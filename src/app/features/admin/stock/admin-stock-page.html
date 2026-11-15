@@ -1,0 +1,178 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Lotes y stock</h2>
+      <p class="page-subtitle">Stock de {{ selectedBranchLabel() }}. Cambia la sucursal en el selector de arriba.</p>
+    </div>
+  </div>
+
+  <div class="panel-toolbar">
+    <input type="search" class="form-control panel-search" placeholder="Buscar producto"
+      aria-label="Buscar producto" (input)="updateSearchText($event)" />
+    <button type="button" class="btn" [class.btn-warning]="isShowingOnlyAlerts()" [class.btn-outline-secondary]="!isShowingOnlyAlerts()"
+      [attr.aria-pressed]="isShowingOnlyAlerts()" (click)="toggleAlertsFilter()">
+      <i class="fas fa-triangle-exclamation me-1" aria-hidden="true"></i>Solo alertas
+    </button>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (productStockRows().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-boxes-stacked" aria-hidden="true"></i>
+        <p class="mb-0">{{ products().length === 0 ? 'Primero registra productos en el catálogo.' : 'No hay productos para mostrar.' }}</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col" class="text-end">Unidades</th>
+              <th scope="col" class="text-end">Mínimo</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (stockRow of productStockRows(); track stockRow.product.id) {
+              <tr>
+                <td>
+                  <strong>{{ stockRow.product.name }}</strong>
+                  <span class="panel-table-secondary">{{ stockRow.product.presentation }}</span>
+                </td>
+                <td class="text-end fw-semibold">{{ stockRow.availableUnits }}</td>
+                <td class="text-end">{{ stockRow.product.minimumStock }}</td>
+                <td>
+                  <span class="status-badge"
+                    [class.is-danger]="stockRow.stockStatus === 'out_of_stock'"
+                    [class.is-warning]="stockRow.stockStatus === 'low_stock'"
+                    [class.is-success]="stockRow.stockStatus === 'available'">
+                    {{ stockStatusLabel[stockRow.stockStatus] }}
+                  </span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openLotHistory(stockRow.product)">
+                      <i class="fas fa-list me-1" aria-hidden="true"></i>Lotes
+                    </button>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="openLotRegistration(stockRow.product)">
+                      <i class="fas fa-plus me-1" aria-hidden="true"></i>Ingresar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel
+  [dialogTitle]="'Ingresar lote · ' + (productForLotRegistration()?.name ?? '')"
+  [isOpen]="productForLotRegistration() !== null"
+  (closeRequested)="closeDialogs()"
+>
+  <form [formGroup]="lotForm" (ngSubmit)="registerLot()" novalidate>
+    <div class="panel-form-grid">
+      <div class="is-full-width">
+        <label class="form-label" for="lot-branch">Sucursal</label>
+        <select id="lot-branch" class="form-select" formControlName="branchId" [class.is-invalid]="hasLotFieldError('branchId')">
+          <option value="" disabled>Elige la botica</option>
+          @for (branch of branchSelection.availableBranches(); track branch.id) {
+            <option [value]="branch.id">{{ branch.name }}</option>
+          }
+        </select>
+        <div class="invalid-feedback">Elige la sucursal donde entra el stock.</div>
+      </div>
+      <div>
+        <label class="form-label" for="lot-number">N.° de lote</label>
+        <input id="lot-number" class="form-control text-uppercase" formControlName="lotNumber" placeholder="L2401A"
+          [class.is-invalid]="hasLotFieldError('lotNumber')" />
+        <div class="invalid-feedback">Solo letras, números, punto, guion o barra.</div>
+      </div>
+      <div>
+        <label class="form-label" for="lot-expiration">Vencimiento</label>
+        <input id="lot-expiration" type="date" class="form-control" formControlName="expirationDate"
+          [min]="earliestAllowedExpirationDate" [class.is-invalid]="hasLotFieldError('expirationDate')" />
+        <div class="invalid-feedback">Indica una fecha futura.</div>
+      </div>
+      <div>
+        <label class="form-label" for="lot-quantity">Unidades</label>
+        <input id="lot-quantity" type="number" min="1" step="1" class="form-control" formControlName="quantity"
+          inputmode="numeric" [class.is-invalid]="hasLotFieldError('quantity')" />
+        <div class="invalid-feedback">Número entero mayor que 0.</div>
+      </div>
+      <div>
+        <label class="form-label" for="lot-reason">Motivo</label>
+        <select id="lot-reason" class="form-select" formControlName="entryReason">
+          <option value="initial_stock">Stock inicial</option>
+          <option value="manual_entry">Ingreso manual</option>
+        </select>
+      </div>
+    </div>
+    <p class="form-text mt-3 mb-0">Si el lote ya existe en esa botica con la misma fecha, se suman las unidades.</p>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialogs()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+        @if (isSaving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        Registrar ingreso
+      </button>
+    </div>
+  </form>
+</app-dialog-panel>
+
+<app-dialog-panel
+  [dialogTitle]="'Lotes · ' + (productForLotHistory()?.name ?? '')"
+  [isOpen]="productForLotHistory() !== null"
+  (closeRequested)="closeDialogs()"
+>
+  @if (isLoadingLots()) {
+    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else if (lotsOfSelectedProduct().length === 0) {
+    <div class="panel-empty-state">
+      <i class="fas fa-box-open" aria-hidden="true"></i>
+      <p class="mb-0">No hay lotes registrados en {{ selectedBranchLabel() }}.</p>
+    </div>
+  } @else {
+    <p class="form-text mt-0">Ordenados por vencimiento: se despacha primero el que vence antes.</p>
+    <div class="table-responsive">
+      <table class="table panel-table">
+        <thead>
+          <tr>
+            <th scope="col">Lote</th>
+            <th scope="col">Sucursal</th>
+            <th scope="col">Vence</th>
+            <th scope="col" class="text-end">Disponible</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (stockLot of lotsOfSelectedProduct(); track stockLot.id) {
+            <tr>
+              <td><strong>{{ stockLot.lotNumber }}</strong></td>
+              <td>{{ describeBranch(stockLot.branchId) }}</td>
+              <td>
+                {{ stockLot.expirationDate ? (stockLot.expirationDate | date: 'dd/MM/yyyy') : '—' }}
+                @if (isNearExpiration(stockLot)) {
+                  <span class="status-badge is-warning ms-1">Por vencer</span>
+                }
+              </td>
+              <td class="text-end">{{ stockLot.quantityAvailable }} / {{ stockLot.quantityReceived }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</app-dialog-panel>

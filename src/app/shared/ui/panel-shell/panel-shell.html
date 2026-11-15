@@ -1,0 +1,96 @@
+<div class="panel-layout" [class.is-sidebar-collapsed]="isSidebarCollapsed()">
+  <aside class="panel-sidebar" aria-label="Menú del panel">
+    <div class="panel-sidebar-header">
+      <span class="panel-brand">
+        <span class="panel-brand-icon" aria-hidden="true"><i class="fas fa-prescription-bottle-medical"></i></span>
+        <span class="panel-brand-name">Farmasalud</span>
+      </span>
+      <button
+        type="button"
+        class="panel-sidebar-toggle"
+        [attr.aria-expanded]="!isSidebarCollapsed()"
+        [attr.aria-label]="isSidebarCollapsed() ? 'Expandir menú' : 'Contraer menú'"
+        (click)="toggleSidebar()"
+      >
+        <i class="fas fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <nav class="panel-sidebar-nav">
+      @for (navigationSection of navigationSections(); track navigationSection.sectionTitle) {
+        <p class="panel-section-title">{{ navigationSection.sectionTitle }}</p>
+        @for (navigationItem of navigationSection.items; track navigationItem.path) {
+          <a
+            class="panel-nav-link"
+            [routerLink]="navigationItem.path"
+            routerLinkActive="is-active"
+            #activeLink="routerLinkActive"
+            [attr.aria-current]="activeLink.isActive ? 'page' : null"
+            [title]="navigationItem.label"
+          >
+            <i [class]="navigationItem.iconClass" aria-hidden="true"></i>
+            <span class="panel-nav-text">{{ navigationItem.label }}</span>
+          </a>
+        }
+      }
+    </nav>
+  </aside>
+
+  <div class="panel-main">
+    <header class="panel-header">
+      <h1 class="panel-title">{{ panelTitle() }}</h1>
+      <div class="panel-header-controls">
+        <ng-content select="[panelHeaderControls]" />
+        <button type="button" class="panel-icon-button" (click)="goToStore()" title="Ir a la tienda">
+          <i class="fas fa-store" aria-hidden="true"></i>
+          <span class="panel-icon-label">Tienda</span>
+        </button>
+        @if (currentSession(); as session) {
+          <span class="panel-user-badge" [title]="session.email">
+            <i class="fas fa-user-shield" aria-hidden="true"></i>
+            <span>{{ roleDisplayName[session.role] }}</span>
+          </span>
+        }
+        <button type="button" class="panel-icon-button is-danger" (click)="signOut()" title="Cerrar sesión">
+          <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
+          <span class="panel-icon-label">Salir</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="panel-content">
+      <router-outlet />
+    </main>
+  </div>
+
+  <nav class="panel-bottom-nav" aria-label="Accesos rápidos">
+    @for (quickLink of mobileQuickLinks(); track quickLink.path) {
+      <a class="panel-bottom-link" [routerLink]="quickLink.path" routerLinkActive="is-active" (click)="closeMobileMoreSheet()">
+        <i [class]="quickLink.iconClass" aria-hidden="true"></i>
+        <span>{{ quickLink.label }}</span>
+      </a>
+    }
+    <button type="button" class="panel-bottom-link" [class.is-active]="isMobileMoreSheetOpen()" (click)="toggleMobileMoreSheet()">
+      <i class="fas" [class.fa-ellipsis]="!isMobileMoreSheetOpen()" [class.fa-xmark]="isMobileMoreSheetOpen()" aria-hidden="true"></i>
+      <span>Más</span>
+    </button>
+  </nav>
+
+  @if (isMobileMoreSheetOpen()) {
+    <div class="panel-sheet-backdrop" (click)="closeMobileMoreSheet()" aria-hidden="true"></div>
+    <div class="panel-more-sheet" role="dialog" aria-label="Más opciones">
+      <span class="panel-sheet-handle" aria-hidden="true"></span>
+      @for (navigationSection of navigationSections(); track navigationSection.sectionTitle) {
+        <p class="panel-sheet-section">{{ navigationSection.sectionTitle }}</p>
+        <div class="panel-sheet-grid">
+          @for (navigationItem of navigationSection.items; track navigationItem.path) {
+            <a class="panel-sheet-link" [routerLink]="navigationItem.path" routerLinkActive="is-active" (click)="closeMobileMoreSheet()">
+              <i [class]="navigationItem.iconClass" aria-hidden="true"></i>
+              <span>{{ navigationItem.label }}</span>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

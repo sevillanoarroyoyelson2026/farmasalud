@@ -1,0 +1,129 @@
+<section class="auth-page">
+  <div class="container-xl auth-page-grid">
+    <div class="auth-welcome">
+      <span class="auth-welcome-badge"><i class="fas fa-user-plus me-2" aria-hidden="true"></i>Nueva cuenta</span>
+      <h1 class="auth-welcome-title">Crea tu cuenta <span>en un minuto</span></h1>
+      <p class="auth-welcome-text">
+        Guarda tus datos de entrega, revisa el historial de tus compras y recibe la confirmación de cada pedido.
+      </p>
+      <ul class="auth-welcome-benefits">
+        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Tus datos protegidos y cifrados</li>
+        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Promociones vigentes de tu botica</li>
+        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Historial de pedidos y recetas</li>
+      </ul>
+    </div>
+
+    <div class="auth-card surface-card">
+      <header class="auth-card-header">
+        <h2 class="auth-card-title">Crear cuenta</h2>
+        <p class="auth-card-subtitle">Completa tus datos</p>
+      </header>
+
+      <form [formGroup]="registerForm" (ngSubmit)="submitRegistration()" novalidate>
+        <div class="mb-3">
+          <label for="register-full-name" class="form-label">Nombre completo</label>
+          <input
+            id="register-full-name"
+            class="form-control"
+            formControlName="fullName"
+            autocomplete="name"
+            [class.is-invalid]="hasFieldError('fullName')"
+          />
+          @if (hasFieldError('fullName')) {
+            <div class="invalid-feedback">Escribe tu nombre (mínimo 3 letras).</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="register-email" class="form-label">Correo electrónico</label>
+          <input
+            id="register-email"
+            type="email"
+            class="form-control"
+            formControlName="email"
+            autocomplete="email"
+            [class.is-invalid]="hasFieldError('email')"
+          />
+          @if (hasFieldError('email')) {
+            <div class="invalid-feedback">Ingresa un correo electrónico válido.</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="register-phone" class="form-label">Celular <span class="text-muted fw-normal">(opcional)</span></label>
+          <input
+            id="register-phone"
+            type="tel"
+            inputmode="numeric"
+            class="form-control"
+            formControlName="phone"
+            autocomplete="tel"
+            placeholder="9XXXXXXXX"
+            [class.is-invalid]="hasFieldError('phone')"
+          />
+          @if (hasFieldError('phone')) {
+            <div class="invalid-feedback">El celular debe tener 9 dígitos y empezar con 9.</div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="register-password" class="form-label">Contraseña</label>
+          <div class="input-group has-validation">
+            <input
+              id="register-password"
+              class="form-control"
+              formControlName="password"
+              autocomplete="new-password"
+              [type]="isPasswordVisible() ? 'text' : 'password'"
+              [class.is-invalid]="hasFieldError('password')"
+              aria-describedby="register-password-help"
+            />
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="isPasswordVisible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+            >
+              <i class="fas" [class.fa-eye]="!isPasswordVisible()" [class.fa-eye-slash]="isPasswordVisible()" aria-hidden="true"></i>
+            </button>
+            @if (hasFieldError('password')) {
+              <div class="invalid-feedback">Usa al menos 8 caracteres con letras y números.</div>
+            }
+          </div>
+          <div id="register-password-help" class="form-text">Mínimo 8 caracteres, con letras y números.</div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input
+            id="register-privacy-consent"
+            type="checkbox"
+            class="form-check-input"
+            formControlName="hasAcceptedPrivacyPolicy"
+            [class.is-invalid]="hasFieldError('hasAcceptedPrivacyPolicy')"
+          />
+          <label for="register-privacy-consent" class="form-check-label small">
+            Acepto la <a routerLink="/privacidad" target="_blank">política de privacidad</a> y autorizo el tratamiento de
+            mis datos personales para gestionar mis pedidos (Ley N.° 29733).
+          </label>
+          @if (hasFieldError('hasAcceptedPrivacyPolicy')) {
+            <div class="invalid-feedback">Necesitamos tu autorización para crear la cuenta.</div>
+          }
+        </div>
+
+        @if (errorMessage()) {
+          <div class="alert alert-danger py-2" role="alert">{{ errorMessage() }}</div>
+        }
+
+        <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Creando cuenta...
+          } @else {
+            Crear cuenta
+          }
+        </button>
+      </form>
+
+      <p class="auth-switch">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </div>
+  </div>
+</section>

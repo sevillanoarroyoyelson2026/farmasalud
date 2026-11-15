@@ -1,0 +1,26 @@
+<section>
+  <h2 class="page-title">Hola, {{ administratorName() }}</h2>
+  <p class="page-subtitle">Resumen de {{ selectedBranchName() }}</p>
+
+  <div class="dashboard-indicator-grid">
+    @for (indicator of dashboardIndicators; track indicator.label) {
+      <article class="dashboard-indicator surface-card">
+        <span class="dashboard-indicator-icon" aria-hidden="true"><i [class]="indicator.iconClass"></i></span>
+        <div>
+          <p class="dashboard-indicator-label">{{ indicator.label }}</p>
+          <p class="dashboard-indicator-value">Sin datos aún</p>
+          <p class="dashboard-indicator-source">{{ indicator.sourceIndicator }}</p>
+        </div>
+      </article>
+    }
+  </div>
+
+  <div class="dashboard-next-steps surface-card">
+    <h3 class="h6">Primeros pasos</h3>
+    <ol class="mb-0">
+      <li>Registra las sucursales y los usuarios trabajadores.</li>
+      <li>Crea las categorías y los productos del catálogo.</li>
+      <li>Carga los lotes iniciales de stock por sucursal.</li>
+    </ol>
+  </div>
+</section>

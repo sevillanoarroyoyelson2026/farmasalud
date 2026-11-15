@@ -1,0 +1,163 @@
+.checkout-page {
+  padding-top: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+.checkout-back {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.checkout-title {
+  margin-bottom: 1.25rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.checkout-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.checkout-step {
+  min-width: 0;
+  padding: 1.25rem;
+}
+
+.checkout-step-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.checkout-step-title span {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.checkout-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.checkout-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-base);
+}
+
+.checkout-option input {
+  position: absolute;
+  opacity: 0;
+}
+
+.checkout-option:focus-within {
+  outline: 3px solid rgba(15, 118, 110, 0.35);
+}
+
+.checkout-option i {
+  font-size: 1.3rem;
+  color: var(--color-primary);
+}
+
+.checkout-option small {
+  display: block;
+  color: var(--color-text-secondary);
+}
+
+.checkout-option.is-selected {
+  border-color: var(--color-primary);
+  background: #f0fdfa;
+}
+
+.checkout-option.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.checkout-pickup-note {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-soft);
+  font-size: 0.9rem;
+}
+
+.checkout-prescription-ok {
+  margin: 0.75rem 0 0;
+  font-weight: 600;
+  color: #166534;
+}
+
+.checkout-summary {
+  position: sticky;
+  top: 88px;
+  padding: 1.25rem;
+}
+
+.checkout-summary-items {
+  padding: 0;
+  margin: 0 0 1rem;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.checkout-summary-items li,
+.checkout-summary dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.checkout-summary dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.checkout-summary-total {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 1.1rem;
+}
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-options {
+    grid-template-columns: 1fr;
+  }
+}

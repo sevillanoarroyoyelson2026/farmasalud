@@ -42,3 +42,16 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Secretos y entornos locales (nunca subir credenciales)
+.env
+.env.*
+!.env.example
+service-account*.json
+.netlify/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Archivos de variables con secretos (cualquier nombre)
+*.env

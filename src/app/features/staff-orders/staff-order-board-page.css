@@ -1,0 +1,116 @@
+.live-dot {
+  font-size: 0.5rem;
+  color: var(--color-accent);
+}
+
+.order-board-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.order-board-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  text-align: left;
+  transition: box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.order-board-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-raised);
+}
+
+.order-board-card-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-board-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.order-board-card-total {
+  min-width: 80px;
+  text-align: right;
+}
+
+.order-sheet-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.order-sheet-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.order-sheet-note {
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-info-soft);
+  font-size: 0.875rem;
+}
+
+.order-sheet-items {
+  padding: 0;
+  margin: 0 0 0.5rem;
+  list-style: none;
+}
+
+.order-sheet-items li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.order-sheet-lots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.order-sheet-prescription {
+  max-width: 100%;
+  max-height: 360px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.order-sheet-actions,
+.order-sheet-confirmation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  margin-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.order-sheet-confirmation {
+  flex-direction: column;
+}

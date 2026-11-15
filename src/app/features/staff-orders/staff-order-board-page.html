@@ -1,0 +1,153 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">{{ boardConfiguration().pageTitle }}</h2>
+      <p class="page-subtitle">{{ boardConfiguration().pageDescription }}</p>
+    </div>
+    <span class="status-badge is-info"><i class="fas fa-circle live-dot" aria-hidden="true"></i>En vivo</span>
+  </div>
+
+  <div class="panel-toolbar">
+    <input type="search" class="form-control panel-search" placeholder="Buscar por N.° de pedido o cliente"
+      aria-label="Buscar pedidos" (input)="updateSearchText($event)" />
+  </div>
+
+  @if (isLoading()) {
+    <div class="panel-empty-state surface-card"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else if (loadErrorMessage()) {
+    <div class="panel-empty-state surface-card"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+  } @else if (visibleOrders().length === 0) {
+    <div class="panel-empty-state surface-card">
+      <i class="fas fa-inbox" aria-hidden="true"></i>
+      <p class="mb-0">{{ boardConfiguration().emptyMessage }}</p>
+    </div>
+  } @else {
+    <ul class="order-board-list">
+      @for (order of visibleOrders(); track order.id) {
+        <li>
+          <button type="button" class="order-board-card surface-card" (click)="openOrder(order)">
+            <span class="order-board-card-main">
+              <strong>{{ order.orderNumber }}</strong>
+              <span class="panel-table-secondary">
+                {{ order.createdAt ? (order.createdAt | date: 'dd/MM HH:mm') : '' }} · {{ order.customerName }} · {{ countUnits(order) }} unid.
+              </span>
+            </span>
+            <span class="order-board-card-tags">
+              @if (!branchSelection.selectedBranchId()) {
+                <span class="status-badge is-neutral">{{ order.branchName }}</span>
+              }
+              <span class="status-badge is-neutral">
+                <i [class]="order.fulfillmentType === 'delivery' ? 'fas fa-motorcycle' : 'fas fa-store'" aria-hidden="true"></i>
+                {{ order.fulfillmentType === 'delivery' ? 'Delivery' : 'Recojo' }}
+              </span>
+              @if (order.hasPrescription) {
+                <span class="status-badge is-warning"><i class="fas fa-file-prescription" aria-hidden="true"></i>Receta</span>
+              }
+              <span [class]="'status-badge ' + statusTone[order.status]">{{ statusLabel[order.status] }}</span>
+              <strong class="order-board-card-total">{{ order.orderTotal | currency: 'PEN' : 'S/ ' }}</strong>
+            </span>
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+<app-dialog-panel [dialogTitle]="'Pedido ' + (selectedOrder()?.orderNumber ?? '')" [isOpen]="selectedOrder() !== null" (closeRequested)="closeOrder()">
+  @if (selectedOrder(); as order) {
+    <div class="order-sheet-status">
+      <span [class]="'status-badge ' + statusTone[order.status]">{{ statusLabel[order.status] }}</span>
+      <span class="panel-table-secondary">{{ order.branchName }} · {{ order.createdAt ? (order.createdAt | date: 'dd/MM/yyyy HH:mm') : '' }}</span>
+    </div>
+
+    <h3 class="order-sheet-title">Cliente</h3>
+    <p class="mb-1"><strong>{{ order.customerName }}</strong> · <a [href]="'tel:' + order.contactPhone">{{ order.contactPhone }}</a></p>
+    @if (order.fulfillmentType === 'delivery' && order.deliveryAddress) {
+      <p class="mb-1"><i class="fas fa-motorcycle me-2" aria-hidden="true"></i>{{ order.deliveryAddress.street }}, {{ order.deliveryAddress.district }}
+        @if (order.deliveryAddress.reference) { <span class="panel-table-secondary">Ref.: {{ order.deliveryAddress.reference }}</span> }
+      </p>
+    } @else {
+      <p class="mb-1"><i class="fas fa-store me-2" aria-hidden="true"></i>Recoge en botica</p>
+    }
+    @if (order.customerNote) {
+      <p class="order-sheet-note"><i class="fas fa-comment me-1" aria-hidden="true"></i>{{ order.customerNote }}</p>
+    }
+    <p class="mb-0 small">{{ paymentMethodLabel[order.paymentMethod] }} · <strong>{{ paymentStatusLabel[order.paymentStatus] }}</strong>
+      @if (order.paymentStatus === 'pending') { — cobrar {{ order.orderTotal | currency: 'PEN' : 'S/ ' }} al entregar }
+    </p>
+
+    <h3 class="order-sheet-title">Productos (despachar de estos lotes)</h3>
+    <ul class="order-sheet-items">
+      @for (orderItem of order.items; track orderItem.productId) {
+        <li>
+          <span>
+            <strong>{{ orderItem.quantity }} × {{ orderItem.productName }}</strong>
+            @if (orderItem.requiresPrescription) { <span class="status-badge is-warning ms-1">Receta</span> }
+            <span class="panel-table-secondary">{{ orderItem.presentation }}</span>
+            <span class="order-sheet-lots">
+              @for (allocatedLot of orderItem.allocatedLots; track allocatedLot.lotId) {
+                <span>Lote {{ allocatedLot.lotNumber }}: {{ allocatedLot.quantity }}</span>
+              }
+            </span>
+          </span>
+          <span>{{ orderItem.subtotal | currency: 'PEN' : 'S/ ' }}</span>
+        </li>
+      }
+    </ul>
+    <p class="text-end mb-0"><strong>Total {{ order.orderTotal | currency: 'PEN' : 'S/ ' }}</strong>
+      <span class="panel-table-secondary">incluye delivery {{ order.deliveryFee | currency: 'PEN' : 'S/ ' }}</span></p>
+
+    @if (order.hasPrescription) {
+      <h3 class="order-sheet-title">Receta médica</h3>
+      @if (prescriptionUrl()) {
+        <a [href]="prescriptionUrl()" target="_blank" rel="noopener noreferrer">
+          <img class="order-sheet-prescription" [src]="prescriptionUrl()" alt="Receta médica del pedido" />
+        </a>
+      } @else {
+        <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="isLoadingPrescription()" (click)="showPrescription()">
+          <i class="fas fa-eye me-1" aria-hidden="true"></i>Ver receta
+        </button>
+      }
+      @if (order.prescriptionReviewNote) {
+        <p class="panel-table-secondary mt-1">Observación: {{ order.prescriptionReviewNote }}</p>
+      }
+    }
+
+    @if (order.courierName) {
+      <p class="mt-3 mb-0"><i class="fas fa-motorcycle me-2" aria-hidden="true"></i>Repartidor: {{ order.courierName }}</p>
+    }
+
+    @if (actionErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ actionErrorMessage() }}</div>
+    }
+
+    @if (pendingAction(); as actionDefinition) {
+      <div class="order-sheet-confirmation">
+        <p class="fw-semibold mb-2">{{ actionDefinition.label }}</p>
+        @if (actionDefinition.action === 'dispatch') {
+          <label class="form-label" for="courier-name">Repartidor (opcional)</label>
+          <input id="courier-name" class="form-control mb-2" maxlength="80" [ngModel]="courierName()" (ngModelChange)="courierName.set($event)" />
+        }
+        @if (actionDefinition.isNoteRequired) {
+          <label class="form-label" for="action-note">Motivo (lo verá el cliente)</label>
+          <textarea id="action-note" class="form-control mb-2" rows="2" maxlength="300" [ngModel]="actionNote()"
+            (ngModelChange)="actionNote.set($event)"></textarea>
+        }
+        <div class="d-flex gap-2 justify-content-end">
+          <button type="button" class="btn btn-light" (click)="cancelPendingAction()">Volver</button>
+          <button type="button" class="btn" [class]="'btn ' + actionDefinition.buttonClass" [disabled]="isApplyingAction()"
+            (click)="applyAction(actionDefinition)">Confirmar</button>
+        </div>
+      </div>
+    } @else if (selectedOrderActions().length > 0) {
+      <div class="order-sheet-actions">
+        @for (actionDefinition of selectedOrderActions(); track actionDefinition.action) {
+          <button type="button" [class]="'btn ' + actionDefinition.buttonClass" [disabled]="isApplyingAction()"
+            (click)="requestAction(actionDefinition)">
+            <i [class]="actionDefinition.iconClass + ' me-1'" aria-hidden="true"></i>{{ actionDefinition.label }}
+          </button>
+        }
+      </div>
+    }
+  }
+</app-dialog-panel>

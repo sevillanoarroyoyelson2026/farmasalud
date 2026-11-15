@@ -1,0 +1,10 @@
+<app-panel-shell
+  panelTitle="Panel del trabajador"
+  [navigationSections]="navigationSections"
+  [mobileQuickLinks]="mobileQuickLinks"
+>
+  <span class="assigned-branch" panelHeaderControls title="Sucursal asignada">
+    <i class="fas fa-location-dot" aria-hidden="true"></i>
+    <span>{{ assignedBranchName() }}</span>
+  </span>
+</app-panel-shell>

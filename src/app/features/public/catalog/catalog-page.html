@@ -1,0 +1,101 @@
+<section class="container-xl catalog-page">
+  <header class="catalog-header">
+    <div>
+      <h1 class="catalog-title">Catálogo</h1>
+      <p class="catalog-subtitle">Elige tu botica para ver la disponibilidad real antes de comprar.</p>
+    </div>
+    <label class="catalog-branch-picker">
+      <span class="catalog-branch-label"><i class="fas fa-store me-1" aria-hidden="true"></i>Tu botica</span>
+      <select class="form-select" (change)="changeSelectedBranch($event)">
+        <option value="" [selected]="branchSelection.selectedBranchId() === ''">Todas las boticas</option>
+        @for (branch of branchSelection.availableBranches(); track branch.id) {
+          <option [value]="branch.id" [selected]="branchSelection.selectedBranchId() === branch.id">
+            {{ branch.name }} — {{ branch.district }}
+          </option>
+        }
+      </select>
+    </label>
+  </header>
+
+  <div class="catalog-filters">
+    <div class="catalog-search">
+      <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" class="form-control" placeholder="Busca por nombre, principio activo o laboratorio"
+        aria-label="Buscar productos" (input)="updateSearchText($event)" />
+    </div>
+    <div class="form-check form-switch catalog-available-toggle">
+      <input id="only-available" class="form-check-input" type="checkbox" [checked]="isShowingOnlyAvailable()"
+        (change)="toggleOnlyAvailable()" />
+      <label class="form-check-label" for="only-available">Solo disponibles</label>
+    </div>
+  </div>
+
+  <nav class="catalog-category-chips" aria-label="Categorías">
+    <button type="button" class="catalog-chip" [class.is-selected]="selectedCategoryId() === ''"
+      [attr.aria-pressed]="selectedCategoryId() === ''" (click)="selectCategory('')">Todo</button>
+    @for (category of categories(); track category.id) {
+      <button type="button" class="catalog-chip" [class.is-selected]="selectedCategoryId() === category.id"
+        [attr.aria-pressed]="selectedCategoryId() === category.id" (click)="selectCategory(category.id)">
+        {{ category.name }}
+      </button>
+    }
+  </nav>
+
+  @if (isLoading()) {
+    <div class="catalog-grid" aria-busy="true">
+      @for (placeholderNumber of [1, 2, 3, 4, 5, 6, 7, 8]; track placeholderNumber) {
+        <div class="catalog-card is-placeholder" aria-hidden="true"></div>
+      }
+    </div>
+  } @else if (loadErrorMessage()) {
+    <div class="panel-empty-state surface-card"><i class="fas fa-wifi" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+  } @else if (visibleProductCards().length === 0) {
+    <div class="panel-empty-state surface-card">
+      <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+      <p class="mb-0">{{ products().length === 0 ? 'Pronto publicaremos nuestros productos.' : 'No encontramos productos con esos filtros.' }}</p>
+    </div>
+  } @else {
+    <p class="catalog-result-count">{{ visibleProductCards().length }} productos</p>
+    <div class="catalog-grid">
+      @for (productCard of visibleProductCards(); track productCard.product.id) {
+        <article class="catalog-card" [class.is-out-of-stock]="productCard.availability.stockStatus === 'out_of_stock'">
+          <span class="catalog-card-image">
+            @if (productCard.product.imageUrl) {
+              <img [src]="productCard.product.imageUrl" [alt]="productCard.product.name" loading="lazy" />
+            } @else {
+              <i class="fas fa-capsules" aria-hidden="true"></i>
+            }
+            @if (productCard.product.requiresPrescription) {
+              <span class="catalog-card-prescription"><i class="fas fa-file-prescription me-1" aria-hidden="true"></i>Con receta</span>
+            }
+          </span>
+          <span class="catalog-card-body">
+            <span class="catalog-card-category">{{ productCard.categoryName }}</span>
+            <a class="catalog-card-name" [routerLink]="['/producto', productCard.product.id]">{{ productCard.product.name }}</a>
+            <span class="catalog-card-presentation">{{ productCard.product.presentation }}</span>
+            <span class="status-badge catalog-card-availability"
+              [class.is-success]="productCard.availability.stockStatus === 'available'"
+              [class.is-warning]="productCard.availability.stockStatus === 'low_stock'"
+              [class.is-neutral]="productCard.availability.stockStatus === 'out_of_stock'">
+              {{ productCard.availability.availabilityLabel }}
+            </span>
+            <span class="catalog-card-footer">
+              <span class="catalog-card-price">{{ productCard.product.price | currency: 'PEN' : 'S/ ' }}</span>
+              @if (!isStaffMember()) {
+                <button type="button" class="btn btn-sm btn-primary catalog-card-add"
+                  [disabled]="productCard.availability.stockStatus === 'out_of_stock'"
+                  [attr.aria-label]="'Agregar ' + productCard.product.name + ' al carrito'"
+                  (click)="addToCart(productCard.product.id)">
+                  <i class="fas fa-cart-plus" aria-hidden="true"></i>
+                  @if (cartService.getQuantityOf(productCard.product.id) > 0) {
+                    <span>{{ cartService.getQuantityOf(productCard.product.id) }}</span>
+                  }
+                </button>
+              }
+            </span>
+          </span>
+        </article>
+      }
+    </div>
+  }
+</section>

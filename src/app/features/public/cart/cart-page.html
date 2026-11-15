@@ -1,0 +1,89 @@
+<section class="container-xl cart-page">
+  <h1 class="cart-title">Tu carrito</h1>
+
+  @if (cartDetails.isLoading()) {
+    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else if (cartDetails.cartLineDetails().length === 0) {
+    <div class="panel-empty-state surface-card">
+      <i class="fas fa-cart-shopping" aria-hidden="true"></i>
+      <p class="mb-0">Tu carrito está vacío.</p>
+      <a class="btn btn-primary btn-sm mt-2" routerLink="/catalogo">Ver catálogo</a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <div>
+        <label class="cart-branch-picker surface-card">
+          <span><i class="fas fa-store me-2" aria-hidden="true"></i><strong>Botica que atiende tu pedido</strong></span>
+          <select class="form-select" (change)="changeSelectedBranch($event)">
+            <option value="" disabled [selected]="!cartDetails.branchSelection.selectedBranchId()">Elige una botica</option>
+            @for (branch of cartDetails.branchSelection.availableBranches(); track branch.id) {
+              <option [value]="branch.id" [selected]="cartDetails.branchSelection.selectedBranchId() === branch.id">
+                {{ branch.name }} — {{ branch.district }}
+              </option>
+            }
+          </select>
+        </label>
+
+        <ul class="cart-line-list">
+          @for (lineDetail of cartDetails.cartLineDetails(); track lineDetail.product.id) {
+            <li class="cart-line surface-card">
+              <a class="cart-line-image" [routerLink]="['/producto', lineDetail.product.id]">
+                @if (lineDetail.product.imageUrl) {
+                  <img [src]="lineDetail.product.imageUrl" [alt]="lineDetail.product.name" />
+                } @else {
+                  <i class="fas fa-capsules" aria-hidden="true"></i>
+                }
+              </a>
+              <div class="cart-line-info">
+                <a class="cart-line-name" [routerLink]="['/producto', lineDetail.product.id]">{{ lineDetail.product.name }}</a>
+                <span class="panel-table-secondary">{{ lineDetail.product.presentation }}</span>
+                @if (lineDetail.product.requiresPrescription) {
+                  <span class="status-badge is-warning mt-1"><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere receta</span>
+                }
+                @if (cartDetails.branchSelection.selectedBranchId() && !lineDetail.hasEnoughStockInBranch) {
+                  <span class="cart-line-warning"><i class="fas fa-triangle-exclamation me-1" aria-hidden="true"></i>No hay suficiente stock en esta botica</span>
+                }
+              </div>
+              <div class="cart-line-quantity" role="group" [attr.aria-label]="'Cantidad de ' + lineDetail.product.name">
+                <button type="button" class="btn btn-sm btn-light" aria-label="Quitar una unidad" (click)="decreaseQuantity(lineDetail.product.id)">
+                  <i class="fas fa-minus" aria-hidden="true"></i>
+                </button>
+                <span aria-live="polite">{{ lineDetail.quantity }}</span>
+                <button type="button" class="btn btn-sm btn-light" aria-label="Agregar una unidad"
+                  [disabled]="lineDetail.quantity >= maximumUnitsPerProduct" (click)="increaseQuantity(lineDetail.product.id)">
+                  <i class="fas fa-plus" aria-hidden="true"></i>
+                </button>
+              </div>
+              <div class="cart-line-subtotal">
+                <strong>{{ lineDetail.subtotal | currency: 'PEN' : 'S/ ' }}</strong>
+                <button type="button" class="btn btn-sm btn-link text-danger p-0" (click)="removeProduct(lineDetail.product.id)">Quitar</button>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <aside class="cart-summary surface-card">
+        <h2 class="h6">Resumen</h2>
+        <dl>
+          <div><dt>Productos ({{ cartService.totalUnits() }})</dt><dd>{{ cartDetails.itemsTotal() | currency: 'PEN' : 'S/ ' }}</dd></div>
+          <div><dt>Delivery</dt><dd class="text-muted">Se calcula al pagar</dd></div>
+        </dl>
+        @if (cartDetails.requiresPrescription()) {
+          <p class="cart-summary-note"><i class="fas fa-file-prescription me-1" aria-hidden="true"></i>Tendrás que adjuntar la receta médica.</p>
+        }
+        <a class="btn btn-primary w-100" routerLink="/checkout"
+          [class.disabled]="!cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()"
+          [attr.aria-disabled]="!cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()">
+          Continuar con el pago
+        </a>
+        @if (!cartDetails.branchSelection.selectedBranchId()) {
+          <p class="form-text mb-0 mt-2">Elige la botica que atenderá tu pedido.</p>
+        } @else if (cartDetails.hasStockProblems()) {
+          <p class="form-text mb-0 mt-2">Ajusta las cantidades o elige otra botica.</p>
+        }
+        <a class="btn btn-link w-100 mt-1" routerLink="/catalogo">Seguir comprando</a>
+      </aside>
+    </div>
+  }
+</section>

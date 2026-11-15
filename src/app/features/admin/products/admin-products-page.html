@@ -1,0 +1,201 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Productos</h2>
+      <p class="page-subtitle">Catálogo, precios, receta médica e imágenes. El stock se carga en "Lotes y stock".</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openNewProductDialog()" [disabled]="categories().length === 0">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i> Nuevo producto
+    </button>
+  </div>
+
+  @if (!isLoading() && categories().length === 0) {
+    <div class="alert alert-info" role="status">
+      Primero crea al menos una categoría en <strong>Inventario → Categorías</strong>.
+    </div>
+  }
+
+  <div class="panel-toolbar">
+    <input type="search" class="form-control panel-search" placeholder="Buscar por nombre, principio activo o laboratorio"
+      aria-label="Buscar productos" (input)="updateSearchText($event)" />
+    <select class="form-select w-auto" aria-label="Filtrar por categoría" (change)="updateCategoryFilter($event)">
+      <option value="">Todas las categorías</option>
+      @for (category of categories(); track category.id) {
+        <option [value]="category.id">{{ category.name }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (filteredProducts().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-pills" aria-hidden="true"></i>
+        <p class="mb-0">{{ products().length === 0 ? 'Aún no hay productos.' : 'Ningún producto coincide con la búsqueda.' }}</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col">Categoría</th>
+              <th scope="col" class="text-end">Precio</th>
+              <th scope="col">Receta</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of filteredProducts(); track product.id) {
+              <tr>
+                <td>
+                  <div class="product-name-cell">
+                    <span class="product-thumbnail">
+                      @if (product.imageUrl) {
+                        <img [src]="product.imageUrl" alt="" loading="lazy" />
+                      } @else {
+                        <i class="fas fa-capsules" aria-hidden="true"></i>
+                      }
+                    </span>
+                    <span>
+                      <strong>{{ product.name }}</strong>
+                      <span class="panel-table-secondary">{{ product.presentation }}{{ product.laboratory ? ' · ' + product.laboratory : '' }}</span>
+                    </span>
+                  </div>
+                </td>
+                <td>{{ categoryNameById().get(product.categoryId) ?? 'Sin categoría' }}</td>
+                <td class="text-end">{{ product.price | currency: 'PEN' : 'S/ ' }}</td>
+                <td>
+                  @if (product.requiresPrescription) {
+                    <span class="status-badge is-warning"><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere</span>
+                  } @else {
+                    <span class="status-badge is-neutral">Libre</span>
+                  }
+                </td>
+                <td>
+                  <span class="status-badge" [class.is-success]="product.isActive" [class.is-neutral]="!product.isActive">
+                    {{ product.isActive ? 'En venta' : 'Oculto' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditProductDialog(product)">
+                      <i class="fas fa-pen me-1" aria-hidden="true"></i>Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel
+  [dialogTitle]="editingProductId() ? 'Editar producto' : 'Nuevo producto'"
+  [isOpen]="isDialogOpen()"
+  (closeRequested)="closeDialog()"
+>
+  <form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
+    <div class="panel-form-grid">
+      <div class="is-full-width product-image-picker">
+        <span class="product-image-preview">
+          @if (isUploadingImage()) {
+            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+          } @else if (productForm.controls.imageUrl.value) {
+            <img [src]="productForm.controls.imageUrl.value" alt="Vista previa del producto" />
+          } @else {
+            <i class="fas fa-image" aria-hidden="true"></i>
+          }
+        </span>
+        <div>
+          <label class="btn btn-sm btn-outline-primary mb-1" for="product-image">
+            <i class="fas fa-upload me-1" aria-hidden="true"></i>Subir imagen
+          </label>
+          <input id="product-image" type="file" class="visually-hidden" accept="image/jpeg,image/png,image/webp"
+            (change)="uploadSelectedImage($event)" [disabled]="isUploadingImage()" />
+          @if (productForm.controls.imageUrl.value) {
+            <button type="button" class="btn btn-sm btn-link text-danger mb-1" (click)="removeImage()">Quitar</button>
+          }
+          <div class="form-text">JPG, PNG o WEBP, máximo 5 MB.</div>
+        </div>
+      </div>
+
+      <div class="is-full-width">
+        <label class="form-label" for="product-name">Nombre comercial</label>
+        <input id="product-name" class="form-control" formControlName="name" placeholder="Panadol Antigripal"
+          [class.is-invalid]="hasFieldError('name')" />
+        <div class="invalid-feedback">Escribe el nombre del producto.</div>
+      </div>
+      <div>
+        <label class="form-label" for="product-generic">Principio activo</label>
+        <input id="product-generic" class="form-control" formControlName="genericName" placeholder="Paracetamol" />
+      </div>
+      <div>
+        <label class="form-label" for="product-laboratory">Laboratorio</label>
+        <input id="product-laboratory" class="form-control" formControlName="laboratory" />
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="product-presentation">Presentación</label>
+        <input id="product-presentation" class="form-control" formControlName="presentation"
+          placeholder="Caja x 100 tabletas de 500 mg" [class.is-invalid]="hasFieldError('presentation')" />
+        <div class="invalid-feedback">Indica la presentación.</div>
+      </div>
+      <div>
+        <label class="form-label" for="product-category">Categoría</label>
+        <select id="product-category" class="form-select" formControlName="categoryId" [class.is-invalid]="hasFieldError('categoryId')">
+          <option value="" disabled>Elige una categoría</option>
+          @for (category of categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}{{ category.isActive ? '' : ' (oculta)' }}</option>
+          }
+        </select>
+        <div class="invalid-feedback">Elige una categoría.</div>
+      </div>
+      <div>
+        <label class="form-label" for="product-price">Precio (S/)</label>
+        <input id="product-price" type="number" min="0.1" step="0.10" class="form-control" formControlName="price"
+          inputmode="decimal" [class.is-invalid]="hasFieldError('price')" />
+        <div class="invalid-feedback">Precio entre S/ 0.10 y S/ 100 000.</div>
+      </div>
+      <div>
+        <label class="form-label" for="product-minimum-stock">Stock mínimo por botica</label>
+        <input id="product-minimum-stock" type="number" min="0" step="1" class="form-control" formControlName="minimumStock"
+          inputmode="numeric" [class.is-invalid]="hasFieldError('minimumStock')" />
+        <div class="form-text">Debajo de este número se genera alerta de reposición.</div>
+        <div class="invalid-feedback">Número entero desde 0.</div>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="product-description">Descripción (opcional)</label>
+        <textarea id="product-description" class="form-control" rows="3" formControlName="description"></textarea>
+      </div>
+      <div class="form-check form-switch">
+        <input id="product-prescription" class="form-check-input" type="checkbox" formControlName="requiresPrescription" />
+        <label class="form-check-label" for="product-prescription">Requiere receta médica</label>
+      </div>
+      <div class="form-check form-switch">
+        <input id="product-active" class="form-check-input" type="checkbox" formControlName="isActive" />
+        <label class="form-check-label" for="product-active">En venta</label>
+      </div>
+    </div>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialog()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving() || isUploadingImage()">
+        @if (isSaving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        Guardar
+      </button>
+    </div>
+  </form>
+</app-dialog-panel>

@@ -1,0 +1,138 @@
+<div class="public-layout">
+  <header class="store-header">
+    <nav class="store-navbar container-xl" aria-label="Navegación principal">
+      <a class="store-brand" routerLink="/" (click)="closeMobileMenu()">
+        <span class="store-brand-icon" aria-hidden="true"><i class="fas fa-prescription-bottle-medical"></i></span>
+        <span class="store-brand-name">Farmasalud</span>
+      </a>
+
+      <button
+        type="button"
+        class="store-menu-toggle"
+        [attr.aria-expanded]="isMobileMenuOpen()"
+        aria-controls="store-navigation-menu"
+        [attr.aria-label]="isMobileMenuOpen() ? 'Cerrar menú' : 'Abrir menú'"
+        (click)="toggleMobileMenu()"
+      >
+        <i class="fas" [class.fa-bars]="!isMobileMenuOpen()" [class.fa-xmark]="isMobileMenuOpen()"></i>
+      </button>
+
+      <div id="store-navigation-menu" class="store-menu" [class.is-open]="isMobileMenuOpen()">
+        <ul class="store-links">
+          @for (navigationLink of navigationLinks; track navigationLink.path) {
+            <li>
+              <a
+                class="store-link"
+                [routerLink]="navigationLink.path"
+                routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{ exact: navigationLink.isExactMatch }"
+                (click)="closeMobileMenu()"
+                >{{ navigationLink.label }}</a
+              >
+            </li>
+          }
+          @if (isCustomer()) {
+            <li>
+              <a class="store-link" routerLink="/mis-pedidos" routerLinkActive="is-active" (click)="closeMobileMenu()"
+                >Mis pedidos</a
+              >
+            </li>
+          }
+        </ul>
+
+        <div class="store-actions">
+          @if (isStaffMember()) {
+            <a class="btn btn-sm btn-primary" [routerLink]="staffPanelRoute()" (click)="closeMobileMenu()">
+              <i class="fas fa-gauge-high me-1" aria-hidden="true"></i> Volver al panel
+            </a>
+          } @else {
+            <a class="store-cart-link" routerLink="/carrito" (click)="closeMobileMenu()" aria-label="Ver carrito">
+              <i class="fas fa-cart-shopping" aria-hidden="true"></i>
+              <span>Carrito</span>
+              @if (cartUnits() > 0) {
+                <span class="store-cart-count">{{ cartUnits() }}</span>
+              }
+            </a>
+          }
+
+          @if (currentSession(); as session) {
+            <div class="store-user-menu">
+              <button
+                type="button"
+                class="store-user-button"
+                [attr.aria-expanded]="isUserMenuOpen()"
+                (click)="toggleUserMenu()"
+              >
+                <span class="store-user-avatar" aria-hidden="true">{{ session.displayName.charAt(0).toUpperCase() }}</span>
+                <span class="store-user-name">{{ session.displayName }}</span>
+                <i class="fas fa-chevron-down small" aria-hidden="true"></i>
+              </button>
+              @if (isUserMenuOpen()) {
+                <div class="store-user-dropdown" role="menu">
+                  <p class="store-user-role">{{ currentRoleName() }}</p>
+                  <p class="store-user-email">{{ session.email }}</p>
+                  <button type="button" class="store-dropdown-item" role="menuitem" (click)="signOut()">
+                    <i class="fas fa-right-from-bracket me-2" aria-hidden="true"></i>Cerrar sesión
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <a class="btn btn-sm btn-outline-primary" routerLink="/login" (click)="closeMobileMenu()">Iniciar sesión</a>
+            <a class="btn btn-sm btn-primary" routerLink="/registro" (click)="closeMobileMenu()">Crear cuenta</a>
+          }
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  @if (shouldShowEmailVerificationNotice()) {
+    <div class="verification-notice" role="status">
+      <div class="container-xl verification-notice-content">
+        <span>
+          <i class="fas fa-envelope-circle-check me-2" aria-hidden="true"></i>
+          Verifica tu correo para poder comprar.
+          @if (verificationNoticeMessage()) {
+            <strong class="ms-1">{{ verificationNoticeMessage() }}</strong>
+          }
+        </span>
+        <span class="verification-notice-actions">
+          <button type="button" class="btn btn-sm btn-light" (click)="confirmEmailWasVerified()">Ya lo verifiqué</button>
+          <button type="button" class="btn btn-sm btn-link text-white" (click)="resendVerificationEmail()">Reenviar correo</button>
+        </span>
+      </div>
+    </div>
+  }
+
+  <main class="store-content" id="contenido-principal">
+    <router-outlet />
+  </main>
+
+  <footer class="store-footer">
+    <div class="container-xl store-footer-grid">
+      <div>
+        <p class="store-footer-brand">
+          <i class="fas fa-prescription-bottle-medical me-2" aria-hidden="true"></i>Farmasalud
+        </p>
+        <p class="store-footer-text">
+          Medicamentos, productos médicos y de cuidado personal con disponibilidad real en nuestras 10 boticas de Trujillo.
+        </p>
+      </div>
+      <div>
+        <p class="store-footer-title">Contacto</p>
+        <ul class="store-footer-list">
+          <li><i class="fas fa-location-dot" aria-hidden="true"></i>Av. Ricardo Palma 903, El Bosque, Trujillo</li>
+          <li><i class="fas fa-truck-fast" aria-hidden="true"></i>Delivery en Trujillo</li>
+        </ul>
+      </div>
+      <div>
+        <p class="store-footer-title">Información</p>
+        <ul class="store-footer-list">
+          <li><a routerLink="/privacidad">Política de privacidad</a></li>
+          <li><a routerLink="/catalogo">Catálogo de productos</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="store-footer-bottom">&copy; {{ currentYear }} Farmasalud E.I.R.L. Todos los derechos reservados.</p>
+  </footer>
+</div>

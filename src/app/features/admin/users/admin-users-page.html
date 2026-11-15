@@ -1,0 +1,191 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Usuarios</h2>
+      <p class="page-subtitle">Personal de las boticas y clientes registrados en la tienda.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openCreateStaffDialog()">
+      <i class="fas fa-user-plus me-1" aria-hidden="true"></i> Nuevo trabajador
+    </button>
+  </div>
+
+  <div class="panel-toolbar">
+    <div class="btn-group" role="group" aria-label="Tipo de usuario">
+      <button type="button" class="btn" [class.btn-primary]="activeTab() === 'staff'" [class.btn-outline-primary]="activeTab() !== 'staff'"
+        (click)="selectTab('staff')">Personal ({{ staffUsers().length }})</button>
+      <button type="button" class="btn" [class.btn-primary]="activeTab() === 'customers'" [class.btn-outline-primary]="activeTab() !== 'customers'"
+        (click)="selectTab('customers')">Clientes ({{ customers().length }})</button>
+    </div>
+    <input type="search" class="form-control panel-search" placeholder="Buscar por nombre o correo"
+      aria-label="Buscar usuarios" (input)="updateSearchText($event)" />
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (visibleUsers().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-users" aria-hidden="true"></i>
+        <p class="mb-0">No hay usuarios para mostrar.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Usuario</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Sucursal</th>
+              <th scope="col">Registro</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (userProfile of visibleUsers(); track userProfile.uid) {
+              <tr>
+                <td>
+                  <strong>{{ userProfile.fullName || 'Sin nombre' }}</strong>
+                  <span class="panel-table-secondary">{{ userProfile.email }}</span>
+                </td>
+                <td>{{ roleDisplayName[userProfile.role] }}</td>
+                <td>{{ describeBranch(userProfile.branchId) }}</td>
+                <td>{{ userProfile.createdAt ? (userProfile.createdAt | date: 'dd/MM/yyyy') : '—' }}</td>
+                <td>
+                  <span class="status-badge" [class.is-success]="!userProfile.isDisabled" [class.is-danger]="userProfile.isDisabled">
+                    {{ userProfile.isDisabled ? 'Deshabilitado' : 'Activo' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    @if (userProfile.uid === currentAdministratorUid()) {
+                      <span class="status-badge is-info">Tú</span>
+                    } @else {
+                      <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditAccessDialog(userProfile)">
+                        <i class="fas fa-user-shield me-1" aria-hidden="true"></i>Acceso
+                      </button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel dialogTitle="Nuevo trabajador o administrador" [isOpen]="isCreateDialogOpen()" (closeRequested)="closeDialogs()">
+  <form [formGroup]="createStaffForm" (ngSubmit)="createStaffUser()" novalidate>
+    <div class="panel-form-grid">
+      <div class="is-full-width">
+        <label class="form-label" for="staff-name">Nombre completo</label>
+        <input id="staff-name" class="form-control" formControlName="fullName" autocomplete="off"
+          [class.is-invalid]="hasCreateFieldError('fullName')" />
+        <div class="invalid-feedback">Mínimo 3 caracteres.</div>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="staff-email">Correo</label>
+        <input id="staff-email" type="email" class="form-control" formControlName="email" autocomplete="off"
+          [class.is-invalid]="hasCreateFieldError('email')" />
+        <div class="invalid-feedback">Correo no válido.</div>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="staff-password">Contraseña temporal</label>
+        <input id="staff-password" type="text" class="form-control" formControlName="temporaryPassword" autocomplete="new-password"
+          [class.is-invalid]="hasCreateFieldError('temporaryPassword')" />
+        <div class="form-text">Entrégala en persona; el trabajador puede cambiarla con "¿Olvidaste tu contraseña?".</div>
+        <div class="invalid-feedback">Mínimo 8 caracteres, con letras y números.</div>
+      </div>
+      <div>
+        <label class="form-label" for="staff-role">Rol</label>
+        <select id="staff-role" class="form-select" formControlName="role">
+          <option value="worker">Trabajador</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      @if (createStaffForm.controls.role.value === 'worker') {
+        <div>
+          <label class="form-label" for="staff-branch">Sucursal</label>
+          <select id="staff-branch" class="form-select" formControlName="branchId"
+            [class.is-invalid]="createStaffForm.touched && !createStaffForm.controls.branchId.value">
+            <option value="" disabled>Elige la botica</option>
+            @for (branch of branches(); track branch.id) {
+              <option [value]="branch.id">{{ branch.name }}</option>
+            }
+          </select>
+          <div class="invalid-feedback">El trabajador debe tener sucursal.</div>
+        </div>
+      }
+    </div>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialogs()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+        @if (isSaving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        Crear cuenta
+      </button>
+    </div>
+  </form>
+</app-dialog-panel>
+
+<app-dialog-panel
+  [dialogTitle]="'Acceso de ' + (editingUser()?.fullName || editingUser()?.email || '')"
+  [isOpen]="editingUser() !== null"
+  (closeRequested)="closeDialogs()"
+>
+  <form [formGroup]="accessForm" (ngSubmit)="updateUserAccess()" novalidate>
+    <div class="panel-form-grid">
+      <div>
+        <label class="form-label" for="access-role">Rol</label>
+        <select id="access-role" class="form-select" formControlName="role">
+          <option value="customer">Cliente</option>
+          <option value="worker">Trabajador</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+      @if (accessForm.controls.role.value === 'worker') {
+        <div>
+          <label class="form-label" for="access-branch">Sucursal</label>
+          <select id="access-branch" class="form-select" formControlName="branchId"
+            [class.is-invalid]="accessForm.touched && !accessForm.controls.branchId.value">
+            <option value="" disabled>Elige la botica</option>
+            @for (branch of branches(); track branch.id) {
+              <option [value]="branch.id">{{ branch.name }}</option>
+            }
+          </select>
+          <div class="invalid-feedback">El trabajador debe tener sucursal.</div>
+        </div>
+      }
+      <div class="is-full-width form-check form-switch">
+        <input id="access-disabled" class="form-check-input" type="checkbox" formControlName="isDisabled" />
+        <label class="form-check-label" for="access-disabled">Deshabilitar cuenta (no podrá iniciar sesión)</label>
+      </div>
+    </div>
+    <p class="form-text mt-3 mb-0">
+      <i class="fas fa-circle-info me-1" aria-hidden="true"></i>
+      Al guardar se cierra la sesión del usuario en todos sus dispositivos para aplicar el cambio.
+    </p>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialogs()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+        @if (isSaving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        Guardar
+      </button>
+    </div>
+  </form>
+</app-dialog-panel>

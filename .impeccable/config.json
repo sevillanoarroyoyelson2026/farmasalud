@@ -1,0 +1,71 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/admin/products/admin-products-page.html"
+        ],
+        "createdAt": "2026-11-15T21:12:52.087Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (imageUrl), so it is never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/public/catalog/catalog-page.html"
+        ],
+        "createdAt": "2026-11-15T21:15:31.026Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (imageUrl), so it is never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/public/product-detail/product-detail-page.html"
+        ],
+        "createdAt": "2026-11-15T21:15:31.500Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (imageUrl), so it is never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/public/cart/cart-page.html"
+        ],
+        "createdAt": "2026-11-15T22:07:57.612Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (url), never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/public/checkout/checkout-page.html"
+        ],
+        "createdAt": "2026-11-15T22:07:58.022Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (url), never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/public/customer-orders/customer-order-detail-page.html"
+        ],
+        "createdAt": "2026-11-15T22:07:58.434Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (url), never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/staff-orders/staff-order-board-page.html"
+        ],
+        "createdAt": "2026-11-15T22:07:58.844Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (url), never empty"
+      }
+    ]
+  }
+}

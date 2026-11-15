@@ -1,0 +1,126 @@
+<section class="container-xl order-detail-page">
+  <a routerLink="/mis-pedidos" class="order-detail-back"><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Mis pedidos</a>
+
+  @if (isLoading()) {
+    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else if (order(); as currentOrder) {
+    <header class="order-detail-header">
+      <div>
+        <h1 class="order-detail-title">Pedido {{ currentOrder.orderNumber }}</h1>
+        <p class="text-secondary mb-0">
+          {{ currentOrder.createdAt ? (currentOrder.createdAt | date: "dd/MM/yyyy 'a las' HH:mm") : '' }} · {{ currentOrder.branchName }}
+        </p>
+      </div>
+      <span [class]="'status-badge ' + statusTone[currentOrder.status]">{{ statusLabel[currentOrder.status] }}</span>
+    </header>
+
+    @if (currentOrder.status === 'cancelled') {
+      <div class="alert alert-danger" role="status">
+        <strong>Pedido cancelado.</strong>
+        @if (currentOrder.prescriptionReviewStatus === 'rejected') {
+          La receta no fue aprobada: {{ currentOrder.prescriptionReviewNote }}
+        } @else {
+          {{ currentOrder.statusHistory[currentOrder.statusHistory.length - 1]?.note }}
+        }
+        @if (currentOrder.paymentStatus === 'refunded') {
+          <br />Se registró la devolución del pago (simulada).
+        }
+      </div>
+    } @else {
+      <ol class="order-tracking surface-card" aria-label="Seguimiento del pedido">
+        @for (trackingStep of trackingSteps(); track trackingStep.status) {
+          <li class="order-tracking-step" [class.is-completed]="trackingStep.isCompleted" [class.is-current]="trackingStep.isCurrent"
+            [attr.aria-current]="trackingStep.isCurrent ? 'step' : null">
+            <span class="order-tracking-dot" aria-hidden="true">
+              @if (trackingStep.isCompleted) {
+                <i class="fas fa-check"></i>
+              }
+            </span>
+            <span class="order-tracking-label">{{ trackingStep.label }}</span>
+          </li>
+        }
+      </ol>
+      @if (currentOrder.status === 'out_for_delivery' && currentOrder.courierName) {
+        <p class="order-detail-courier"><i class="fas fa-motorcycle me-2" aria-hidden="true"></i>Tu pedido va con {{ currentOrder.courierName }}.</p>
+      }
+    }
+
+    <div class="order-detail-grid">
+      <div class="surface-card order-detail-card">
+        <h2 class="h6">Productos</h2>
+        <ul class="order-detail-items">
+          @for (orderItem of currentOrder.items; track orderItem.productId) {
+            <li>
+              <span>
+                {{ orderItem.quantity }} × {{ orderItem.productName }}
+                <span class="panel-table-secondary">{{ orderItem.presentation }}</span>
+              </span>
+              <span>{{ orderItem.subtotal | currency: 'PEN' : 'S/ ' }}</span>
+            </li>
+          }
+        </ul>
+        <dl class="order-detail-totals">
+          <div><dt>Productos</dt><dd>{{ currentOrder.itemsTotal | currency: 'PEN' : 'S/ ' }}</dd></div>
+          <div><dt>Delivery</dt><dd>{{ currentOrder.deliveryFee | currency: 'PEN' : 'S/ ' }}</dd></div>
+          <div class="is-total"><dt>Total</dt><dd>{{ currentOrder.orderTotal | currency: 'PEN' : 'S/ ' }}</dd></div>
+        </dl>
+      </div>
+
+      <div class="surface-card order-detail-card">
+        <h2 class="h6">Entrega</h2>
+        @if (currentOrder.fulfillmentType === 'delivery' && currentOrder.deliveryAddress) {
+          <p class="mb-2"><i class="fas fa-motorcycle me-2" aria-hidden="true"></i>{{ currentOrder.deliveryAddress.street }}, {{ currentOrder.deliveryAddress.district }}
+            @if (currentOrder.deliveryAddress.reference) {
+              <span class="panel-table-secondary">Ref.: {{ currentOrder.deliveryAddress.reference }}</span>
+            }
+          </p>
+        } @else {
+          <p class="mb-2"><i class="fas fa-store me-2" aria-hidden="true"></i>Recojo en {{ currentOrder.branchName }}</p>
+        }
+        <p class="mb-3"><i class="fas fa-phone me-2" aria-hidden="true"></i>{{ currentOrder.contactPhone }}</p>
+
+        <h2 class="h6">Pago</h2>
+        <p class="mb-3">
+          {{ paymentMethodLabel[currentOrder.paymentMethod] }} · <strong>{{ paymentStatusLabel[currentOrder.paymentStatus] }}</strong>
+          @if (currentOrder.paymentReference) {
+            <span class="panel-table-secondary">Operación {{ currentOrder.paymentReference }}</span>
+          }
+        </p>
+
+        @if (currentOrder.hasPrescription) {
+          <h2 class="h6">Receta</h2>
+          <p class="mb-1">
+            Estado:
+            <strong>{{ currentOrder.prescriptionReviewStatus === 'approved' ? 'Aprobada' : currentOrder.prescriptionReviewStatus === 'rejected' ? 'Rechazada' : 'En revisión' }}</strong>
+          </p>
+          @if (prescriptionUrl()) {
+            <img class="order-detail-prescription" [src]="prescriptionUrl()" alt="Receta médica adjunta" />
+          } @else {
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="showPrescription()">Ver receta enviada</button>
+          }
+        }
+      </div>
+    </div>
+
+    @if (actionErrorMessage()) {
+      <div class="alert alert-danger mt-3" role="alert">{{ actionErrorMessage() }}</div>
+    }
+
+    @if (canCancelOrder()) {
+      <div class="order-detail-cancel">
+        @if (isConfirmingCancellation()) {
+          <span>¿Seguro que quieres cancelar? Se devolverá tu pago.</span>
+          <button type="button" class="btn btn-danger btn-sm" [disabled]="isCancelling()" (click)="cancelOrder()">Sí, cancelar</button>
+          <button type="button" class="btn btn-light btn-sm" (click)="isConfirmingCancellation.set(false)">No</button>
+        } @else {
+          <button type="button" class="btn btn-outline-danger btn-sm" (click)="isConfirmingCancellation.set(true)">Cancelar pedido</button>
+        }
+      </div>
+    }
+  } @else {
+    <div class="panel-empty-state surface-card">
+      <i class="fas fa-receipt" aria-hidden="true"></i>
+      <p class="mb-0">No encontramos este pedido.</p>
+    </div>
+  }
+</section>

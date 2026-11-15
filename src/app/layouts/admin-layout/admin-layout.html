@@ -1,0 +1,18 @@
+<app-panel-shell
+  panelTitle="Panel de administración"
+  [navigationSections]="navigationSections"
+  [mobileQuickLinks]="mobileQuickLinks"
+>
+  <label class="branch-picker" panelHeaderControls>
+    <i class="fas fa-store" aria-hidden="true"></i>
+    <span class="visually-hidden">Sucursal</span>
+    <select class="form-select form-select-sm" (change)="changeSelectedBranch($event)">
+      <option [value]="allBranchesOption" [selected]="branchSelection.selectedBranchId() === allBranchesOption">
+        Todas las sucursales
+      </option>
+      @for (branch of branchSelection.availableBranches(); track branch.id) {
+        <option [value]="branch.id" [selected]="branchSelection.selectedBranchId() === branch.id">{{ branch.name }}</option>
+      }
+    </select>
+  </label>
+</app-panel-shell>

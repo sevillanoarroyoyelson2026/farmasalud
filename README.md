@@ -1,59 +1,79 @@
-# Farmasalud
+# Farmasalud — E-commerce y gestión interna
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.30.
+Sistema web responsivo para **Farmasalud E.I.R.L.** (10 boticas en Trujillo): catálogo y venta en línea, inventario por lotes y sucursal, compras a proveedores y delivery. Basado en la arquitectura del POS *Alliker* (layouts por rol, login con Google, Netlify Functions + Firebase Admin), con mejoras de seguridad.
 
-## Development server
+| Rol | Ruta | Qué hace |
+|---|---|---|
+| Cliente | `/` | Catálogo, carrito, pago, receta, seguimiento |
+| Trabajador | `/trabajador` | Cola de pedidos, recetas, despacho, recepción de mercadería |
+| Administrador | `/admin` | Catálogo, stock, proveedores, compras, usuarios, reportes |
 
-To start a local development server, run:
+## Stack
+Angular 21 (standalone + signals) · Bootstrap 5 · Firebase 13 (Auth + Firestore + App Check) · Netlify Functions (Firebase Admin 14, zod 4) · Culqi · Cloudinary.
 
-```bash
-ng serve
+## Estructura
+```
+src/app/
+  core/       auth (sesión, roles), guards, firebase, http, logger
+  layouts/    public-layout · admin-layout · worker-layout
+  features/   public/ · admin/ · worker/   (una carpeta por pantalla)
+  shared/     ui (panel-shell, …), data-access (repositorios), models, validators
+netlify/
+  functions/  un archivo = un endpoint /api/<nombre>
+  lib/        código compartido del servidor (auth, validación, rate limit, auditoría)
+firestore.rules · tests/firestore-rules/ · scripts/
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Puesta en marcha (desarrollo con emuladores)
+Requisitos: Node 22+ y **Java 11+** (lo necesita el emulador de Firestore).
 
 ```bash
-ng generate component component-name
+npm install
+npm run emulators          # terminal 1: Auth + Firestore locales (UI en :4000)
+npm run seed:emulator      # crea 2 sucursales y usuarios de prueba (clave Farma2026)
+cp .env.example .env
+npm run dev:full           # terminal 2: netlify dev → app + functions en http://localhost:8888
 ```
+Usuarios de prueba: `admin@farmasalud.test`, `trabajador@farmasalud.test`, `cliente@farmasalud.test`.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Comandos
+| Comando | Uso |
+|---|---|
+| `npm test` | Pruebas unitarias (Vitest) |
+| `npm run test:rules` | Pruebas de reglas de Firestore en el emulador |
+| `npm run typecheck:functions` | Revisión de tipos de las functions |
+| `npm run build` | Build de producción |
+| `npm run audit:security` | `npm audit` de dependencias de producción |
 
-```bash
-ng generate --help
-```
+## Despliegue en Netlify
+Netlify → *Add new project* → *Import from GitHub* → este repositorio. El build (`npm run build`), la carpeta publicada y las functions ya están en `netlify.toml`.
 
-## Building
+Variables de entorno (Site configuration → Environment variables). Todas son **secretas** salvo `ALLOWED_ORIGIN` y `REQUIRE_APP_CHECK`:
 
-To build the project run:
+| Variable | Valor |
+|---|---|
+| `FIREBASE_SERVICE_ACCOUNT_KEY` | JSON de la cuenta de servicio de Firebase, en una sola línea |
+| `ALLOWED_ORIGIN` | URL pública del sitio, p. ej. `https://farmasalud.netlify.app` (sin `/` final) |
+| `REQUIRE_APP_CHECK` | `false` (cambiar a `true` cuando se configure reCAPTCHA v3 / App Check) |
+| `CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary |
+| `CLOUDINARY_API_KEY` | API key de Cloudinary |
+| `CLOUDINARY_API_SECRET` | API secret de Cloudinary |
 
-```bash
-ng build
-```
+**No** crear en Netlify `FIREBASE_AUTH_EMULATOR_HOST`, `FIRESTORE_EMULATOR_HOST` ni `FIREBASE_PROJECT_ID` (son solo para emuladores locales).
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Después del primer deploy: Firebase → Authentication → Configuración → **Dominios autorizados** → agregar el dominio de Netlify (sin esto el login con Google falla).
 
-## Running unit tests
+## Producción
+1. Crear proyecto Firebase: habilitar Auth (Google + correo), Firestore, **App Check con reCAPTCHA v3** y la *password policy* (mín. 8, letras y números).
+2. Poner la configuración web pública en `src/environments/environment.ts`.
+3. En Netlify, variables: `FIREBASE_SERVICE_ACCOUNT_KEY`, `ALLOWED_ORIGIN`, `REQUIRE_APP_CHECK=true` (y luego las de Culqi/Cloudinary).
+4. `firebase deploy --only firestore:rules,firestore:indexes`.
+5. Primer administrador: registrarse en la web y ejecutar
+   `GOOGLE_APPLICATION_CREDENTIALS=./service-account.json node scripts/promote-first-admin.mjs correo@...`
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Seguridad (resumen)
+- Rol y sucursal en **custom claims**; los asigna solo el servidor. La sesión nunca se guarda en localStorage.
+- Reglas de Firestore **cerradas por defecto**; stock y dinero solo se modifican desde functions.
+- Functions: verificación de ID token (con revocación), App Check, validación zod estricta, límite de peticiones, CORS restringido, errores genéricos y `audit_logs`.
+- Cabeceras CSP, HSTS, X-Frame-Options, etc. en `netlify.toml`.
+- Consentimiento de datos personales (Ley N.° 29733) registrado con versión de la política.

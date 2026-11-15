@@ -1,0 +1,156 @@
+rules_version = '2';
+
+// =============================================================================
+// FARMASALUD — Reglas de seguridad de Firestore
+// Principio: TODO está denegado salvo lo que se permite explícitamente aquí.
+// El rol y la sucursal se leen de los custom claims del token (los asigna solo
+// el servidor), así no hace falta un get() extra por cada petición.
+// Las operaciones con dinero o stock NO se hacen desde el navegador: las hacen
+// las Netlify Functions con Firebase Admin (que no pasa por estas reglas).
+// =============================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------- helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function callerRole() {
+      return isSignedIn() ? request.auth.token.get('role', '') : '';
+    }
+
+    function callerBranchId() {
+      return isSignedIn() ? request.auth.token.get('branchId', '') : '';
+    }
+
+    function isAdmin() {
+      return callerRole() == 'admin';
+    }
+
+    function isWorker() {
+      return callerRole() == 'worker';
+    }
+
+    function isStaffMember() {
+      return isAdmin() || isWorker();
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** El trabajador solo opera en su sucursal; el admin en todas. */
+    function canOperateInBranch(branchId) {
+      return isAdmin() || (isWorker() && callerBranchId() == branchId);
+    }
+
+    function changesOnlyFields(allowedFields) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedFields);
+    }
+
+    // ---------------------------------------------------------------- usuarios
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      // El perfil lo crea la function complete-customer-profile / admin-create-staff-user.
+      allow create, delete: if false;
+      // El cliente solo puede editar sus datos de contacto: nunca role, branchId ni isDisabled.
+      allow update: if isOwner(userId)
+        && changesOnlyFields(['fullName', 'phone', 'deliveryAddresses', 'updatedAt'])
+        && (!('fullName' in request.resource.data) || (request.resource.data.fullName is string && request.resource.data.fullName.size() <= 80))
+        && (!('phone' in request.resource.data) || request.resource.data.phone == null || request.resource.data.phone.matches('^9[0-9]{8}$'));
+    }
+
+    // ---------------------------------------------------------------- sucursales
+    function isShortText(value, minimumLength, maximumLength) {
+      return value is string && value.size() >= minimumLength && value.size() <= maximumLength;
+    }
+
+    function hasServerTimestamps(data) {
+      return data.updatedAt == request.time
+        && (resource == null
+          ? data.createdAt == request.time
+          : data.get('createdAt', null) == resource.data.get('createdAt', null));
+    }
+
+    function isValidBranch(data) {
+      return data.keys().hasOnly(['name', 'address', 'district', 'phone', 'isActive', 'offersDelivery', 'createdAt', 'updatedAt'])
+        && isShortText(data.name, 2, 80)
+        && isShortText(data.address, 0, 160)
+        && isShortText(data.district, 0, 60)
+        && isShortText(data.phone, 0, 20)
+        && data.isActive is bool
+        && data.offersDelivery is bool
+        && hasServerTimestamps(data);
+    }
+
+    function isValidCategory(data) {
+      return data.keys().hasOnly(['name', 'description', 'isActive', 'createdAt', 'updatedAt'])
+        && isShortText(data.name, 2, 60)
+        && isShortText(data.description, 0, 200)
+        && data.isActive is bool
+        && hasServerTimestamps(data);
+    }
+
+    // Sin borrado: los pedidos y el personal referencian sucursales y categorías;
+    // se desactivan con isActive = false.
+    match /branches/{branchId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidBranch(request.resource.data);
+      allow delete: if false;
+    }
+
+    // ---------------------------------------------------------------- catálogo
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isValidCategory(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /products/{productId} {
+      // El público solo ve productos activos (las consultas deben filtrar isActive == true).
+      allow read: if resource.data.isActive == true || isStaffMember();
+      // Se escriben solo con la function admin-save-product (valida, protege el stock y audita precios).
+      allow write: if false;
+
+      // Lotes por sucursal: solo personal de esa sucursal los lee. Nadie los escribe
+      // desde el navegador: ventas, recepciones y ajustes pasan por las functions.
+      match /lots/{lotId} {
+        allow read: if isStaffMember() && canOperateInBranch(resource.data.branchId);
+        allow write: if false;
+      }
+    }
+
+    // ---------------------------------------------------------------- inventario
+    match /stock_movements/{movementId} {
+      allow read: if isStaffMember() && canOperateInBranch(resource.data.branchId);
+      allow write: if false;
+    }
+
+    // ---------------------------------------------------------------- pedidos
+    // El cliente lee solo los suyos (la consulta debe filtrar customerUid == su uid);
+    // el personal, los de su sucursal. Crear y cambiar estado: solo functions
+    // (create-order, update-order-status), que recalculan precios y mueven stock.
+    match /orders/{orderId} {
+      allow read: if (isSignedIn() && resource.data.customerUid == request.auth.uid)
+        || (isStaffMember() && canOperateInBranch(resource.data.branchId));
+      allow write: if false;
+    }
+
+    // Correlativos (número de pedido, de orden de compra): solo el servidor.
+    match /counters/{counterId} {
+      allow read, write: if false;
+    }
+
+    // ---------------------------------------------------------------- auditoría
+    match /audit_logs/{auditLogId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    // Contadores internos del limitador de peticiones: solo el servidor.
+    match /rate_limits/{rateLimitId} {
+      allow read, write: if false;
+    }
+  }
+}

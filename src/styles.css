@@ -1,1 +1,295 @@
-/* You can add global styles to this file, and also import other style files */
+/* ==========================================================
+   FARMASALUD — Estilos globales y tokens de diseño
+   Paleta salud: verde azulado (confianza) + verde fresco (bienestar)
+   ========================================================== */
+:root {
+  --color-primary: #0f766e;
+  --color-primary-hover: #115e59;
+  --color-primary-soft: #ccfbf1;
+  --color-accent: #16a34a;
+  --color-accent-soft: #dcfce7;
+  --color-warning: #d97706;
+  --color-warning-soft: #fef3c7;
+  --color-danger: #dc2626;
+  --color-danger-soft: #fee2e2;
+  --color-info: #0369a1;
+  --color-info-soft: #e0f2fe;
+
+  --color-text: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94a3b8;
+  --color-border: #e2e8f0;
+  --color-surface: #ffffff;
+  --color-background: #f6faf9;
+
+  --color-sidebar: #0b1f1d;
+  --color-sidebar-text: #a7c4c0;
+  --color-sidebar-active: #5eead4;
+
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', var(--font-body);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
+  --shadow-raised: 0 12px 32px rgba(15, 23, 42, 0.12);
+  --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Bootstrap hereda la paleta */
+  --bs-primary: var(--color-primary);
+  --bs-primary-rgb: 15, 118, 110;
+  --bs-success: var(--color-accent);
+  --bs-success-rgb: 22, 163, 74;
+  --bs-body-font-family: var(--font-body);
+  --bs-body-color: var(--color-text);
+  --bs-body-bg: var(--color-background);
+  --bs-link-color: var(--color-primary);
+  --bs-link-color-rgb: 15, 118, 110;
+  --bs-link-hover-color: var(--color-primary-hover);
+  --bs-border-radius: var(--radius-sm);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(15, 118, 110, 0.45);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--color-primary-soft);
+}
+
+/* -- Botones -- */
+.btn {
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary-hover);
+  --bs-btn-hover-border-color: var(--color-primary-hover);
+  --bs-btn-active-bg: var(--color-primary-hover);
+  --bs-btn-active-border-color: var(--color-primary-hover);
+  --bs-btn-disabled-bg: var(--color-primary);
+  --bs-btn-disabled-border-color: var(--color-primary);
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--color-primary);
+  --bs-btn-border-color: var(--color-primary);
+  --bs-btn-hover-bg: var(--color-primary);
+  --bs-btn-hover-border-color: var(--color-primary);
+  --bs-btn-active-bg: var(--color-primary-hover);
+}
+
+.form-control,
+.form-select {
+  border-radius: var(--radius-sm);
+  border-color: var(--color-border);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.15);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* -- Tarjetas de contenido reutilizables -- */
+.surface-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.page-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* -- Pantallas de gestión del panel (listado + filtros + tabla) -- */
+.panel-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.panel-page-header .page-subtitle {
+  margin-bottom: 0;
+}
+
+.panel-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.panel-toolbar .panel-search {
+  flex: 1 1 240px;
+  max-width: 420px;
+}
+
+.panel-table-card {
+  overflow: hidden;
+}
+
+.panel-table {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.panel-table th {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+  background: var(--color-background);
+  white-space: nowrap;
+}
+
+.panel-table td,
+.panel-table th {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+.panel-table-secondary {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.panel-table-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.panel-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.panel-empty-state > i {
+  font-size: 2rem;
+  color: var(--color-text-muted);
+}
+
+.panel-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1rem;
+}
+
+.panel-form-grid .is-full-width {
+  grid-column: 1 / -1;
+}
+
+.panel-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 576px) {
+  .panel-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -- Etiquetas de estado -- */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.is-success {
+  background: var(--color-accent-soft);
+  color: #166534;
+}
+
+.status-badge.is-warning {
+  background: var(--color-warning-soft);
+  color: #92400e;
+}
+
+.status-badge.is-danger {
+  background: var(--color-danger-soft);
+  color: #991b1b;
+}
+
+.status-badge.is-info {
+  background: var(--color-info-soft);
+  color: #075985;
+}
+
+.status-badge.is-neutral {
+  background: #f1f5f9;
+  color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

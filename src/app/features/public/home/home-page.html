@@ -1,0 +1,53 @@
+<section class="home-hero">
+  <div class="container-xl home-hero-grid">
+    <div>
+      <span class="home-hero-tag"><i class="fas fa-location-dot me-2" aria-hidden="true"></i>10 boticas en Trujillo</span>
+      <h1 class="home-hero-title">Tus medicamentos, con stock real y <span>delivery a tu puerta</span></h1>
+      <p class="home-hero-text">
+        Compra en Farmasalud desde cualquier dispositivo: revisa la disponibilidad en tu botica, sube tu receta y recibe
+        tu pedido sin hacer colas.
+      </p>
+      <div class="home-hero-actions">
+        <a class="btn btn-primary btn-lg" routerLink="/catalogo"><i class="fas fa-magnifying-glass me-2" aria-hidden="true"></i>Ver catálogo</a>
+        <a class="btn btn-outline-primary btn-lg" routerLink="/registro">Crear cuenta</a>
+      </div>
+    </div>
+    <div class="home-hero-visual" aria-hidden="true">
+      <div class="home-hero-card">
+        <i class="fas fa-capsules"></i>
+        <div>
+          <p class="home-hero-card-title">Paracetamol 500 mg</p>
+          <p class="home-hero-card-stock"><span class="home-stock-dot"></span>Disponible en Botica El Bosque</p>
+        </div>
+      </div>
+      <div class="home-hero-card is-offset">
+        <i class="fas fa-file-circle-check"></i>
+        <div>
+          <p class="home-hero-card-title">Receta validada</p>
+          <p class="home-hero-card-stock">Tu pedido pasó a preparación</p>
+        </div>
+      </div>
+      <div class="home-hero-card">
+        <i class="fas fa-motorcycle"></i>
+        <div>
+          <p class="home-hero-card-title">Pedido en camino</p>
+          <p class="home-hero-card-stock">Llega en aproximadamente 35 minutos</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container-xl home-steps">
+  <h2 class="home-section-title">Así de simple es comprar</h2>
+  <ol class="home-steps-grid">
+    @for (purchaseStep of purchaseSteps; track purchaseStep.title; let stepIndex = $index) {
+      <li class="home-step surface-card">
+        <span class="home-step-number">{{ stepIndex + 1 }}</span>
+        <i [class]="purchaseStep.iconClass" class="home-step-icon" aria-hidden="true"></i>
+        <h3 class="home-step-title">{{ purchaseStep.title }}</h3>
+        <p class="home-step-text">{{ purchaseStep.description }}</p>
+      </li>
+    }
+  </ol>
+</section>

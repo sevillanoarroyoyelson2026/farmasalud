@@ -1,0 +1,66 @@
+# -----------------------------------------------------------------------------
+# Farmasalud en Netlify: Angular (estático) + Netlify Functions (API en /api/*).
+# Variables de entorno: se configuran en Netlify (Site configuration → Environment
+# variables), NUNCA aquí. Lista completa en README.md → "Despliegue en Netlify".
+# -----------------------------------------------------------------------------
+[build]
+  command = "npm run build"
+  publish = "dist/farmasalud/browser"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[dev]
+  framework = "#custom"
+  command = "npm start"
+  targetPort = 4200
+  port = 8888
+  autoLaunch = false
+
+# API: /api/<function> → Netlify Function. DEBE ir antes del fallback del SPA.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Fallback del SPA de Angular.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# -----------------------------------------------------------------------------
+# Cabeceras de seguridad (OWASP Secure Headers)
+# CSP: solo se permiten los dominios que la app realmente usa
+# (Firebase/Google, reCAPTCHA de App Check, Culqi, Cloudinary, Google Fonts).
+# -----------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(), geolocation=(self), payment=(self)"
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://apis.google.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ https://checkout.culqi.com https://js.culqi.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com; connect-src 'self' https://*.googleapis.com https://firebaseappcheck.googleapis.com https://api.cloudinary.com https://*.culqi.com https://www.google.com; frame-src https://*.firebaseapp.com https://www.google.com https://recaptcha.google.com https://checkout.culqi.com https://*.culqi.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+
+# Los archivos con hash del build se pueden cachear un año; index.html nunca.
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"

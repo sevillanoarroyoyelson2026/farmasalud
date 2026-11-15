@@ -1,0 +1,99 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Categorías</h2>
+      <p class="page-subtitle">Organizan el catálogo y los filtros de la tienda.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openNewCategoryDialog()">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i> Nueva categoría
+    </button>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (categories().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-tags" aria-hidden="true"></i>
+        <p class="mb-0">Aún no hay categorías. Ejemplos: Analgésicos, Antibióticos, Cuidado personal.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Categoría</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (category of categories(); track category.id) {
+              <tr>
+                <td>
+                  <strong>{{ category.name }}</strong>
+                  <span class="panel-table-secondary">{{ category.description || 'Sin descripción' }}</span>
+                </td>
+                <td>
+                  <span class="status-badge" [class.is-success]="category.isActive" [class.is-neutral]="!category.isActive">
+                    {{ category.isActive ? 'Visible' : 'Oculta' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditCategoryDialog(category)">
+                      <i class="fas fa-pen me-1" aria-hidden="true"></i>Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel
+  [dialogTitle]="editingCategoryId() ? 'Editar categoría' : 'Nueva categoría'"
+  [isOpen]="isDialogOpen()"
+  (closeRequested)="closeDialog()"
+>
+  <form [formGroup]="categoryForm" (ngSubmit)="saveCategory()" novalidate>
+    <div class="panel-form-grid">
+      <div class="is-full-width">
+        <label class="form-label" for="category-name">Nombre</label>
+        <input id="category-name" class="form-control" formControlName="name" placeholder="Analgésicos"
+          [class.is-invalid]="hasFieldError('name')" />
+        <div class="invalid-feedback">Escribe el nombre (mínimo 2 caracteres).</div>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="category-description">Descripción (opcional)</label>
+        <textarea id="category-description" class="form-control" rows="2" formControlName="description"
+          [class.is-invalid]="hasFieldError('description')"></textarea>
+        <div class="invalid-feedback">Máximo 200 caracteres.</div>
+      </div>
+      <div class="form-check form-switch">
+        <input id="category-active" class="form-check-input" type="checkbox" formControlName="isActive" />
+        <label class="form-check-label" for="category-active">Visible en la tienda</label>
+      </div>
+    </div>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialog()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+        @if (isSaving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        Guardar
+      </button>
+    </div>
+  </form>
+</app-dialog-panel>

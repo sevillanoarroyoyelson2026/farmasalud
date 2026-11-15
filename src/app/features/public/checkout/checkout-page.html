@@ -1,0 +1,179 @@
+<section class="container-xl checkout-page">
+  <a routerLink="/carrito" class="checkout-back"><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Volver al carrito</a>
+  <h1 class="checkout-title">Finalizar compra</h1>
+
+  @if (!isEmailVerified()) {
+    <div class="alert alert-warning" role="alert">
+      <i class="fas fa-envelope-circle-check me-2" aria-hidden="true"></i>
+      Verifica tu correo para poder comprar (revisa tu bandeja y usa "Ya lo verifiqué" en el aviso de arriba).
+    </div>
+  }
+
+  @if (cartDetails.isLoading()) {
+    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else {
+    <form class="checkout-layout" [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" novalidate>
+      <div class="checkout-steps">
+        <fieldset class="checkout-step surface-card">
+          <legend class="checkout-step-title"><span>1</span>Entrega</legend>
+          <div class="checkout-options">
+            <label class="checkout-option" [class.is-selected]="selectedFulfillmentType() === 'delivery'" [class.is-disabled]="!canSelectedBranchDeliver()">
+              <input type="radio" formControlName="fulfillmentType" value="delivery" [attr.disabled]="canSelectedBranchDeliver() ? null : true" />
+              <i class="fas fa-motorcycle" aria-hidden="true"></i>
+              <span><strong>Delivery</strong><small>S/ 6.00 · {{ canSelectedBranchDeliver() ? 'a tu dirección' : 'no disponible en esta botica' }}</small></span>
+            </label>
+            <label class="checkout-option" [class.is-selected]="selectedFulfillmentType() === 'pickup'">
+              <input type="radio" formControlName="fulfillmentType" value="pickup" />
+              <i class="fas fa-store" aria-hidden="true"></i>
+              <span><strong>Recojo en botica</strong><small>Gratis · {{ cartDetails.selectedBranch()?.name }}</small></span>
+            </label>
+          </div>
+
+          @if (selectedFulfillmentType() === 'delivery') {
+            <div class="panel-form-grid mt-3">
+              <div class="is-full-width">
+                <label class="form-label" for="checkout-street">Dirección</label>
+                <input id="checkout-street" class="form-control" formControlName="street" autocomplete="street-address"
+                  placeholder="Av. España 1234, dpto. 201" [class.is-invalid]="hasFieldError('street')" />
+                <div class="invalid-feedback">Escribe la dirección completa.</div>
+              </div>
+              <div>
+                <label class="form-label" for="checkout-district">Distrito</label>
+                <input id="checkout-district" class="form-control" formControlName="district" placeholder="Trujillo"
+                  [class.is-invalid]="hasFieldError('district')" />
+                <div class="invalid-feedback">Indica el distrito.</div>
+              </div>
+              <div>
+                <label class="form-label" for="checkout-reference">Referencia (opcional)</label>
+                <input id="checkout-reference" class="form-control" formControlName="addressReference" placeholder="Frente al parque" />
+              </div>
+            </div>
+          } @else {
+            <p class="checkout-pickup-note">
+              <i class="fas fa-location-dot me-2" aria-hidden="true"></i>
+              Recoge en <strong>{{ cartDetails.selectedBranch()?.name }}</strong>: {{ cartDetails.selectedBranch()?.address }},
+              {{ cartDetails.selectedBranch()?.district }}. Te avisaremos cuando esté listo.
+            </p>
+          }
+
+          <div class="panel-form-grid mt-3">
+            <div>
+              <label class="form-label" for="checkout-phone">Celular de contacto</label>
+              <input id="checkout-phone" class="form-control" formControlName="contactPhone" inputmode="numeric" autocomplete="tel"
+                placeholder="987654321" [class.is-invalid]="hasFieldError('contactPhone')" />
+              <div class="invalid-feedback">9 dígitos, empieza con 9.</div>
+            </div>
+            <div>
+              <label class="form-label" for="checkout-note">Nota para la botica (opcional)</label>
+              <input id="checkout-note" class="form-control" formControlName="customerNote" maxlength="300" />
+            </div>
+          </div>
+        </fieldset>
+
+        @if (cartDetails.requiresPrescription()) {
+          <fieldset class="checkout-step surface-card">
+            <legend class="checkout-step-title"><span>2</span>Receta médica</legend>
+            <p class="text-secondary small">
+              Tu pedido incluye medicamentos que requieren receta. Sube una foto legible: un químico farmacéutico la
+              validará antes de preparar tu pedido. Solo la ven tú y el personal de la botica.
+            </p>
+            <label class="btn btn-outline-primary" for="checkout-prescription" [class.disabled]="isUploadingPrescription()">
+              @if (isUploadingPrescription()) {
+                <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Subiendo…
+              } @else {
+                <i class="fas fa-camera me-1" aria-hidden="true"></i>{{ uploadedPrescription() ? 'Cambiar foto' : 'Subir foto de la receta' }}
+              }
+            </label>
+            <input id="checkout-prescription" type="file" class="visually-hidden" accept="image/jpeg,image/png,image/webp"
+              (change)="uploadPrescription($event)" [disabled]="isUploadingPrescription()" />
+            @if (uploadedPrescription()) {
+              <p class="checkout-prescription-ok"><i class="fas fa-circle-check me-1" aria-hidden="true"></i>Receta adjunta: {{ uploadedPrescriptionName() }}</p>
+            }
+            <div class="form-text">JPG, PNG o WEBP, máximo 10 MB.</div>
+          </fieldset>
+        }
+
+        <fieldset class="checkout-step surface-card">
+          <legend class="checkout-step-title"><span>{{ cartDetails.requiresPrescription() ? 3 : 2 }}</span>Pago</legend>
+          <div class="checkout-options">
+            <label class="checkout-option" [class.is-selected]="selectedPaymentMethod() === 'simulated_card'">
+              <input type="radio" formControlName="paymentMethod" value="simulated_card" />
+              <i class="fas fa-credit-card" aria-hidden="true"></i>
+              <span><strong>Tarjeta</strong><small>Débito o crédito</small></span>
+            </label>
+            <label class="checkout-option" [class.is-selected]="selectedPaymentMethod() === 'cash_on_delivery'">
+              <input type="radio" formControlName="paymentMethod" value="cash_on_delivery" />
+              <i class="fas fa-money-bill-wave" aria-hidden="true"></i>
+              <span><strong>Pago al recibir</strong><small>Efectivo o POS</small></span>
+            </label>
+          </div>
+
+          @if (selectedPaymentMethod() === 'simulated_card') {
+            <div class="alert alert-info small mt-3 mb-0" role="note">
+              <i class="fas fa-flask me-1" aria-hidden="true"></i>
+              <strong>Pago simulado</strong> (proyecto académico): no se realiza ningún cobro. Puedes usar la tarjeta de
+              prueba <code>4111 1111 1111 1111</code>, cualquier fecha futura y CVV 123.
+            </div>
+            <div class="panel-form-grid mt-3">
+              <div class="is-full-width">
+                <label class="form-label" for="card-holder">Nombre en la tarjeta</label>
+                <input id="card-holder" class="form-control" formControlName="cardHolderName" autocomplete="cc-name"
+                  [class.is-invalid]="hasFieldError('cardHolderName')" />
+                <div class="invalid-feedback">Escribe el nombre del titular.</div>
+              </div>
+              <div class="is-full-width">
+                <label class="form-label" for="card-number">Número de tarjeta</label>
+                <input id="card-number" class="form-control" formControlName="cardNumber" inputmode="numeric" autocomplete="cc-number"
+                  placeholder="4111 1111 1111 1111" [class.is-invalid]="hasFieldError('cardNumber')" />
+                <div class="invalid-feedback">Número de tarjeta no válido.</div>
+              </div>
+              <div>
+                <label class="form-label" for="card-expiration">Vencimiento</label>
+                <input id="card-expiration" class="form-control" formControlName="cardExpiration" placeholder="MM/AA" autocomplete="cc-exp"
+                  [class.is-invalid]="hasFieldError('cardExpiration')" />
+                <div class="invalid-feedback">Formato MM/AA y fecha futura.</div>
+              </div>
+              <div>
+                <label class="form-label" for="card-cvv">CVV</label>
+                <input id="card-cvv" class="form-control" formControlName="cardSecurityCode" inputmode="numeric" autocomplete="cc-csc"
+                  [class.is-invalid]="hasFieldError('cardSecurityCode')" />
+                <div class="invalid-feedback">3 o 4 dígitos.</div>
+              </div>
+            </div>
+          }
+        </fieldset>
+      </div>
+
+      <aside class="checkout-summary surface-card">
+        <h2 class="h6">Tu pedido · {{ cartDetails.selectedBranch()?.name }}</h2>
+        <ul class="checkout-summary-items">
+          @for (lineDetail of cartDetails.cartLineDetails(); track lineDetail.product.id) {
+            <li>
+              <span>{{ lineDetail.quantity }} × {{ lineDetail.product.name }}</span>
+              <span>{{ lineDetail.subtotal | currency: 'PEN' : 'S/ ' }}</span>
+            </li>
+          }
+        </ul>
+        <dl>
+          <div><dt>Productos</dt><dd>{{ cartDetails.itemsTotal() | currency: 'PEN' : 'S/ ' }}</dd></div>
+          <div><dt>Delivery</dt><dd>{{ deliveryFee() | currency: 'PEN' : 'S/ ' }}</dd></div>
+          <div class="checkout-summary-total"><dt>Total</dt><dd>{{ orderTotal() | currency: 'PEN' : 'S/ ' }}</dd></div>
+        </dl>
+
+        @if (checkoutErrorMessage()) {
+          <div class="alert alert-danger small" role="alert">{{ checkoutErrorMessage() }}</div>
+        }
+
+        <button type="submit" class="btn btn-primary btn-lg w-100"
+          [disabled]="isPlacingOrder() || isUploadingPrescription() || !isEmailVerified() || cartDetails.hasStockProblems()">
+          @if (isPlacingOrder()) {
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Procesando…
+          } @else {
+            {{ selectedPaymentMethod() === 'simulated_card' ? 'Pagar' : 'Confirmar pedido' }} {{ orderTotal() | currency: 'PEN' : 'S/ ' }}
+          }
+        </button>
+        <p class="form-text mt-2 mb-0">El precio final lo confirma el sistema al registrar el pedido.</p>
+      </aside>
+    </form>
+  }
+</section>

@@ -1,0 +1,52 @@
+.dashboard-indicator-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-indicator {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.dashboard-indicator-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.dashboard-indicator-label {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.dashboard-indicator-value {
+  margin: 0.15rem 0;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.dashboard-indicator-source {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.dashboard-next-steps {
+  padding: 1.25rem 1.5rem;
+}
+
+.dashboard-next-steps li {
+  margin-bottom: 0.35rem;
+  color: var(--color-text-secondary);
+}

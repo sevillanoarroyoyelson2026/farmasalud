@@ -1,0 +1,111 @@
+<section class="container-xl product-detail-page">
+  <a routerLink="/catalogo" class="product-detail-back"><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Volver al catálogo</a>
+
+  @if (isLoading()) {
+    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else if (product(); as loadedProduct) {
+    <article class="product-detail-grid">
+      <div class="product-detail-image surface-card">
+        @if (loadedProduct.imageUrl) {
+          <img [src]="loadedProduct.imageUrl" [alt]="loadedProduct.name" />
+        } @else {
+          <i class="fas fa-capsules" aria-hidden="true"></i>
+        }
+      </div>
+
+      <div class="product-detail-info">
+        @if (categoryName()) {
+          <a class="product-detail-category" routerLink="/catalogo" [queryParams]="{ categoria: loadedProduct.categoryId }">
+            {{ categoryName() }}
+          </a>
+        }
+        <h1 class="product-detail-name">{{ loadedProduct.name }}</h1>
+        <p class="product-detail-presentation">{{ loadedProduct.presentation }}</p>
+
+        <dl class="product-detail-facts">
+          @if (loadedProduct.genericName) {
+            <div><dt>Principio activo</dt><dd>{{ loadedProduct.genericName }}</dd></div>
+          }
+          @if (loadedProduct.laboratory) {
+            <div><dt>Laboratorio</dt><dd>{{ loadedProduct.laboratory }}</dd></div>
+          }
+        </dl>
+
+        <p class="product-detail-price">{{ loadedProduct.price | currency: 'PEN' : 'S/ ' }}</p>
+
+        @if (selectedBranchAvailability(); as availability) {
+          <span class="status-badge"
+            [class.is-success]="availability.stockStatus === 'available'"
+            [class.is-warning]="availability.stockStatus === 'low_stock'"
+            [class.is-neutral]="availability.stockStatus === 'out_of_stock'">
+            {{ availability.availabilityLabel }}
+          </span>
+        }
+
+        @if (loadedProduct.requiresPrescription) {
+          <div class="product-detail-prescription" role="note">
+            <i class="fas fa-file-prescription" aria-hidden="true"></i>
+            <span>Este medicamento <strong>requiere receta médica</strong>. Podrás subirla al hacer tu pedido y un químico farmacéutico la validará antes del despacho.</span>
+          </div>
+        }
+
+        @if (!isStaffMember()) {
+          <div class="product-detail-purchase">
+            <div class="product-detail-quantity" role="group" aria-label="Cantidad">
+              <button type="button" class="btn btn-light" aria-label="Quitar una unidad" [disabled]="selectedQuantity() <= 1"
+                (click)="changeSelectedQuantity(-1)"><i class="fas fa-minus" aria-hidden="true"></i></button>
+              <span aria-live="polite">{{ selectedQuantity() }}</span>
+              <button type="button" class="btn btn-light" aria-label="Agregar una unidad" [disabled]="selectedQuantity() >= maximumUnitsPerProduct"
+                (click)="changeSelectedQuantity(1)"><i class="fas fa-plus" aria-hidden="true"></i></button>
+            </div>
+            <button type="button" class="btn btn-primary btn-lg product-detail-buy" [disabled]="!canAddToCart()" (click)="addToCart()">
+              <i class="fas fa-cart-plus me-2" aria-hidden="true"></i>Agregar al carrito
+            </button>
+          </div>
+          @if (unitsInCart() > 0) {
+            <p class="product-detail-in-cart" role="status">
+              <i class="fas fa-circle-check me-1" aria-hidden="true"></i>Tienes {{ unitsInCart() }} en tu carrito ·
+              <a routerLink="/carrito">Ir al carrito</a>
+            </p>
+          }
+        }
+
+        @if (loadedProduct.description) {
+          <h2 class="product-detail-section-title">Descripción</h2>
+          <p class="product-detail-description">{{ loadedProduct.description }}</p>
+        }
+      </div>
+    </article>
+
+    <section class="product-detail-branches">
+      <h2 class="product-detail-section-title">Disponibilidad por botica</h2>
+      <ul class="product-detail-branch-list">
+        @for (branchAvailability of availabilityByBranch(); track branchAvailability.branch.id) {
+          <li class="surface-card" [class.is-selected]="branchSelection.selectedBranchId() === branchAvailability.branch.id">
+            <span>
+              <strong>{{ branchAvailability.branch.name }}</strong>
+              <span class="panel-table-secondary">{{ branchAvailability.branch.address }}, {{ branchAvailability.branch.district }}</span>
+            </span>
+            <span class="product-detail-branch-actions">
+              <span class="status-badge"
+                [class.is-success]="branchAvailability.stockStatus === 'available'"
+                [class.is-warning]="branchAvailability.stockStatus === 'low_stock'"
+                [class.is-neutral]="branchAvailability.stockStatus === 'out_of_stock'">
+                {{ branchStockLabel[branchAvailability.stockStatus] }}
+              </span>
+              @if (branchSelection.selectedBranchId() !== branchAvailability.branch.id) {
+                <button type="button" class="btn btn-sm btn-link" (click)="selectBranch(branchAvailability.branch.id)">Elegir</button>
+              }
+            </span>
+          </li>
+        }
+      </ul>
+    </section>
+  } @else {
+    <div class="panel-empty-state surface-card">
+      <i class="fas fa-box-open" aria-hidden="true"></i>
+      <p class="mb-0">Este producto no existe o ya no está a la venta.</p>
+      <a class="btn btn-primary btn-sm mt-2" routerLink="/catalogo">Ver catálogo</a>
+    </div>
+  }
+</section>

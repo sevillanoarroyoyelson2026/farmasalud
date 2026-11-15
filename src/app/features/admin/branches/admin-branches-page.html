@@ -1,0 +1,125 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Sucursales</h2>
+      <p class="page-subtitle">Boticas de Farmasalud. El stock, los trabajadores y los pedidos pertenecen a una sucursal.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openNewBranchDialog()">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i> Nueva sucursal
+    </button>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (branches().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-store" aria-hidden="true"></i>
+        <p class="mb-0">Aún no hay sucursales. Crea la primera.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Sucursal</th>
+              <th scope="col">Distrito</th>
+              <th scope="col">Teléfono</th>
+              <th scope="col">Delivery</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (branch of branches(); track branch.id) {
+              <tr>
+                <td>
+                  <strong>{{ branch.name }}</strong>
+                  <span class="panel-table-secondary">{{ branch.address }} · id: {{ branch.id }}</span>
+                </td>
+                <td>{{ branch.district }}</td>
+                <td>{{ branch.phone || '—' }}</td>
+                <td>
+                  <span class="status-badge" [class.is-info]="branch.offersDelivery" [class.is-neutral]="!branch.offersDelivery">
+                    {{ branch.offersDelivery ? 'Sí' : 'No' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status-badge" [class.is-success]="branch.isActive" [class.is-neutral]="!branch.isActive">
+                    {{ branch.isActive ? 'Activa' : 'Inactiva' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditBranchDialog(branch)">
+                      <i class="fas fa-pen me-1" aria-hidden="true"></i>Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel
+  [dialogTitle]="editingBranchId() ? 'Editar sucursal' : 'Nueva sucursal'"
+  [isOpen]="isDialogOpen()"
+  (closeRequested)="closeDialog()"
+>
+  <form [formGroup]="branchForm" (ngSubmit)="saveBranch()" novalidate>
+    <div class="panel-form-grid">
+      <div class="is-full-width">
+        <label class="form-label" for="branch-name">Nombre</label>
+        <input id="branch-name" class="form-control" formControlName="name" placeholder="Botica El Bosque"
+          [class.is-invalid]="hasFieldError('name')" />
+        @if (editingBranchId()) {
+          <div class="form-text">El identificador ({{ editingBranchId() }}) no cambia aunque edites el nombre.</div>
+        }
+        <div class="invalid-feedback">Escribe el nombre (mínimo 2 caracteres).</div>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="branch-address">Dirección</label>
+        <input id="branch-address" class="form-control" formControlName="address" [class.is-invalid]="hasFieldError('address')" />
+        <div class="invalid-feedback">La dirección es obligatoria.</div>
+      </div>
+      <div>
+        <label class="form-label" for="branch-district">Distrito</label>
+        <input id="branch-district" class="form-control" formControlName="district" [class.is-invalid]="hasFieldError('district')" />
+        <div class="invalid-feedback">El distrito es obligatorio.</div>
+      </div>
+      <div>
+        <label class="form-label" for="branch-phone">Teléfono</label>
+        <input id="branch-phone" class="form-control" formControlName="phone" inputmode="tel" [class.is-invalid]="hasFieldError('phone')" />
+        <div class="invalid-feedback">Solo números, espacios, + o -.</div>
+      </div>
+      <div class="form-check form-switch">
+        <input id="branch-delivery" class="form-check-input" type="checkbox" formControlName="offersDelivery" />
+        <label class="form-check-label" for="branch-delivery">Hace delivery</label>
+      </div>
+      <div class="form-check form-switch">
+        <input id="branch-active" class="form-check-input" type="checkbox" formControlName="isActive" />
+        <label class="form-check-label" for="branch-active">Sucursal activa</label>
+      </div>
+    </div>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialog()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving()">
+        @if (isSaving()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
+        Guardar
+      </button>
+    </div>
+  </form>
+</app-dialog-panel>
