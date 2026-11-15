@@ -2,7 +2,9 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, computed, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
+import { CustomerServiceRepository } from '../../../shared/data-access/customer-service.repository';
 import { OrderRepository } from '../../../shared/data-access/order.repository';
+import { OrderReview } from '../../../shared/models/customer-service';
 import {
   buildTrackingSteps,
   CUSTOMER_CANCELLABLE_STATUSES,
@@ -31,6 +33,7 @@ interface TrackingStepView {
 })
 export class CustomerOrderDetailPage implements OnInit {
   private readonly orderRepository = inject(OrderRepository);
+  private readonly customerServiceRepository = inject(CustomerServiceRepository);
   private readonly logger = inject(AppLoggerService);
   private readonly destroyReference = inject(DestroyRef);
 
@@ -68,12 +71,23 @@ export class CustomerOrderDetailPage implements OnInit {
     return currentOrder !== null && CUSTOMER_CANCELLABLE_STATUSES.includes(currentOrder.status);
   });
 
+  readonly ratingOptions = [1, 2, 3, 4, 5];
+  readonly existingReview = signal<OrderReview | null>(null);
+  readonly selectedRating = signal(0);
+  readonly reviewComment = signal('');
+  readonly isSavingReview = signal(false);
+  private hasRequestedReview = false;
+
   ngOnInit(): void {
     const stopWatchingOrder = this.orderRepository.watchOrder(
       this.orderId(),
       (watchedOrder) => {
         this.order.set(watchedOrder);
         this.isLoading.set(false);
+        if (watchedOrder?.status === 'delivered' && !this.hasRequestedReview) {
+          this.hasRequestedReview = true;
+          void this.loadExistingReview();
+        }
       },
       (error) => {
         this.logger.logError('CustomerOrderDetailPage.watchOrder', error);
@@ -89,6 +103,35 @@ export class CustomerOrderDetailPage implements OnInit {
     } catch (error) {
       this.actionErrorMessage.set(describeErrorForUser(error, 'No se pudo abrir la receta.'));
     }
+  }
+
+  async submitReview(): Promise<void> {
+    const currentOrder = this.order();
+    if (!currentOrder || this.selectedRating() < 1) {
+      this.actionErrorMessage.set('Elige de 1 a 5 estrellas.');
+      return;
+    }
+    this.isSavingReview.set(true);
+    this.actionErrorMessage.set('');
+    try {
+      await this.customerServiceRepository.createReview(
+        currentOrder.id,
+        currentOrder.branchId,
+        currentOrder.customerUid,
+        this.selectedRating(),
+        this.reviewComment().trim().slice(0, 500),
+      );
+      await this.loadExistingReview();
+    } catch (error) {
+      this.logger.logError('CustomerOrderDetailPage.submitReview', error);
+      this.actionErrorMessage.set(describeErrorForUser(error, 'No se pudo guardar tu calificación.'));
+    } finally {
+      this.isSavingReview.set(false);
+    }
+  }
+
+  private async loadExistingReview(): Promise<void> {
+    this.existingReview.set(await this.customerServiceRepository.findReviewOfOrder(this.orderId()));
   }
 
   async cancelOrder(): Promise<void> {

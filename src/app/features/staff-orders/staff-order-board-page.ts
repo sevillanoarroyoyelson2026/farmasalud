@@ -21,12 +21,14 @@ import { normalizeTextForSearch } from '../../shared/utils/text-normalization';
 import { describeErrorForUser } from '../../shared/utils/user-facing-error';
 
 /** Qué pedidos muestra cada pantalla (se configura en la ruta con `data.boardMode`). */
-export type OrderBoardMode = 'active' | 'prescriptions' | 'dispatch' | 'history';
+export type OrderBoardMode = 'active' | 'prescriptions' | 'dispatch' | 'deliveries' | 'history';
 
 interface OrderBoardConfiguration {
   pageTitle: string;
   pageDescription: string;
   visibleStatuses: OrderStatus[] | 'all';
+  /** Si se indica, solo muestra pedidos de ese tipo de entrega. */
+  onlyFulfillmentType?: Order['fulfillmentType'];
   emptyMessage: string;
 }
 
@@ -48,6 +50,13 @@ const ORDER_BOARD_CONFIGURATION: Record<OrderBoardMode, OrderBoardConfiguration>
     pageDescription: 'Arma los pedidos confirmados (despacha primero el lote indicado) y entrégalos.',
     visibleStatuses: ['confirmed', 'preparing', 'ready_for_pickup', 'out_for_delivery'],
     emptyMessage: 'No hay pedidos para preparar o despachar.',
+  },
+  deliveries: {
+    pageTitle: 'Delivery',
+    pageDescription: 'Pedidos a domicilio por preparar y en camino. Despacha asignando el repartidor y marca la entrega.',
+    visibleStatuses: ['confirmed', 'preparing', 'out_for_delivery'],
+    onlyFulfillmentType: 'delivery',
+    emptyMessage: 'No hay entregas a domicilio pendientes.',
   },
   history: {
     pageTitle: 'Pedidos',
@@ -99,11 +108,12 @@ export class StaffOrderBoardPage {
   readonly boardConfiguration = computed(() => ORDER_BOARD_CONFIGURATION[this.boardMode()]);
 
   readonly visibleOrders = computed(() => {
-    const visibleStatuses = this.boardConfiguration().visibleStatuses;
+    const { visibleStatuses, onlyFulfillmentType } = this.boardConfiguration();
     const normalizedSearch = normalizeTextForSearch(this.searchText());
     const filteredOrders = this.orders().filter(
       (order) =>
         (visibleStatuses === 'all' || visibleStatuses.includes(order.status)) &&
+        (!onlyFulfillmentType || order.fulfillmentType === onlyFulfillmentType) &&
         normalizeTextForSearch(`${order.orderNumber} ${order.customerName}`).includes(normalizedSearch),
     );
     // En las colas se atiende primero lo más antiguo; en el historial, lo más reciente arriba.

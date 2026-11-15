@@ -179,3 +179,46 @@
     flex: 1 1 100%;
   }
 }
+
+.home-promotions {
+  padding-top: 2.5rem;
+}
+
+.home-promotions-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.home-promotions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.home-promotion-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.1rem;
+  color: inherit;
+  text-decoration: none;
+  transition: box-shadow var(--transition-base);
+}
+
+.home-promotion-card:hover {
+  box-shadow: var(--shadow-raised);
+}
+
+.home-promotion-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.home-promotion-presentation {
+  font-size: 0.82rem;
+  color: var(--color-text-secondary);
+}

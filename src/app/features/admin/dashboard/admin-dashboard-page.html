@@ -1,26 +1,84 @@
 <section>
   <h2 class="page-title">Hola, {{ administratorName() }}</h2>
-  <p class="page-subtitle">Resumen de {{ selectedBranchName() }}</p>
+  <p class="page-subtitle">Indicadores de {{ selectedBranchName() }} · últimos {{ indicatorPeriodDays }} días</p>
 
-  <div class="dashboard-indicator-grid">
-    @for (indicator of dashboardIndicators; track indicator.label) {
-      <article class="dashboard-indicator surface-card">
-        <span class="dashboard-indicator-icon" aria-hidden="true"><i [class]="indicator.iconClass"></i></span>
-        <div>
-          <p class="dashboard-indicator-label">{{ indicator.label }}</p>
-          <p class="dashboard-indicator-value">Sin datos aún</p>
-          <p class="dashboard-indicator-source">{{ indicator.sourceIndicator }}</p>
-        </div>
-      </article>
-    }
+  @if (loadErrorMessage()) {
+    <div class="alert alert-warning" role="alert">{{ loadErrorMessage() }}</div>
+  }
+
+  <div class="dashboard-indicator-grid" [attr.aria-busy]="isLoading()">
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-receipt"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Ventas de hoy</p>
+        <p class="dashboard-indicator-value">{{ todaysSales() | currency: 'PEN' : 'S/ ' }}</p>
+        <p class="dashboard-indicator-source">{{ todaysOrders().length }} pedidos · {{ periodSales() | currency: 'PEN' : 'S/ ' }} en el período</p>
+      </div>
+    </article>
+
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-circle-check"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Pedidos atendidos correctamente</p>
+        <p class="dashboard-indicator-value">{{ correctFulfillmentRate() !== null ? (correctFulfillmentRate() | number: '1.0-1') + ' %' : 'Sin datos aún' }}</p>
+        <p class="dashboard-indicator-source">Entregados ÷ cerrados (sin cancelaciones del cliente)</p>
+      </div>
+    </article>
+
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-stopwatch"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Tiempo promedio de atención</p>
+        <p class="dashboard-indicator-value">{{ averageFulfillmentTime() ?? 'Sin datos aún' }}</p>
+        <p class="dashboard-indicator-source">Desde el pedido online hasta la entrega</p>
+      </div>
+    </article>
+
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon is-warning" aria-hidden="true"><i class="fas fa-triangle-exclamation"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Productos bajo el mínimo</p>
+        <p class="dashboard-indicator-value">{{ productsBelowMinimum().length }}</p>
+        <p class="dashboard-indicator-source"><a routerLink="/admin/stock">Ver stock</a> · <a routerLink="/admin/cotizaciones">Cotizar reposición</a></p>
+      </div>
+    </article>
+
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-star"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Satisfacción del cliente</p>
+        <p class="dashboard-indicator-value">{{ averageRating() !== null ? averageRating() + ' / 5' : 'Sin datos aún' }}</p>
+        <p class="dashboard-indicator-source">{{ ratings().length }} calificaciones de pedidos entregados</p>
+      </div>
+    </article>
+
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-list-check"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Pedidos en curso</p>
+        <p class="dashboard-indicator-value">{{ activeOrdersCount() }}</p>
+        <p class="dashboard-indicator-source">{{ pendingPrescriptionsCount() }} con receta por validar · <a routerLink="/admin/pedidos">Ver pedidos</a></p>
+      </div>
+    </article>
+
+    <article class="dashboard-indicator surface-card">
+      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-comment-medical"></i></span>
+      <div>
+        <p class="dashboard-indicator-label">Reclamos pendientes</p>
+        <p class="dashboard-indicator-value">{{ pendingClaimsCount() }}</p>
+        <p class="dashboard-indicator-source"><a routerLink="/admin/reclamos">Atender reclamos</a></p>
+      </div>
+    </article>
   </div>
 
-  <div class="dashboard-next-steps surface-card">
-    <h3 class="h6">Primeros pasos</h3>
-    <ol class="mb-0">
-      <li>Registra las sucursales y los usuarios trabajadores.</li>
-      <li>Crea las categorías y los productos del catálogo.</li>
-      <li>Carga los lotes iniciales de stock por sucursal.</li>
-    </ol>
-  </div>
+  @if (productsBelowMinimum().length > 0) {
+    <div class="surface-card dashboard-next-steps">
+      <h3 class="h6">Reponer pronto</h3>
+      <ul class="mb-0">
+        @for (product of productsBelowMinimum().slice(0, 6); track product.id) {
+          <li>{{ product.name }} <span class="text-muted">· mínimo {{ product.minimumStock }}</span></li>
+        }
+      </ul>
+    </div>
+  }
 </section>

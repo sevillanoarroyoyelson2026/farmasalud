@@ -17,6 +17,7 @@ import {
   rejectUnsupportedMethod,
 } from '../lib/http-response';
 import type { OrderStatus } from '../lib/order-workflow';
+import { calculateEffectiveUnitPrice, type StoredProductPromotion } from '../lib/product-pricing';
 import { enforceRateLimit } from '../lib/rate-limiter';
 import { authenticateCallerWithRole, parseRequestBody } from '../lib/request-guard';
 import {
@@ -131,7 +132,10 @@ function priceAndReserveOrderItems(
     if (!allocatedLots) {
       throw new HttpError(409, `No hay stock suficiente de "${productName}" en la botica elegida.`);
     }
-    const unitPrice = productSnapshot.get('price') as number;
+    const unitPrice = calculateEffectiveUnitPrice(
+      productSnapshot.get('price') as number,
+      productSnapshot.get('promotion') as StoredProductPromotion | null,
+    );
     return {
       productId: requestedItem.productId,
       productName,

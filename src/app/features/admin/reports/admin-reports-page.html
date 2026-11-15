@@ -1,0 +1,141 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Reportes</h2>
+      <p class="page-subtitle">{{ selectedBranchName() }} · últimos {{ selectedPeriodDays() }} días</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <div class="btn-group" role="group" aria-label="Período">
+        @for (periodDays of periodOptions; track periodDays) {
+          <button type="button" class="btn btn-sm" [class.btn-primary]="selectedPeriodDays() === periodDays"
+            [class.btn-outline-primary]="selectedPeriodDays() !== periodDays" [attr.aria-pressed]="selectedPeriodDays() === periodDays"
+            (click)="selectPeriod(periodDays)">{{ periodDays }} días</button>
+        }
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="periodOrders().length === 0" (click)="exportOrdersToCsv()">
+        <i class="fas fa-file-csv me-1" aria-hidden="true"></i>Exportar CSV
+      </button>
+    </div>
+  </div>
+
+  @if (loadErrorMessage()) {
+    <div class="alert alert-warning" role="alert">{{ loadErrorMessage() }}</div>
+  }
+
+  <div class="report-stat-row">
+    <div class="surface-card report-stat"><span>Ventas</span><strong>{{ periodSalesTotal() | currency: 'PEN' : 'S/ ' }}</strong></div>
+    <div class="surface-card report-stat"><span>Pedidos (sin cancelados)</span><strong>{{ nonCancelledOrdersCount() }}</strong></div>
+    <div class="surface-card report-stat"><span>Ticket promedio</span><strong>{{ averageTicket() | currency: 'PEN' : 'S/ ' }}</strong></div>
+  </div>
+
+  <article class="surface-card report-card">
+    <header class="report-card-header">
+      <h3 class="h6 mb-0">Ventas por día (S/)</h3>
+      <button type="button" class="btn btn-sm btn-link" (click)="isShowingSalesTable.set(!isShowingSalesTable())">
+        {{ isShowingSalesTable() ? 'Ver gráfico' : 'Ver como tabla' }}
+      </button>
+    </header>
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (isShowingSalesTable()) {
+      <div class="table-responsive report-table-scroll">
+        <table class="table panel-table">
+          <thead><tr><th scope="col">Día</th><th scope="col" class="text-end">Pedidos</th><th scope="col" class="text-end">Ventas</th></tr></thead>
+          <tbody>
+            @for (daySales of dailySales(); track daySales.date.getTime()) {
+              <tr><td>{{ daySales.date | date: 'EEE dd/MM' }}</td><td class="text-end">{{ daySales.orderCount }}</td>
+                <td class="text-end">{{ daySales.salesTotal | currency: 'PEN' : 'S/ ' }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="sales-chart" role="img" [attr.aria-label]="'Ventas diarias, máximo ' + maximumDailySales() + ' soles'">
+        <span class="sales-chart-max">{{ maximumDailySales() | currency: 'PEN' : 'S/ ' : '1.0-0' }}</span>
+        <div class="sales-chart-bars">
+          @for (daySales of dailySales(); track daySales.date.getTime()) {
+            <div class="sales-chart-slot" tabindex="0">
+              <div class="sales-chart-bar" [style.height.%]="calculateBarHeight(daySales)"></div>
+              <div class="sales-chart-tooltip" role="tooltip">
+                <strong>{{ daySales.date | date: 'EEE dd/MM' }}</strong><br />
+                {{ daySales.salesTotal | currency: 'PEN' : 'S/ ' }} · {{ daySales.orderCount }} pedidos
+              </div>
+            </div>
+          }
+        </div>
+        <div class="sales-chart-axis">
+          <span>{{ dailySales()[0]?.date | date: 'dd/MM' }}</span>
+          <span>Hoy</span>
+        </div>
+      </div>
+    }
+  </article>
+
+  <div class="report-grid">
+    <article class="surface-card report-card">
+      <h3 class="h6">Productos más vendidos (unidades)</h3>
+      @if (bestSellingProducts().length === 0) {
+        <p class="text-muted small mb-0">Sin ventas en el período.</p>
+      } @else {
+        <ol class="ranking-list">
+          @for (productSales of bestSellingProducts(); track productSales.productId) {
+            <li>
+              <span class="ranking-name">{{ productSales.productName }}</span>
+              <span class="ranking-track"><span class="ranking-bar" [style.width.%]="(productSales.unitsSold / maximumUnitsSold()) * 100"></span></span>
+              <span class="ranking-value">{{ productSales.unitsSold }} u · {{ productSales.revenue | currency: 'PEN' : 'S/ ' : '1.0-0' }}</span>
+            </li>
+          }
+        </ol>
+      }
+    </article>
+
+    <article class="surface-card report-card">
+      <h3 class="h6">Pedidos del período</h3>
+      <table class="table table-sm panel-table mb-3">
+        <tbody>
+          @for (group of ordersByStatus(); track group.groupName) {
+            <tr><td>{{ group.groupName }}</td><td class="text-end">{{ group.orderCount }}</td></tr>
+          }
+        </tbody>
+      </table>
+      <h4 class="report-subtitle">Medio de pago</h4>
+      @for (group of ordersByPaymentMethod(); track group.groupName) {
+        <p class="report-pair"><span>{{ group.groupName }}</span><strong>{{ group.orderCount }}</strong></p>
+      }
+      <h4 class="report-subtitle">Tipo de entrega</h4>
+      @for (group of ordersByFulfillment(); track group.groupName) {
+        <p class="report-pair"><span>{{ group.groupName }}</span><strong>{{ group.orderCount }}</strong></p>
+      }
+    </article>
+  </div>
+
+  <article class="surface-card report-card">
+    <header class="report-card-header">
+      <h3 class="h6 mb-0">Lotes por vencer (próximos 90 días)</h3>
+      <button type="button" class="btn btn-sm btn-outline-primary" [disabled]="isLoadingLots()" (click)="loadExpiringLots()">
+        @if (isLoadingLots()) { <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> }
+        Consultar
+      </button>
+    </header>
+    @if (expiringLots().length > 0) {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead><tr><th scope="col">Producto</th><th scope="col">Lote</th><th scope="col">Botica</th><th scope="col">Vence</th><th scope="col" class="text-end">Unidades</th></tr></thead>
+          <tbody>
+            @for (expiringLot of expiringLots(); track expiringLot.lot.id) {
+              <tr>
+                <td>{{ expiringLot.productName }}</td>
+                <td>{{ expiringLot.lot.lotNumber }}</td>
+                <td>{{ describeBranch(expiringLot.lot.branchId) }}</td>
+                <td>{{ expiringLot.lot.expirationDate | date: 'dd/MM/yyyy' }}</td>
+                <td class="text-end">{{ expiringLot.lot.quantityAvailable }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="text-muted small mb-0">Pulsa "Consultar" para revisar los vencimientos de la sucursal elegida.</p>
+    }
+  </article>
+</section>

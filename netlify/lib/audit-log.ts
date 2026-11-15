@@ -11,6 +11,8 @@ export type AuditAction =
   | 'stock.lot_registered'
   | 'product.created'
   | 'purchase_order.approved'
+  | 'purchase_order.cancelled'
+  | 'purchase_order.received'
   | 'prescription.validated'
   | 'order.cancelled'
   | 'product.price_changed';

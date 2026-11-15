@@ -137,6 +137,97 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // Reseñas: una por pedido (id = id del pedido), solo del dueño y solo si ya se entregó.
+    match /reviews/{orderId} {
+      function reviewedOrder() {
+        return get(/databases/$(database)/documents/orders/$(orderId)).data;
+      }
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.customerUid == request.auth.uid)
+        || (isWorker() && callerBranchId() == resource.data.branchId);
+      allow create: if isSignedIn()
+        && request.resource.data.keys().hasOnly(['orderId', 'customerUid', 'branchId', 'rating', 'comment', 'createdAt'])
+        && request.resource.data.orderId == orderId
+        && request.resource.data.customerUid == request.auth.uid
+        && reviewedOrder().customerUid == request.auth.uid
+        && reviewedOrder().status == 'delivered'
+        && request.resource.data.branchId == reviewedOrder().branchId
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+        && isShortText(request.resource.data.comment, 0, 500)
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------- compras (O01.02)
+    function isValidSupplier(data) {
+      return data.keys().hasOnly(['name', 'ruc', 'contactName', 'phone', 'email', 'address', 'paymentTerms',
+          'deliveryDays', 'isActive', 'createdAt', 'updatedAt'])
+        && isShortText(data.name, 2, 120)
+        && data.ruc is string && data.ruc.matches('^(10|20)[0-9]{9}$')
+        && isShortText(data.contactName, 0, 80)
+        && isShortText(data.phone, 0, 20)
+        && isShortText(data.email, 0, 120)
+        && isShortText(data.address, 0, 160)
+        && isShortText(data.paymentTerms, 0, 80)
+        && data.deliveryDays is int && data.deliveryDays >= 0 && data.deliveryDays <= 120
+        && data.isActive is bool
+        && hasServerTimestamps(data);
+    }
+
+    match /suppliers/{supplierId} {
+      allow read: if isStaffMember();
+      allow create, update: if isAdmin() && isValidSupplier(request.resource.data);
+      allow delete: if false;
+    }
+
+    // Cotizaciones: las arma el admin. Adjudicar (status 'awarded') solo lo hace la
+    // function create-purchase-order; una cotización adjudicada ya no se edita.
+    match /quotations/{quotationId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['title', 'branchId', 'requestedItems', 'supplierOffers', 'status',
+            'awardedSupplierId', 'purchaseOrderId', 'createdAt', 'updatedAt'])
+        && isShortText(request.resource.data.title, 3, 120)
+        && request.resource.data.status == 'open'
+        && request.resource.data.purchaseOrderId == null
+        && request.resource.data.requestedItems is list && request.resource.data.requestedItems.size() <= 60
+        && request.resource.data.supplierOffers is list && request.resource.data.supplierOffers.size() <= 10
+        && hasServerTimestamps(request.resource.data);
+      allow update: if isAdmin()
+        && resource.data.status == 'open'
+        && request.resource.data.status in ['open', 'cancelled']
+        && changesOnlyFields(['title', 'requestedItems', 'supplierOffers', 'status', 'updatedAt'])
+        && request.resource.data.requestedItems.size() <= 60
+        && request.resource.data.supplierOffers.size() <= 10
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+
+    // Órdenes de compra y recepciones: solo las escriben las functions.
+    match /purchase_orders/{purchaseOrderId} {
+      allow read: if isStaffMember() && canOperateInBranch(resource.data.branchId);
+      allow write: if false;
+    }
+
+    match /receptions/{receptionId} {
+      allow read: if isStaffMember() && canOperateInBranch(resource.data.branchId);
+      allow write: if false;
+    }
+
+    // ---------------------------------------------------------------- reclamos
+    // Se registran con la function submit-claim (número correlativo). El admin responde.
+    match /claims/{claimId} {
+      allow read: if isAdmin() || (isSignedIn() && resource.data.customerUid == request.auth.uid);
+      allow create, delete: if false;
+      allow update: if isAdmin()
+        && changesOnlyFields(['status', 'response', 'respondedByUid', 'respondedAt', 'updatedAt'])
+        && request.resource.data.status in ['open', 'in_review', 'resolved']
+        && isShortText(request.resource.data.response, 0, 2000)
+        && request.resource.data.respondedByUid == request.auth.uid
+        && request.resource.data.updatedAt == request.time;
+    }
+
     // Correlativos (número de pedido, de orden de compra): solo el servidor.
     match /counters/{counterId} {
       allow read, write: if false;

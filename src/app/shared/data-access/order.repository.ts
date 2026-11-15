@@ -2,7 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import {
   collection,
   doc,
+  getDocs,
   limit,
+  Timestamp,
   onSnapshot,
   orderBy,
   query,
@@ -65,6 +67,20 @@ export class OrderRepository {
         onOrder(orderSnapshot.exists() ? this.mapDocumentToOrder(orderSnapshot.id, orderSnapshot.data()) : null),
       onError,
     );
+  }
+
+  /** Pedidos desde una fecha, para indicadores y reportes (`branchId` vacío = todas, solo admin). */
+  async findOrdersSince(branchId: string, sinceDate: Date): Promise<Order[]> {
+    const branchFilter = branchId ? [where('branchId', '==', branchId)] : [];
+    const ordersSnapshot = await getDocs(
+      query(
+        collection(firestoreDatabase, ORDERS_COLLECTION),
+        ...branchFilter,
+        where('createdAt', '>=', Timestamp.fromDate(sinceDate)),
+        orderBy('createdAt', 'desc'),
+      ),
+    );
+    return ordersSnapshot.docs.map((orderDocument) => this.mapDocumentToOrder(orderDocument.id, orderDocument.data()));
   }
 
   async createOrder(orderRequest: CreateOrderRequest): Promise<CreatedOrder> {

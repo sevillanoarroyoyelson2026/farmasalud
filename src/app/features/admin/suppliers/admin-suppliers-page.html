@@ -1,0 +1,130 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Proveedores</h2>
+      <p class="page-subtitle">Laboratorios y droguerías que abastecen a las boticas.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openNewSupplierDialog()">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i> Nuevo proveedor
+    </button>
+  </div>
+
+  <div class="panel-toolbar">
+    <input type="search" class="form-control panel-search" placeholder="Buscar por nombre, RUC o contacto"
+      aria-label="Buscar proveedores" (input)="updateSearchText($event)" />
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (visibleSuppliers().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-handshake" aria-hidden="true"></i>
+        <p class="mb-0">{{ suppliers().length === 0 ? 'Aún no hay proveedores registrados.' : 'Ningún proveedor coincide.' }}</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Proveedor</th>
+              <th scope="col">Contacto</th>
+              <th scope="col">Condiciones</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (supplier of visibleSuppliers(); track supplier.id) {
+              <tr>
+                <td>
+                  <strong>{{ supplier.name }}</strong>
+                  <span class="panel-table-secondary">RUC {{ supplier.ruc }}</span>
+                </td>
+                <td>
+                  {{ supplier.contactName || '—' }}
+                  <span class="panel-table-secondary">{{ supplier.phone }} {{ supplier.email }}</span>
+                </td>
+                <td>
+                  {{ supplier.paymentTerms || '—' }}
+                  <span class="panel-table-secondary">Entrega en {{ supplier.deliveryDays }} días</span>
+                </td>
+                <td>
+                  <span class="status-badge" [class.is-success]="supplier.isActive" [class.is-neutral]="!supplier.isActive">
+                    {{ supplier.isActive ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditSupplierDialog(supplier)">
+                      <i class="fas fa-pen me-1" aria-hidden="true"></i>Editar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel [dialogTitle]="editingSupplierId() ? 'Editar proveedor' : 'Nuevo proveedor'" [isOpen]="isDialogOpen()" (closeRequested)="closeDialog()">
+  <form [formGroup]="supplierForm" (ngSubmit)="saveSupplier()" novalidate>
+    <div class="panel-form-grid">
+      <div class="is-full-width">
+        <label class="form-label" for="supplier-name">Razón social</label>
+        <input id="supplier-name" class="form-control" formControlName="name" [class.is-invalid]="hasFieldError('name')" />
+        <div class="invalid-feedback">Escribe la razón social.</div>
+      </div>
+      <div>
+        <label class="form-label" for="supplier-ruc">RUC</label>
+        <input id="supplier-ruc" class="form-control" formControlName="ruc" inputmode="numeric" maxlength="11"
+          [class.is-invalid]="hasFieldError('ruc')" />
+        <div class="invalid-feedback">11 dígitos, empieza con 10 o 20.</div>
+      </div>
+      <div>
+        <label class="form-label" for="supplier-contact">Persona de contacto</label>
+        <input id="supplier-contact" class="form-control" formControlName="contactName" />
+      </div>
+      <div>
+        <label class="form-label" for="supplier-phone">Teléfono</label>
+        <input id="supplier-phone" class="form-control" formControlName="phone" inputmode="tel" [class.is-invalid]="hasFieldError('phone')" />
+        <div class="invalid-feedback">Solo números, espacios, + o -.</div>
+      </div>
+      <div>
+        <label class="form-label" for="supplier-email">Correo</label>
+        <input id="supplier-email" type="email" class="form-control" formControlName="email" [class.is-invalid]="hasFieldError('email')" />
+        <div class="invalid-feedback">Correo no válido.</div>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="supplier-address">Dirección</label>
+        <input id="supplier-address" class="form-control" formControlName="address" />
+      </div>
+      <div>
+        <label class="form-label" for="supplier-terms">Condiciones de pago</label>
+        <input id="supplier-terms" class="form-control" formControlName="paymentTerms" placeholder="Crédito 30 días" />
+      </div>
+      <div>
+        <label class="form-label" for="supplier-days">Plazo de entrega (días)</label>
+        <input id="supplier-days" type="number" min="0" class="form-control" formControlName="deliveryDays"
+          [class.is-invalid]="hasFieldError('deliveryDays')" />
+        <div class="invalid-feedback">Entre 0 y 120 días.</div>
+      </div>
+      <div class="form-check form-switch">
+        <input id="supplier-active" class="form-check-input" type="checkbox" formControlName="isActive" />
+        <label class="form-check-label" for="supplier-active">Proveedor activo</label>
+      </div>
+    </div>
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeDialog()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isSaving()">Guardar</button>
+    </div>
+  </form>
+</app-dialog-panel>

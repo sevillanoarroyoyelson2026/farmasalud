@@ -38,6 +38,24 @@
   </div>
 </section>
 
+@if (promotedProducts().length > 0) {
+  <section class="container-xl home-promotions">
+    <div class="home-promotions-header">
+      <h2 class="home-section-title mb-0">Ofertas de la semana</h2>
+      <a routerLink="/catalogo">Ver todo el catálogo <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i></a>
+    </div>
+    <div class="home-promotions-grid">
+      @for (product of promotedProducts(); track product.id) {
+        <a class="home-promotion-card surface-card" [routerLink]="['/producto', product.id]">
+          <span class="home-promotion-name">{{ product.name }}</span>
+          <span class="home-promotion-presentation">{{ product.presentation }}</span>
+          <app-product-price [product]="product" />
+        </a>
+      }
+    </div>
+  </section>
+}
+
 <section class="container-xl home-steps">
   <h2 class="home-section-title">Así de simple es comprar</h2>
   <ol class="home-steps-grid">

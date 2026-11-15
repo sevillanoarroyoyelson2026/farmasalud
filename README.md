@@ -8,6 +8,11 @@ Sistema web responsivo para **Farmasalud E.I.R.L.** (10 boticas en Trujillo): ca
 | Trabajador | `/trabajador` | Cola de pedidos, recetas, despacho, recepción de mercadería |
 | Administrador | `/admin` | Catálogo, stock, proveedores, compras, usuarios, reportes |
 
+## Módulos
+- **Tienda (cliente):** catálogo con stock real por botica, ofertas, ficha, carrito, checkout (delivery o recojo, receta privada, **pago simulado**), seguimiento en vivo, calificación del pedido y Libro de Reclamaciones.
+- **Trabajador (su sucursal):** cola de pedidos, validación de recetas, preparación y despacho (lote FEFO indicado), recepción de mercadería y alertas de stock.
+- **Administrador:** dashboard con indicadores del T2, pedidos, delivery, promociones, reclamos, productos, categorías, lotes y stock, proveedores, cotizaciones (comparación y adjudicación), órdenes de compra, recepción, sucursales, usuarios y reportes (CSV).
+
 ## Stack
 Angular 21 (standalone + signals) · Bootstrap 5 · Firebase 13 (Auth + Firestore + App Check) · Netlify Functions (Firebase Admin 14, zod 4) · Culqi · Cloudinary.
 

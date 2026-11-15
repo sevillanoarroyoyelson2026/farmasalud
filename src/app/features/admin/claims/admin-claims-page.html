@@ -1,0 +1,101 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Reclamos</h2>
+      <p class="page-subtitle">Libro de Reclamaciones virtual · {{ pendingClaimsCount() }} pendientes de respuesta (plazo legal: 15 días).</p>
+    </div>
+  </div>
+
+  <div class="panel-toolbar">
+    <select class="form-select w-auto" aria-label="Filtrar por estado" (change)="updateStatusFilter($event)">
+      <option value="">Todos los estados</option>
+      <option value="open">Recibidos</option>
+      <option value="in_review">En revisión</option>
+      <option value="resolved">Respondidos</option>
+    </select>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (visibleClaims().length === 0) {
+      <div class="panel-empty-state"><i class="fas fa-comment-medical" aria-hidden="true"></i><p class="mb-0">No hay reclamos.</p></div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">N.°</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Plazo</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (claim of visibleClaims(); track claim.id) {
+              <tr>
+                <td><strong>{{ claim.claimNumber }}</strong><span class="panel-table-secondary">{{ claim.createdAt ? (claim.createdAt | date: 'dd/MM/yyyy') : '' }}</span></td>
+                <td>{{ claim.fullName }}<span class="panel-table-secondary">{{ claim.customerEmail }}</span></td>
+                <td>{{ claimTypeLabel[claim.claimType] }}</td>
+                <td>
+                  @if (daysLeftToRespond(claim); as daysLeft) {
+                    <span class="status-badge" [class.is-danger]="daysLeft <= 3" [class.is-neutral]="daysLeft > 3">
+                      {{ daysLeft > 0 ? daysLeft + ' días' : 'Vencido' }}
+                    </span>
+                  } @else if (claim.status !== 'resolved') {
+                    <span class="status-badge is-danger">Vence hoy</span>
+                  } @else { — }
+                </td>
+                <td><span [class]="'status-badge ' + claimStatusTone[claim.status]">{{ claimStatusLabel[claim.status] }}</span></td>
+                <td><div class="panel-table-actions"><button type="button" class="btn btn-sm btn-outline-primary" (click)="openClaim(claim)">Atender</button></div></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel [dialogTitle]="'Reclamo ' + (selectedClaim()?.claimNumber ?? '')" [isOpen]="selectedClaim() !== null" (closeRequested)="closeClaim()">
+  @if (selectedClaim(); as claim) {
+    <dl class="row small mb-2">
+      <dt class="col-4">Cliente</dt><dd class="col-8">{{ claim.fullName }} · DNI/CE {{ claim.documentNumber }}</dd>
+      <dt class="col-4">Contacto</dt><dd class="col-8">{{ claim.phone }} · {{ claim.customerEmail }}</dd>
+      <dt class="col-4">Dirección</dt><dd class="col-8">{{ claim.address }}</dd>
+      <dt class="col-4">Tipo</dt><dd class="col-8">{{ claimTypeLabel[claim.claimType] }}</dd>
+      @if (claim.relatedOrderNumber) { <dt class="col-4">Pedido</dt><dd class="col-8">{{ claim.relatedOrderNumber }}</dd> }
+      @if (claim.claimedAmount !== null) { <dt class="col-4">Monto</dt><dd class="col-8">{{ claim.claimedAmount | currency: 'PEN' : 'S/ ' }}</dd> }
+    </dl>
+    <p class="form-label mb-1">Detalle</p>
+    <p class="small" style="white-space: pre-line">{{ claim.description }}</p>
+    <p class="form-label mb-1">Pedido del consumidor</p>
+    <p class="small">{{ claim.requestedSolution }}</p>
+
+    <div class="panel-form-grid">
+      <div>
+        <label class="form-label" for="claim-status">Estado</label>
+        <select id="claim-status" class="form-select" [ngModel]="responseStatus()" (ngModelChange)="responseStatus.set($event)">
+          <option value="open">Recibido</option>
+          <option value="in_review">En revisión</option>
+          <option value="resolved">Respondido (cerrar)</option>
+        </select>
+      </div>
+      <div class="is-full-width">
+        <label class="form-label" for="claim-response">Respuesta al cliente</label>
+        <textarea id="claim-response" class="form-control" rows="4" maxlength="2000" [ngModel]="responseText()" (ngModelChange)="responseText.set($event)"></textarea>
+      </div>
+    </div>
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeClaim()">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="saveResponse()">Guardar</button>
+    </div>
+  }
+</app-dialog-panel>

@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { requireRoleGuard } from '../../core/guards/role.guard';
 import { AdminLayout } from '../../layouts/admin-layout/admin-layout';
-import { createModuleInProgressRoute } from '../../shared/ui/module-in-progress/module-in-progress-route';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -50,13 +49,47 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () =>
           import('../staff-orders/staff-order-board-page').then((module) => module.StaffOrderBoardPage),
       },
-      createModuleInProgressRoute('proveedores', 'Proveedores', 'Registro de proveedores y distribuidores.', 5),
-      createModuleInProgressRoute('cotizaciones', 'Cotizaciones', 'Comparación de precios, plazos y condiciones.', 5),
-      createModuleInProgressRoute('ordenes-compra', 'Órdenes de compra', 'Generación y envío al proveedor.', 5),
-      createModuleInProgressRoute('delivery', 'Delivery', 'Asignación y seguimiento de entregas.', 6),
-      createModuleInProgressRoute('promociones', 'Promociones', 'Descuentos y productos destacados.', 6),
-      createModuleInProgressRoute('reclamos', 'Reclamos', 'Buzón de reclamos de clientes.', 6),
-      createModuleInProgressRoute('reportes', 'Reportes', 'Ventas, rotación, vencimientos y satisfacción.', 6),
+      {
+        path: 'proveedores',
+        title: 'Proveedores | Farmasalud',
+        loadComponent: () => import('./suppliers/admin-suppliers-page').then((module) => module.AdminSuppliersPage),
+      },
+      {
+        path: 'cotizaciones',
+        title: 'Cotizaciones | Farmasalud',
+        loadComponent: () => import('./quotations/admin-quotations-page').then((module) => module.AdminQuotationsPage),
+      },
+      {
+        path: 'ordenes-compra',
+        title: 'Órdenes de compra | Farmasalud',
+        loadComponent: () => import('./purchase-orders/admin-purchase-orders-page').then((module) => module.AdminPurchaseOrdersPage),
+      },
+      {
+        path: 'recepcion',
+        title: 'Recepción de mercadería | Farmasalud',
+        loadComponent: () => import('../staff-purchasing/goods-reception-page').then((module) => module.GoodsReceptionPage),
+      },
+      {
+        path: 'delivery',
+        title: 'Delivery | Farmasalud',
+        data: { boardMode: 'deliveries' },
+        loadComponent: () => import('../staff-orders/staff-order-board-page').then((module) => module.StaffOrderBoardPage),
+      },
+      {
+        path: 'promociones',
+        title: 'Promociones | Farmasalud',
+        loadComponent: () => import('./promotions/admin-promotions-page').then((module) => module.AdminPromotionsPage),
+      },
+      {
+        path: 'reclamos',
+        title: 'Reclamos | Farmasalud',
+        loadComponent: () => import('./claims/admin-claims-page').then((module) => module.AdminClaimsPage),
+      },
+      {
+        path: 'reportes',
+        title: 'Reportes | Farmasalud',
+        loadComponent: () => import('./reports/admin-reports-page').then((module) => module.AdminReportsPage),
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

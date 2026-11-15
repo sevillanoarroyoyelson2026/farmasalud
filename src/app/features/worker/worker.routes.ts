@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { requireRoleGuard } from '../../core/guards/role.guard';
 import { WorkerLayout } from '../../layouts/worker-layout/worker-layout';
-import { createModuleInProgressRoute } from '../../shared/ui/module-in-progress/module-in-progress-route';
 
 const loadStaffOrderBoardPage = () =>
   import('../staff-orders/staff-order-board-page').then((module) => module.StaffOrderBoardPage);
@@ -37,7 +36,12 @@ export const WORKER_ROUTES: Routes = [
         loadComponent: () =>
           import('../admin/stock/admin-stock-page').then((module) => module.AdminStockPage),
       },
-      createModuleInProgressRoute('recepcion', 'Recepción de mercadería', 'Verificación de lotes de órdenes de compra.', 5),
+      {
+        path: 'recepcion',
+        title: 'Recepción de mercadería | Farmasalud',
+        loadComponent: () =>
+          import('../staff-purchasing/goods-reception-page').then((module) => module.GoodsReceptionPage),
+      },
       { path: '', redirectTo: 'pedidos', pathMatch: 'full' },
     ],
   },

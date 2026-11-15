@@ -1,0 +1,101 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Promociones</h2>
+      <p class="page-subtitle">Descuentos con fecha de fin. Se muestran destacados en la tienda y se cobran con el precio rebajado.</p>
+    </div>
+  </div>
+
+  <div class="panel-toolbar">
+    <input type="search" class="form-control panel-search" placeholder="Busca un producto para ponerlo en oferta"
+      aria-label="Buscar producto" (input)="updateSearchText($event)" />
+    <div class="form-check form-switch align-self-center">
+      <input id="only-promoted" class="form-check-input" type="checkbox" [checked]="isShowingOnlyPromoted()"
+        (change)="isShowingOnlyPromoted.set(!isShowingOnlyPromoted())" />
+      <label class="form-check-label" for="only-promoted">Solo en promoción</label>
+    </div>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (visibleProducts().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-percent" aria-hidden="true"></i>
+        <p class="mb-0">{{ isShowingOnlyPromoted() ? 'No hay promociones vigentes. Busca un producto para crear una.' : 'Ningún producto coincide.' }}</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col" class="text-end">Precio normal</th>
+              <th scope="col" class="text-end">Precio oferta</th>
+              <th scope="col">Vigencia</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of visibleProducts(); track product.id) {
+              <tr>
+                <td><strong>{{ product.name }}</strong><span class="panel-table-secondary">{{ product.presentation }}</span></td>
+                <td class="text-end">{{ product.price | currency: 'PEN' : 'S/ ' }}</td>
+                <td class="text-end">
+                  @if (isPromoted(product)) {
+                    <strong>{{ effectivePrice(product) | currency: 'PEN' : 'S/ ' }}</strong>
+                    <span class="status-badge is-danger ms-1">-{{ product.promotion?.discountPercent }}%</span>
+                  } @else { — }
+                </td>
+                <td>
+                  @if (isPromoted(product)) {
+                    hasta {{ product.promotion?.endsAt | date: 'dd/MM/yyyy' }}
+                  } @else {
+                    <span class="status-badge is-neutral">Sin promoción</span>
+                  }
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openPromotionDialog(product)">
+                      {{ isPromoted(product) ? 'Editar' : 'Poner en oferta' }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel [dialogTitle]="'Promoción · ' + (editingProduct()?.name ?? '')" [isOpen]="editingProduct() !== null" (closeRequested)="closeDialog()">
+  @if (editingProduct(); as product) {
+    <div class="panel-form-grid">
+      <div>
+        <label class="form-label" for="promotion-discount">Descuento (%)</label>
+        <input id="promotion-discount" type="number" min="1" max="70" class="form-control" [ngModel]="discountPercent()" (ngModelChange)="discountPercent.set($event)" />
+      </div>
+      <div>
+        <label class="form-label" for="promotion-end">Vigente hasta</label>
+        <input id="promotion-end" type="date" class="form-control" [min]="earliestEndDate" [ngModel]="promotionEndDate()" (ngModelChange)="promotionEndDate.set($event)" />
+      </div>
+    </div>
+    <p class="mt-3 mb-0">
+      Precio normal {{ product.price | currency: 'PEN' : 'S/ ' }} → <strong>{{ previewPrice() | currency: 'PEN' : 'S/ ' }}</strong>
+    </p>
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      @if (isPromoted(product)) {
+        <button type="button" class="btn btn-outline-danger me-auto" [disabled]="isSaving()" (click)="removePromotion()">Quitar promoción</button>
+      }
+      <button type="button" class="btn btn-light" (click)="closeDialog()">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="savePromotion()">Guardar</button>
+    </div>
+  }
+</app-dialog-panel>

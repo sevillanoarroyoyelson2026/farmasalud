@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { ProductPrice } from '../../../shared/ui/product-price/product-price';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
@@ -27,7 +27,7 @@ const BRANCH_STOCK_LABEL: Record<StockStatus, string> = {
 /** Ficha del producto con la disponibilidad en cada botica activa. */
 @Component({
   selector: 'app-product-detail-page',
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, ProductPrice],
   templateUrl: './product-detail-page.html',
   styleUrl: './product-detail-page.css',
 })

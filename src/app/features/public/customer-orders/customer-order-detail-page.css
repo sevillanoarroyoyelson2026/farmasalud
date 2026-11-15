@@ -137,6 +137,18 @@
   border-radius: var(--radius-sm);
 }
 
+.order-review-stars {
+  display: flex;
+  gap: 0.35rem;
+  font-size: 1.4rem;
+  color: #f59e0b;
+}
+
+.order-review-stars .btn {
+  font-size: 1.6rem;
+  color: #f59e0b;
+}
+
 .order-detail-cancel {
   display: flex;
   flex-wrap: wrap;

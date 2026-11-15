@@ -43,6 +43,7 @@ const ADMIN_NAVIGATION_SECTIONS: PanelNavigationSection[] = [
       { iconClass: 'fas fa-handshake', label: 'Proveedores', path: '/admin/proveedores' },
       { iconClass: 'fas fa-file-invoice-dollar', label: 'Cotizaciones', path: '/admin/cotizaciones' },
       { iconClass: 'fas fa-file-signature', label: 'Órdenes de compra', path: '/admin/ordenes-compra' },
+      { iconClass: 'fas fa-dolly', label: 'Recepción', path: '/admin/recepcion' },
     ],
   },
   {

@@ -55,6 +55,13 @@ export const PUBLIC_ROUTES: Routes = [
         loadComponent: () => import('./checkout/checkout-page').then((module) => module.CheckoutPage),
       },
       {
+        path: 'libro-de-reclamaciones',
+        title: 'Libro de Reclamaciones | Farmasalud',
+        canActivate: [requireAuthenticatedUserGuard, customerShoppingAreaGuard],
+        loadComponent: () =>
+          import('./claims-book/claims-book-page').then((module) => module.ClaimsBookPage),
+      },
+      {
         path: 'mis-pedidos',
         title: 'Mis pedidos | Farmasalud',
         canActivate: [requireAuthenticatedUserGuard, customerShoppingAreaGuard],

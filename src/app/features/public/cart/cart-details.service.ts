@@ -3,7 +3,7 @@ import { BranchRepository } from '../../../shared/data-access/branch.repository'
 import { BranchSelectionService } from '../../../shared/data-access/branch-selection.service';
 import { CartLine, CartService } from '../../../shared/data-access/cart.service';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
-import { getStockInBranch, Product } from '../../../shared/models/product';
+import { getEffectivePrice, getStockInBranch, Product } from '../../../shared/models/product';
 
 export interface CartLineDetail {
   product: Product;
@@ -83,7 +83,7 @@ export class CartDetailsService {
     return {
       product,
       quantity: cartLine.quantity,
-      subtotal: product.price * cartLine.quantity,
+      subtotal: getEffectivePrice(product) * cartLine.quantity,
       hasEnoughStockInBranch: Boolean(selectedBranchId) && getStockInBranch(product, selectedBranchId) >= cartLine.quantity,
     };
   }

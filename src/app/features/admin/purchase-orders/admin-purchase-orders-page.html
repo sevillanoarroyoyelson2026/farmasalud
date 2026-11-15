@@ -1,0 +1,184 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Órdenes de compra</h2>
+      <p class="page-subtitle">Pedidos a proveedores y lo que ya recibió cada botica. Filtra con el selector de sucursal.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openCreateDialog()" [disabled]="activeSuppliers().length === 0">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i> Nueva orden
+    </button>
+  </div>
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (purchaseOrders().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-file-signature" aria-hidden="true"></i>
+        <p class="mb-0">No hay órdenes de compra. Créalas aquí o desde una cotización.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">N.°</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col">Botica</th>
+              <th scope="col">Entrega</th>
+              <th scope="col" class="text-end">Total</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (purchaseOrder of purchaseOrders(); track purchaseOrder.id) {
+              <tr>
+                <td><strong>{{ purchaseOrder.orderNumber }}</strong>
+                  <span class="panel-table-secondary">{{ purchaseOrder.createdAt ? (purchaseOrder.createdAt | date: 'dd/MM/yyyy') : '' }}</span></td>
+                <td>{{ purchaseOrder.supplierName }}</td>
+                <td>{{ purchaseOrder.branchName }}</td>
+                <td>{{ purchaseOrder.expectedDeliveryDate ? (purchaseOrder.expectedDeliveryDate | date: 'dd/MM/yyyy') : '—' }}</td>
+                <td class="text-end">{{ purchaseOrder.orderTotal | currency: 'PEN' : 'S/ ' }}</td>
+                <td><span [class]="'status-badge ' + statusTone[purchaseOrder.status]">{{ statusLabel[purchaseOrder.status] }}</span></td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openPurchaseOrder(purchaseOrder)">Ver</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel dialogTitle="Nueva orden de compra" [isOpen]="isCreateDialogOpen()" (closeRequested)="closeDialogs()">
+  <div class="panel-form-grid">
+    <div>
+      <label class="form-label" for="po-supplier">Proveedor</label>
+      <select id="po-supplier" class="form-select" [ngModel]="draftSupplierId()" (ngModelChange)="draftSupplierId.set($event)">
+        <option value="" disabled>Elige el proveedor</option>
+        @for (supplier of activeSuppliers(); track supplier.id) {
+          <option [value]="supplier.id">{{ supplier.name }}</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label class="form-label" for="po-branch">Botica destino</label>
+      <select id="po-branch" class="form-select" [ngModel]="draftBranchId()" (ngModelChange)="draftBranchId.set($event)">
+        <option value="" disabled>Elige la botica</option>
+        @for (branch of branchSelection.availableBranches(); track branch.id) {
+          <option [value]="branch.id">{{ branch.name }}</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label class="form-label" for="po-date">Fecha de entrega esperada</label>
+      <input id="po-date" type="date" class="form-control" [ngModel]="draftExpectedDate()" (ngModelChange)="draftExpectedDate.set($event)" />
+    </div>
+    <div>
+      <label class="form-label" for="po-notes">Observaciones</label>
+      <input id="po-notes" class="form-control" maxlength="500" [ngModel]="draftNotes()" (ngModelChange)="draftNotes.set($event)" />
+    </div>
+  </div>
+  <p class="form-label mt-3 mb-2">Productos · cantidad · costo unitario (S/)</p>
+  @for (itemDraft of purchaseItemDrafts(); track $index) {
+    <div class="draft-row">
+      <select class="form-select" [attr.aria-label]="'Producto ' + ($index + 1)" [(ngModel)]="itemDraft.productId">
+        <option value="" disabled>Producto</option>
+        @for (product of products(); track product.id) {
+          <option [value]="product.id">{{ product.name }} — {{ product.presentation }}</option>
+        }
+      </select>
+      <input type="number" min="1" class="form-control" aria-label="Cantidad" [(ngModel)]="itemDraft.quantity" (ngModelChange)="recalculateDraftTotal()" />
+      <input type="number" min="0.01" step="0.01" class="form-control" aria-label="Costo unitario" [(ngModel)]="itemDraft.unitCost" (ngModelChange)="recalculateDraftTotal()" />
+      <button type="button" class="btn btn-light" aria-label="Quitar producto" (click)="removePurchaseItemDraft($index)"><i class="fas fa-trash" aria-hidden="true"></i></button>
+    </div>
+  }
+  <div class="d-flex justify-content-between align-items-center">
+    <button type="button" class="btn btn-sm btn-link" (click)="addPurchaseItemDraft()"><i class="fas fa-plus me-1" aria-hidden="true"></i>Agregar producto</button>
+    <strong>Total {{ draftTotal() | currency: 'PEN' : 'S/ ' }}</strong>
+  </div>
+  @if (saveErrorMessage()) {
+    <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+  }
+  <div class="panel-form-actions">
+    <button type="button" class="btn btn-light" (click)="closeDialogs()">Cancelar</button>
+    <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="createPurchaseOrder()">Emitir orden</button>
+  </div>
+</app-dialog-panel>
+
+<app-dialog-panel [dialogTitle]="'Orden ' + (selectedPurchaseOrder()?.orderNumber ?? '')" [isOpen]="selectedPurchaseOrder() !== null" (closeRequested)="closeDialogs()">
+  @if (selectedPurchaseOrder(); as purchaseOrder) {
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+      <span [class]="'status-badge ' + statusTone[purchaseOrder.status]">{{ statusLabel[purchaseOrder.status] }}</span>
+      <span class="panel-table-secondary">{{ purchaseOrder.supplierName }} (RUC {{ purchaseOrder.supplierRuc }}) → {{ purchaseOrder.branchName }}</span>
+    </div>
+    @if (purchaseOrder.notes) {
+      <p class="small mb-2">{{ purchaseOrder.notes }}</p>
+    }
+    @if (purchaseOrder.status === 'cancelled') {
+      <div class="alert alert-secondary small">Anulada: {{ purchaseOrder.cancellationReason }}</div>
+    }
+    <div class="table-responsive">
+      <table class="table panel-table">
+        <thead>
+          <tr>
+            <th scope="col">Producto</th>
+            <th scope="col" class="text-end">Pedido</th>
+            <th scope="col" class="text-end">Recibido</th>
+            <th scope="col" class="text-end">Rechazado</th>
+            <th scope="col" class="text-end">Pendiente</th>
+            <th scope="col" class="text-end">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (orderItem of purchaseOrder.items; track orderItem.productId) {
+            <tr>
+              <td>{{ orderItem.productName }}<span class="panel-table-secondary">{{ orderItem.unitCost | currency: 'PEN' : 'S/ ' }} c/u</span></td>
+              <td class="text-end">{{ orderItem.quantityOrdered }}</td>
+              <td class="text-end">{{ orderItem.quantityReceived }}</td>
+              <td class="text-end" [class.text-danger]="orderItem.quantityRejected > 0">{{ orderItem.quantityRejected }}</td>
+              <td class="text-end">{{ getPendingUnits(orderItem) }}</td>
+              <td class="text-end">{{ orderItem.subtotal | currency: 'PEN' : 'S/ ' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="text-end fw-bold">Total {{ purchaseOrder.orderTotal | currency: 'PEN' : 'S/ ' }}</p>
+
+    @if (receptionsOfSelectedOrder().length > 0) {
+      <p class="form-label mb-1">Recepciones</p>
+      @for (reception of receptionsOfSelectedOrder(); track reception.id) {
+        <div class="surface-card p-2 mb-2 small">
+          <strong>{{ reception.createdAt ? (reception.createdAt | date: 'dd/MM/yyyy HH:mm') : '' }}</strong>
+          @if (reception.hasIncidents) { <span class="status-badge is-warning ms-1">Con incidencias</span> }
+          @for (line of reception.lines; track $index) {
+            <div>{{ line.productName }} · lote {{ line.lotNumber }} · {{ line.quantityReceived }} conformes
+              @if (line.quantityRejected > 0) { · <span class="text-danger">{{ line.quantityRejected }} rechazados</span> }
+            </div>
+          }
+          @if (reception.incidentNotes) { <div class="text-secondary">Observación: {{ reception.incidentNotes }}</div> }
+        </div>
+      }
+    }
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-2 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions flex-wrap">
+      <button type="button" class="btn btn-light" (click)="printPurchaseOrder()"><i class="fas fa-print me-1" aria-hidden="true"></i>Imprimir</button>
+      @if (purchaseOrder.status === 'issued') {
+        <input class="form-control" style="max-width: 260px" placeholder="Motivo de anulación" maxlength="300" aria-label="Motivo de anulación"
+          [ngModel]="cancellationReason()" (ngModelChange)="cancellationReason.set($event)" />
+        <button type="button" class="btn btn-outline-danger" [disabled]="isSaving()" (click)="cancelPurchaseOrder()">Anular orden</button>
+      }
+    </div>
+  }
+</app-dialog-panel>

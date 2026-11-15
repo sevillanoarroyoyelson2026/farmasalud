@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { ProductPrice } from '../../../shared/ui/product-price/product-price';
 import { Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -27,7 +27,7 @@ const ALL_CATEGORIES_FILTER = '';
  */
 @Component({
   selector: 'app-catalog-page',
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, ProductPrice],
   templateUrl: './catalog-page.html',
   styleUrl: './catalog-page.css',
 })

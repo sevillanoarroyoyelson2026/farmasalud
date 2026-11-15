@@ -134,7 +134,7 @@ export class AdminProductsPage implements OnInit {
 
   openEditProductDialog(product: Product): void {
     this.editingProductId.set(product.id);
-    const { id: _productId, stockByBranch: _stockByBranch, ...productFormValue } = product;
+    const { id: _productId, stockByBranch: _stockByBranch, promotion: _promotion, ...productFormValue } = product;
     this.productForm.reset(productFormValue);
     this.openDialog();
   }

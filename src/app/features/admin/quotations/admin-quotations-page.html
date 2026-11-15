@@ -1,0 +1,229 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Cotizaciones</h2>
+      <p class="page-subtitle">Pide precios a varios proveedores, compáralos y convierte la mejor oferta en orden de compra.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="openCreateDialog()" [disabled]="products().length === 0">
+      <i class="fas fa-plus me-1" aria-hidden="true"></i> Nueva cotización
+    </button>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success" role="status"><i class="fas fa-circle-check me-1" aria-hidden="true"></i>{{ successMessage() }}</div>
+  }
+
+  <div class="surface-card panel-table-card">
+    @if (isLoading()) {
+      <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    } @else if (loadErrorMessage()) {
+      <div class="panel-empty-state"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+    } @else if (quotations().length === 0) {
+      <div class="panel-empty-state">
+        <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i>
+        <p class="mb-0">Aún no hay cotizaciones. Registra primero tus proveedores.</p>
+      </div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Cotización</th>
+              <th scope="col">Botica destino</th>
+              <th scope="col">Ofertas</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (quotation of quotations(); track quotation.id) {
+              <tr>
+                <td>
+                  <strong>{{ quotation.title }}</strong>
+                  <span class="panel-table-secondary">
+                    {{ quotation.requestedItems.length }} productos · {{ quotation.createdAt ? (quotation.createdAt | date: 'dd/MM/yyyy') : '' }}
+                  </span>
+                </td>
+                <td>{{ describeBranch(quotation.branchId) }}</td>
+                <td>{{ quotation.supplierOffers.length }}</td>
+                <td>
+                  <span class="status-badge" [class.is-info]="quotation.status === 'open'" [class.is-success]="quotation.status === 'awarded'"
+                    [class.is-neutral]="quotation.status === 'cancelled'">{{ quotationStatusLabel[quotation.status] }}</span>
+                </td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="openQuotation(quotation)">
+                      <i class="fas fa-scale-balanced me-1" aria-hidden="true"></i>{{ quotation.status === 'open' ? 'Ofertas y comparar' : 'Ver' }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>
+
+<app-dialog-panel dialogTitle="Nueva cotización" [isOpen]="isCreateDialogOpen()" (closeRequested)="closeDialogs()">
+  <div class="panel-form-grid">
+    <div class="is-full-width">
+      <label class="form-label" for="quotation-title">Título</label>
+      <input id="quotation-title" class="form-control" maxlength="120" placeholder="Reposición analgésicos - noviembre"
+        [ngModel]="newQuotationTitle()" (ngModelChange)="newQuotationTitle.set($event)" />
+    </div>
+    <div class="is-full-width">
+      <label class="form-label" for="quotation-branch">Botica que recibirá la mercadería</label>
+      <select id="quotation-branch" class="form-select" [ngModel]="newQuotationBranchId()" (ngModelChange)="newQuotationBranchId.set($event)">
+        <option value="" disabled>Elige la botica</option>
+        @for (branch of branchSelection.availableBranches(); track branch.id) {
+          <option [value]="branch.id">{{ branch.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+  <p class="form-label mt-3 mb-2">Productos y cantidades</p>
+  @for (itemDraft of requestedItemDrafts(); track $index) {
+    <div class="draft-row">
+      <select class="form-select" [attr.aria-label]="'Producto ' + ($index + 1)" [(ngModel)]="itemDraft.productId">
+        <option value="" disabled>Elige un producto</option>
+        @for (product of products(); track product.id) {
+          <option [value]="product.id">{{ product.name }} — {{ product.presentation }}</option>
+        }
+      </select>
+      <input type="number" min="1" class="form-control" aria-label="Cantidad" [(ngModel)]="itemDraft.quantity" />
+      <button type="button" class="btn btn-light" aria-label="Quitar producto" (click)="removeRequestedItemDraft($index)">
+        <i class="fas fa-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  }
+  <button type="button" class="btn btn-sm btn-link" (click)="addRequestedItemDraft()"><i class="fas fa-plus me-1" aria-hidden="true"></i>Agregar producto</button>
+  @if (saveErrorMessage()) {
+    <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+  }
+  <div class="panel-form-actions">
+    <button type="button" class="btn btn-light" (click)="closeDialogs()">Cancelar</button>
+    <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="createQuotation()">Crear cotización</button>
+  </div>
+</app-dialog-panel>
+
+<app-dialog-panel [dialogTitle]="selectedQuotation()?.title ?? ''" [isOpen]="selectedQuotation() !== null" (closeRequested)="closeDialogs()">
+  @if (selectedQuotation(); as quotation) {
+    <p class="panel-table-secondary mt-0">
+      Destino: {{ describeBranch(quotation.branchId) }} · {{ quotationStatusLabel[quotation.status] }}
+    </p>
+
+    @if (quotation.supplierOffers.length === 0) {
+      <div class="alert alert-info small">Aún no hay ofertas. Agrega la respuesta de cada proveedor.</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="table panel-table comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              @for (evaluation of offerEvaluations(); track evaluation.offer.supplierId) {
+                <th scope="col" [class.comparison-best]="evaluation.isBestOffer">
+                  {{ evaluation.offer.supplierName }}
+                  @if (evaluation.isBestOffer) { <span class="status-badge is-success ms-1">Mejor</span> }
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (requestedItem of quotation.requestedItems; track requestedItem.productId) {
+              <tr>
+                <td>{{ requestedItem.productName }} <span class="panel-table-secondary">× {{ requestedItem.quantity }}</span></td>
+                @for (evaluation of offerEvaluations(); track evaluation.offer.supplierId) {
+                  <td [class.comparison-best]="evaluation.isBestOffer">
+                    @if (evaluation.offer.unitPriceByProduct[requestedItem.productId]; as unitPrice) {
+                      {{ unitPrice | currency: 'PEN' : 'S/ ' }}
+                    } @else {
+                      <span class="text-muted">No cotizó</span>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+            <tr>
+              <th scope="row">Total</th>
+              @for (evaluation of offerEvaluations(); track evaluation.offer.supplierId) {
+                <td [class.comparison-best]="evaluation.isBestOffer">
+                  <strong>{{ evaluation.offerTotal !== null ? (evaluation.offerTotal | currency: 'PEN' : 'S/ ') : 'Incompleta' }}</strong>
+                </td>
+              }
+            </tr>
+            <tr>
+              <th scope="row">Entrega / pago</th>
+              @for (evaluation of offerEvaluations(); track evaluation.offer.supplierId) {
+                <td [class.comparison-best]="evaluation.isBestOffer">
+                  {{ evaluation.offer.deliveryDays }} días
+                  <span class="panel-table-secondary">{{ evaluation.offer.paymentTerms }}</span>
+                </td>
+              }
+            </tr>
+            @if (quotation.status === 'open') {
+              <tr>
+                <td></td>
+                @for (evaluation of offerEvaluations(); track evaluation.offer.supplierId) {
+                  <td>
+                    <div class="d-flex flex-column gap-1">
+                      <button type="button" class="btn btn-sm" [class.btn-success]="evaluation.isBestOffer" [class.btn-outline-success]="!evaluation.isBestOffer"
+                        [disabled]="isSaving() || evaluation.offerTotal === null" (click)="awardOffer(evaluation)">Generar OC</button>
+                      <button type="button" class="btn btn-sm btn-link p-0" (click)="startOfferDraft(evaluation.offer.supplierId)">Editar</button>
+                      <button type="button" class="btn btn-sm btn-link text-danger p-0" (click)="removeOffer(evaluation.offer.supplierId)">Quitar</button>
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    @if (quotation.status === 'open') {
+      @if (offerDraft(); as draft) {
+        <div class="surface-card p-3 mt-3">
+          <p class="fw-semibold mb-2">Oferta de {{ offerDraftSupplierName() }}</p>
+          <div class="panel-form-grid">
+            @for (requestedItem of quotation.requestedItems; track requestedItem.productId) {
+              <div>
+                <label class="form-label small" [for]="'price-' + requestedItem.productId">{{ requestedItem.productName }} (S/ unidad)</label>
+                <input [id]="'price-' + requestedItem.productId" type="number" min="0" step="0.01" class="form-control"
+                  [(ngModel)]="draft.unitPriceByProduct[requestedItem.productId]" />
+              </div>
+            }
+            <div>
+              <label class="form-label small" for="offer-days">Plazo de entrega (días)</label>
+              <input id="offer-days" type="number" min="0" class="form-control" [(ngModel)]="draft.deliveryDays" />
+            </div>
+            <div>
+              <label class="form-label small" for="offer-terms">Condiciones de pago</label>
+              <input id="offer-terms" class="form-control" maxlength="80" [(ngModel)]="draft.paymentTerms" />
+            </div>
+          </div>
+          <div class="panel-form-actions">
+            <button type="button" class="btn btn-light" (click)="offerDraft.set(null)">Cancelar</button>
+            <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="saveOfferDraft()">Guardar oferta</button>
+          </div>
+        </div>
+      } @else if (suppliersWithoutOffer().length > 0) {
+        <label class="form-label mt-3" for="offer-supplier">Registrar la oferta de un proveedor</label>
+        <select id="offer-supplier" class="form-select" (change)="selectSupplierForOffer($event)">
+          <option value="" selected disabled>Elige el proveedor</option>
+          @for (supplier of suppliersWithoutOffer(); track supplier.id) {
+            <option [value]="supplier.id">{{ supplier.name }}</option>
+          }
+        </select>
+      }
+
+      @if (saveErrorMessage()) {
+        <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+      }
+      <div class="panel-form-actions">
+        <button type="button" class="btn btn-outline-danger" [disabled]="isSaving()" (click)="cancelQuotation()">Cancelar cotización</button>
+      </div>
+    }
+  }
+</app-dialog-panel>

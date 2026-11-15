@@ -102,6 +102,35 @@
       </div>
     </div>
 
+    @if (currentOrder.status === 'delivered') {
+      <div class="surface-card order-detail-card mt-3">
+        @if (existingReview(); as review) {
+          <h2 class="h6 mb-1">Tu calificación</h2>
+          <p class="order-review-stars mb-1" [attr.aria-label]="review.rating + ' de 5 estrellas'">
+            @for (ratingOption of ratingOptions; track ratingOption) {
+              <i class="fa-star" [class.fas]="ratingOption <= review.rating" [class.far]="ratingOption > review.rating" aria-hidden="true"></i>
+            }
+          </p>
+          @if (review.comment) { <p class="mb-0 text-secondary">"{{ review.comment }}"</p> }
+        } @else {
+          <h2 class="h6">¿Cómo te atendimos?</h2>
+          <div class="order-review-stars" role="radiogroup" aria-label="Calificación">
+            @for (ratingOption of ratingOptions; track ratingOption) {
+              <button type="button" class="btn btn-link p-0" role="radio" [attr.aria-checked]="selectedRating() === ratingOption"
+                [attr.aria-label]="ratingOption + ' estrellas'" (click)="selectedRating.set(ratingOption)">
+                <i class="fa-star" [class.fas]="ratingOption <= selectedRating()" [class.far]="ratingOption > selectedRating()" aria-hidden="true"></i>
+              </button>
+            }
+          </div>
+          <textarea class="form-control mt-2" rows="2" maxlength="500" placeholder="Comentario (opcional)" aria-label="Comentario"
+            [value]="reviewComment()" (input)="reviewComment.set($any($event.target).value)"></textarea>
+          <button type="button" class="btn btn-primary btn-sm mt-2" [disabled]="isSavingReview() || selectedRating() < 1" (click)="submitReview()">
+            Enviar calificación
+          </button>
+        }
+      </div>
+    }
+
     @if (actionErrorMessage()) {
       <div class="alert alert-danger mt-3" role="alert">{{ actionErrorMessage() }}</div>
     }

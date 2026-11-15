@@ -10,12 +10,13 @@ import {
 } from 'firebase/firestore';
 import { firestoreDatabase } from '../../core/firebase/firebase-client';
 import {
+  convertFirestoreValueToDate,
   readBooleanField,
   readNumberField,
   readStringField,
 } from '../../core/firebase/firestore-mappers';
 import { ApiClientService } from '../../core/http/api-client.service';
-import { Product, ProductFormValue } from '../models/product';
+import { Product, ProductFormValue, ProductPromotion } from '../models/product';
 
 const PRODUCTS_COLLECTION = 'products';
 
@@ -97,7 +98,25 @@ export class ProductRepository {
       isActive: readBooleanField(productFields, 'isActive', true),
       minimumStock: readNumberField(productFields, 'minimumStock'),
       stockByBranch: this.readStockByBranch(productFields['stockByBranch']),
+      promotion: this.readPromotion(productFields['promotion']),
     };
+  }
+
+  private readPromotion(promotionField: unknown): ProductPromotion | null {
+    if (!promotionField || typeof promotionField !== 'object') {
+      return null;
+    }
+    const storedPromotion = promotionField as Record<string, unknown>;
+    const endsAt = convertFirestoreValueToDate(storedPromotion['endsAt']);
+    const discountPercent = storedPromotion['discountPercent'];
+    return endsAt && typeof discountPercent === 'number' ? { discountPercent, endsAt } : null;
+  }
+
+  async setProductPromotion(
+    productId: string,
+    promotion: { discountPercent: number; endsAt: string } | null,
+  ): Promise<void> {
+    await this.apiClient.postJson('set-product-promotion', { productId, promotion });
   }
 
   private readStockByBranch(stockByBranchField: unknown): Record<string, number> {

@@ -50,3 +50,12 @@
   margin-bottom: 0.35rem;
   color: var(--color-text-secondary);
 }
+
+.dashboard-indicator-value {
+  color: var(--color-text);
+}
+
+.dashboard-indicator-icon.is-warning {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}

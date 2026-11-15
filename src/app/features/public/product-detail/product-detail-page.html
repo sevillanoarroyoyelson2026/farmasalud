@@ -31,7 +31,7 @@
           }
         </dl>
 
-        <p class="product-detail-price">{{ loadedProduct.price | currency: 'PEN' : 'S/ ' }}</p>
+        <p class="product-detail-price"><app-product-price [product]="loadedProduct" size="large" /></p>
 
         @if (selectedBranchAvailability(); as availability) {
           <span class="status-badge"

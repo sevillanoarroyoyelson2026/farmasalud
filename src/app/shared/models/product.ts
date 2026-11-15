@@ -17,10 +17,17 @@ export interface Product {
   minimumStock: number;
   /** Unidades disponibles por sucursal: { 'el-bosque': 25 }. */
   stockByBranch: Record<string, number>;
+  /** Descuento vigente (lo define el admin en Promociones; el servidor lo aplica al cobrar). */
+  promotion: ProductPromotion | null;
+}
+
+export interface ProductPromotion {
+  discountPercent: number;
+  endsAt: Date;
 }
 
 /** Datos que el administrador puede editar (el stock nunca viaja desde el formulario). */
-export type ProductFormValue = Omit<Product, 'id' | 'stockByBranch'>;
+export type ProductFormValue = Omit<Product, 'id' | 'stockByBranch' | 'promotion'>;
 
 export type StockStatus = 'out_of_stock' | 'low_stock' | 'available';
 
@@ -52,4 +59,20 @@ export function getCustomerStockStatus(availableUnits: number): StockStatus {
     return 'out_of_stock';
   }
   return availableUnits <= LOW_STOCK_UNITS_FOR_CUSTOMERS ? 'low_stock' : 'available';
+}
+
+export function hasActivePromotion(product: Product, referenceDate = new Date()): boolean {
+  return (
+    product.promotion !== null &&
+    product.promotion.discountPercent > 0 &&
+    product.promotion.endsAt.getTime() > referenceDate.getTime()
+  );
+}
+
+/** Precio con descuento si la promoción sigue vigente (mismo cálculo que el servidor). */
+export function getEffectivePrice(product: Product, referenceDate = new Date()): number {
+  if (!hasActivePromotion(product, referenceDate) || !product.promotion) {
+    return product.price;
+  }
+  return Math.round(product.price * (1 - product.promotion.discountPercent / 100) * 100) / 100;
 }

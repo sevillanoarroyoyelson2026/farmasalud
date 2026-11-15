@@ -80,7 +80,7 @@
               {{ productCard.availability.availabilityLabel }}
             </span>
             <span class="catalog-card-footer">
-              <span class="catalog-card-price">{{ productCard.product.price | currency: 'PEN' : 'S/ ' }}</span>
+              <app-product-price [product]="productCard.product" />
               @if (!isStaffMember()) {
                 <button type="button" class="btn btn-sm btn-primary catalog-card-add"
                   [disabled]="productCard.availability.stockStatus === 'out_of_stock'"

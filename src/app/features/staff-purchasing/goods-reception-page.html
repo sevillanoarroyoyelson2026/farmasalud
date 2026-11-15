@@ -1,0 +1,106 @@
+<section>
+  <div class="panel-page-header">
+    <div>
+      <h2 class="page-title">Recepción de mercadería</h2>
+      <p class="page-subtitle">Órdenes de compra por recibir. Verifica cantidades, lote y vencimiento antes de confirmar.</p>
+    </div>
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success" role="status"><i class="fas fa-circle-check me-1" aria-hidden="true"></i>{{ successMessage() }}</div>
+  }
+
+  @if (isLoading()) {
+    <div class="panel-empty-state surface-card"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+  } @else if (loadErrorMessage()) {
+    <div class="panel-empty-state surface-card"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+  } @else if (openPurchaseOrders().length === 0) {
+    <div class="panel-empty-state surface-card">
+      <i class="fas fa-dolly" aria-hidden="true"></i>
+      <p class="mb-0">No hay mercadería pendiente de recibir.</p>
+    </div>
+  } @else {
+    <div class="surface-card panel-table-card">
+      <div class="table-responsive">
+        <table class="table panel-table">
+          <thead>
+            <tr>
+              <th scope="col">Orden</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col">Botica</th>
+              <th scope="col">Llega</th>
+              <th scope="col" class="text-end">Unid. pendientes</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (purchaseOrder of openPurchaseOrders(); track purchaseOrder.id) {
+              <tr>
+                <td><strong>{{ purchaseOrder.orderNumber }}</strong></td>
+                <td>{{ purchaseOrder.supplierName }}</td>
+                <td>{{ purchaseOrder.branchName }}</td>
+                <td>{{ purchaseOrder.expectedDeliveryDate ? (purchaseOrder.expectedDeliveryDate | date: 'dd/MM/yyyy') : '—' }}</td>
+                <td class="text-end">{{ countPendingUnits(purchaseOrder) }}</td>
+                <td><span [class]="'status-badge ' + statusTone[purchaseOrder.status]">{{ statusLabel[purchaseOrder.status] }}</span></td>
+                <td>
+                  <div class="panel-table-actions">
+                    <button type="button" class="btn btn-sm btn-primary" (click)="openReception(purchaseOrder)">
+                      <i class="fas fa-clipboard-check me-1" aria-hidden="true"></i>Recibir
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</section>
+
+<app-dialog-panel [dialogTitle]="'Recibir ' + (selectedPurchaseOrder()?.orderNumber ?? '')" [isOpen]="selectedPurchaseOrder() !== null" (closeRequested)="closeReception()">
+  @if (selectedPurchaseOrder(); as purchaseOrder) {
+    <p class="panel-table-secondary mt-0">{{ purchaseOrder.supplierName }} → {{ purchaseOrder.branchName }}. Solo entran al stock las unidades conformes.</p>
+    @for (lineDraft of receptionLineDrafts(); track $index) {
+      <div class="reception-line">
+        <div class="reception-line-product">
+          <strong>{{ lineDraft.productName }}</strong>
+          <span class="panel-table-secondary">Pendiente: {{ lineDraft.pendingUnits }}</span>
+          <button type="button" class="btn btn-sm btn-link p-0" (click)="addAnotherLot(lineDraft)">+ otro lote</button>
+        </div>
+        <div>
+          <label class="form-label small" [for]="'lot-' + $index">Lote</label>
+          <input [id]="'lot-' + $index" class="form-control form-control-sm text-uppercase" maxlength="40" [(ngModel)]="lineDraft.lotNumber" />
+        </div>
+        <div>
+          <label class="form-label small" [for]="'expiration-' + $index">Vence</label>
+          <input [id]="'expiration-' + $index" type="date" class="form-control form-control-sm" [min]="earliestAllowedExpirationDate"
+            [(ngModel)]="lineDraft.expirationDate" />
+        </div>
+        <div>
+          <label class="form-label small" [for]="'received-' + $index">Conformes</label>
+          <input [id]="'received-' + $index" type="number" min="0" class="form-control form-control-sm" [(ngModel)]="lineDraft.quantityReceived" />
+        </div>
+        <div>
+          <label class="form-label small" [for]="'rejected-' + $index">Rechazadas</label>
+          <input [id]="'rejected-' + $index" type="number" min="0" class="form-control form-control-sm" [(ngModel)]="lineDraft.quantityRejected" />
+        </div>
+        <button type="button" class="btn btn-sm btn-light" aria-label="Quitar línea" (click)="removeLine(lineDraft)"><i class="fas fa-trash" aria-hidden="true"></i></button>
+      </div>
+    }
+    <label class="form-label mt-3" for="incident-notes">Incidencias (faltantes, empaques dañados, vencimiento corto…)</label>
+    <textarea id="incident-notes" class="form-control" rows="2" maxlength="500" [ngModel]="incidentNotes()" (ngModelChange)="incidentNotes.set($event)"></textarea>
+
+    @if (saveErrorMessage()) {
+      <div class="alert alert-danger mt-3 mb-0" role="alert">{{ saveErrorMessage() }}</div>
+    }
+    <div class="panel-form-actions">
+      <button type="button" class="btn btn-light" (click)="closeReception()">Cancelar</button>
+      <button type="button" class="btn btn-primary" [disabled]="isSaving()" (click)="confirmReception()">
+        @if (isSaving()) { <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> }
+        Confirmar recepción
+      </button>
+    </div>
+  }
+</app-dialog-panel>

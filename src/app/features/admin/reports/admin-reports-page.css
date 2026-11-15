@@ -1,0 +1,189 @@
+.report-stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.report-stat {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+}
+
+.report-stat span {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.report-stat strong {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+}
+
+.report-card {
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.report-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 1rem;
+}
+
+.report-table-scroll {
+  max-height: 320px;
+}
+
+/* -- Gráfico de barras de una sola serie: el título nombra la serie (sin leyenda) -- */
+.sales-chart {
+  position: relative;
+  padding-top: 1.25rem;
+}
+
+.sales-chart-max {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.sales-chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 200px;
+  border-top: 1px dashed var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.sales-chart-slot {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: flex-end;
+  height: 100%;
+  cursor: default;
+}
+
+.sales-chart-slot:hover,
+.sales-chart-slot:focus-visible {
+  background: rgba(15, 118, 110, 0.06);
+  outline: none;
+}
+
+.sales-chart-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  background: var(--color-primary);
+}
+
+.sales-chart-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 2;
+  display: none;
+  padding: 0.4rem 0.6rem;
+  transform: translateX(-50%);
+  border-radius: var(--radius-sm);
+  background: var(--color-text);
+  color: #fff;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.sales-chart-slot:hover .sales-chart-tooltip,
+.sales-chart-slot:focus-visible .sales-chart-tooltip {
+  display: block;
+}
+
+.sales-chart-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-left: 1.25rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.ranking-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ranking-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ranking-track {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #f1f5f9;
+}
+
+.ranking-bar {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--color-primary);
+}
+
+.ranking-value {
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.report-subtitle {
+  margin: 0.75rem 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.report-pair {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 900px) {
+  .report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ranking-list li {
+    grid-template-columns: 1fr auto;
+  }
+
+  .ranking-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}

@@ -3,6 +3,7 @@ import {
   countBranchesWithStock,
   getCustomerStockStatus,
   getInternalStockStatus,
+  getEffectivePrice,
   getTotalStock,
   Product,
 } from './product';
@@ -21,6 +22,7 @@ const sampleProduct: Product = {
   isActive: true,
   minimumStock: 10,
   stockByBranch: { 'el-bosque': 25, 'la-esperanza': 0, 'sucursal-cerrada': 40 },
+  promotion: null,
 };
 
 describe('stock del producto', () => {
@@ -39,5 +41,15 @@ describe('stock del producto', () => {
     expect(getCustomerStockStatus(0)).toBe('out_of_stock');
     expect(getCustomerStockStatus(3)).toBe('low_stock');
     expect(getCustomerStockStatus(30)).toBe('available');
+  });
+});
+
+describe('precio con promoción', () => {
+  it('aplica el descuento solo mientras la promoción está vigente', () => {
+    const referenceDate = new Date(2026, 10, 15);
+    const promotedProduct = { ...sampleProduct, promotion: { discountPercent: 20, endsAt: new Date(2026, 10, 20) } };
+    expect(getEffectivePrice(promotedProduct, referenceDate)).toBe(10);
+    expect(getEffectivePrice(promotedProduct, new Date(2026, 10, 21))).toBe(12.5);
+    expect(getEffectivePrice(sampleProduct, referenceDate)).toBe(12.5);
   });
 });

@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ProductRepository } from '../../../shared/data-access/product.repository';
+import { hasActivePromotion, Product } from '../../../shared/models/product';
+import { ProductPrice } from '../../../shared/ui/product-price/product-price';
+
+const MAXIMUM_FEATURED_PROMOTIONS = 4;
 
 interface PurchaseStep {
   iconClass: string;
@@ -33,10 +38,28 @@ const PURCHASE_STEPS: PurchaseStep[] = [
 
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink],
+  imports: [RouterLink, ProductPrice],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
-export class HomePage {
+export class HomePage implements OnInit {
+  private readonly productRepository = inject(ProductRepository);
+
   readonly purchaseSteps = PURCHASE_STEPS;
+  readonly promotedProducts = signal<Product[]>([]);
+
+  /** Ofertas vigentes con mayor descuento primero. Si falla, la sección simplemente no aparece. */
+  async ngOnInit(): Promise<void> {
+    try {
+      const activeProducts = await this.productRepository.findActiveProducts();
+      this.promotedProducts.set(
+        activeProducts
+          .filter((product) => hasActivePromotion(product))
+          .sort((firstProduct, secondProduct) => (secondProduct.promotion?.discountPercent ?? 0) - (firstProduct.promotion?.discountPercent ?? 0))
+          .slice(0, MAXIMUM_FEATURED_PROMOTIONS),
+      );
+    } catch {
+      this.promotedProducts.set([]);
+    }
+  }
 }
