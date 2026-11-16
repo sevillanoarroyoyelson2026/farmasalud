@@ -13,6 +13,7 @@ import {
 } from '../../../shared/models/business-indicators';
 import { Order, ORDER_STATUS_LABEL, PAYMENT_METHOD_LABEL } from '../../../shared/models/order';
 import { isLotNearExpiration, StockLot } from '../../../shared/models/stock-lot';
+import { downloadSalesReportPdf } from './sales-report-pdf';
 
 interface ExpiringLotRow {
   productName: string;
@@ -53,6 +54,10 @@ export class AdminReportsPage {
   readonly isLoadingLots = signal(false);
   readonly loadErrorMessage = signal('');
   readonly isShowingSalesTable = signal(false);
+  /** Distingue "no se consultaron los vencimientos" de "se consultaron y no hay ninguno". */
+  readonly hasLoadedExpiringLots = signal(false);
+  readonly isExportingPdf = signal(false);
+  readonly exportErrorMessage = signal('');
 
   readonly selectedBranchName = computed(() => this.branchSelection.selectedBranch()?.name ?? 'Todas las sucursales');
   readonly dailySales = computed(() => groupSalesByDay(this.periodOrders(), this.selectedPeriodDays()));
@@ -117,6 +122,7 @@ export class AdminReportsPage {
           )
           .sort((firstRow, secondRow) => (firstRow.lot.expirationDate?.getTime() ?? 0) - (secondRow.lot.expirationDate?.getTime() ?? 0)),
       );
+      this.hasLoadedExpiringLots.set(true);
     } catch (error) {
       this.logger.logError('AdminReportsPage.loadExpiringLots', error);
     } finally {
@@ -126,6 +132,41 @@ export class AdminReportsPage {
 
   describeBranch(branchId: string): string {
     return this.branchSelection.availableBranches().find((branch) => branch.id === branchId)?.name ?? branchId;
+  }
+
+  /** Reporte en PDF con lo que se ve en pantalla (resumen, gráfico, rankings y vencimientos). */
+  async exportReportToPdf(): Promise<void> {
+    this.isExportingPdf.set(true);
+    this.exportErrorMessage.set('');
+    try {
+      await downloadSalesReportPdf({
+        branchName: this.selectedBranchName(),
+        periodDays: this.selectedPeriodDays(),
+        generatedAt: new Date(),
+        periodSalesTotal: this.periodSalesTotal(),
+        nonCancelledOrdersCount: this.nonCancelledOrdersCount(),
+        averageTicket: this.averageTicket(),
+        dailySales: this.dailySales(),
+        bestSellingProducts: this.bestSellingProducts(),
+        ordersByStatus: this.ordersByStatus(),
+        ordersByPaymentMethod: this.ordersByPaymentMethod(),
+        ordersByFulfillment: this.ordersByFulfillment(),
+        expiringLots: this.hasLoadedExpiringLots()
+          ? this.expiringLots().map((expiringLot) => ({
+              productName: expiringLot.productName,
+              lotNumber: expiringLot.lot.lotNumber,
+              branchName: this.describeBranch(expiringLot.lot.branchId),
+              expirationDate: expiringLot.lot.expirationDate,
+              quantityAvailable: expiringLot.lot.quantityAvailable,
+            }))
+          : null,
+      });
+    } catch (error) {
+      this.logger.logError('AdminReportsPage.exportReportToPdf', error);
+      this.exportErrorMessage.set('No se pudo generar el PDF. Inténtalo de nuevo.');
+    } finally {
+      this.isExportingPdf.set(false);
+    }
   }
 
   exportOrdersToCsv(): void {
@@ -167,6 +208,7 @@ export class AdminReportsPage {
     this.isLoading.set(true);
     this.loadErrorMessage.set('');
     this.expiringLots.set([]);
+    this.hasLoadedExpiringLots.set(false);
     try {
       const periodStart = new Date();
       periodStart.setHours(0, 0, 0, 0);

@@ -12,11 +12,25 @@
             (click)="selectPeriod(periodDays)">{{ periodDays }} días</button>
         }
       </div>
+      <button type="button" class="btn btn-sm btn-primary" [disabled]="isLoading() || isExportingPdf()" (click)="exportReportToPdf()">
+        @if (isExportingPdf()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>Generando…
+        } @else {
+          <i class="fas fa-file-pdf me-1" aria-hidden="true"></i>Exportar PDF
+        }
+      </button>
       <button type="button" class="btn btn-sm btn-outline-secondary" [disabled]="periodOrders().length === 0" (click)="exportOrdersToCsv()">
         <i class="fas fa-file-csv me-1" aria-hidden="true"></i>Exportar CSV
       </button>
     </div>
   </div>
+
+  @if (exportErrorMessage()) {
+    <div class="alert alert-danger" role="alert">{{ exportErrorMessage() }}</div>
+  }
+  @if (!hasLoadedExpiringLots() && !isLoading()) {
+    <p class="form-text mt-0">Para incluir los lotes por vencer en el PDF, pulsa primero "Consultar" en esa sección.</p>
+  }
 
   @if (loadErrorMessage()) {
     <div class="alert alert-warning" role="alert">{{ loadErrorMessage() }}</div>
