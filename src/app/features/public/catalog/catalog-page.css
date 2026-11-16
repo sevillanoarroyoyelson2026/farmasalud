@@ -107,101 +107,6 @@
   padding: 2rem 1rem 0;
 }
 
-/* -- Paraderos de botica -- */
-.catalog-stops-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.catalog-stops-title {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.catalog-stops-hint {
-  margin: 0;
-  color: var(--color-text-secondary);
-}
-
-.catalog-stops-hint strong {
-  color: var(--route-live-ink);
-}
-
-.catalog-stops {
-  position: relative;
-  display: flex;
-  gap: 0.5rem;
-  margin: 0 -1rem 1.5rem;
-  padding: 0.25rem 1rem 0.75rem;
-  overflow-x: auto;
-  scroll-padding-inline: 1rem;
-  scrollbar-color: var(--color-border-strong) transparent;
-  scrollbar-width: thin;
-  mask-image: linear-gradient(to right, #000 0, #000 calc(100% - 2.5rem), transparent 100%);
-}
-
-.catalog-stop {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 0.55rem;
-  min-height: 44px;
-  padding: 0.3rem 0.95rem 0.3rem 0.3rem;
-  border: 2px solid var(--color-border-strong);
-  border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-family: var(--font-heading);
-  font-stretch: var(--font-stretch-label);
-  font-weight: 700;
-  transition:
-    border-color var(--transition-base),
-    background-color var(--transition-base),
-    color var(--transition-base);
-}
-
-.catalog-stop-marker {
-  display: grid;
-  place-items: center;
-  width: 1.95rem;
-  height: 1.95rem;
-  border: 3px solid var(--route-cobalt);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--route-ink);
-  font-size: 0.85rem;
-  font-weight: 900;
-  transition:
-    background-color var(--transition-base),
-    border-color var(--transition-base),
-    color var(--transition-base);
-}
-
-.catalog-stop:hover {
-  border-color: var(--route-cobalt);
-}
-
-.catalog-stop:hover .catalog-stop-marker {
-  background: var(--route-marigold);
-}
-
-.catalog-stop.is-selected {
-  border-color: var(--route-ink);
-  background: var(--route-ink);
-  color: #fff;
-}
-
-.catalog-stop.is-selected .catalog-stop-marker {
-  border-color: var(--route-live-ink);
-  background: var(--route-live-ink);
-  color: #fff;
-}
-
 /* -- Filtros -- */
 .catalog-filters {
   display: flex;
@@ -332,51 +237,6 @@
   }
 }
 
-/* -- Banda final: las boticas detrás del pedido -- */
-.catalog-branches-band {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem 2.5rem;
-  margin-top: 2.5rem;
-  padding: 2rem 1.5rem;
-  border-radius: var(--radius-md);
-  background: var(--field-periwinkle);
-}
-
-/* Tres tomas del mundo de la botica: la ciudad, la tradición y el producto */
-.catalog-branches-photos {
-  display: grid;
-  flex: 1 1 30rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  max-width: 50rem;
-}
-
-/* Las tres tomas se reparten el ancho disponible: nunca se salen de la banda en móvil */
-.catalog-branches-photos img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--radius-lg);
-  object-fit: cover;
-}
-
-.catalog-branches-text {
-  max-width: 44ch;
-}
-
-.catalog-branches-text h2 {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.6rem, 2.4vw, 2.25rem);
-}
-
-.catalog-branches-text p {
-  margin: 0;
-  color: var(--route-ink);
-}
-
 /* -- Esqueletos -- */
 .catalog-skeleton-line {
   width: 100%;
@@ -405,14 +265,6 @@
   /* En el celular el buscador y el stock van primero: la foto queda como franja baja */
   .catalog-sign-photo {
     height: 7.5rem;
-  }
-
-  .catalog-branches-band {
-    padding: 1.25rem 1rem;
-  }
-
-  .catalog-branches-photos {
-    gap: 0.5rem;
   }
 
   .catalog-filters {

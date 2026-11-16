@@ -91,6 +91,13 @@ export class CheckoutPage implements OnInit {
   readonly canSelectedBranchDeliver = computed(
     () => this.cartDetails.selectedBranch()?.offersDelivery === true,
   );
+  /** Boticas para elegir, con aviso de cuáles tienen todo el pedido. */
+  readonly branchOptions = computed(() =>
+    this.cartDetails.branchSelection.availableBranches().map((branch) => ({
+      branch,
+      hasWholeOrder: this.cartDetails.canBranchFulfillCart(branch.id),
+    })),
+  );
 
   constructor() {
     if (this.isRealCardPaymentEnabled) {
@@ -119,16 +126,39 @@ export class CheckoutPage implements OnInit {
   async ngOnInit(): Promise<void> {
     try {
       await this.cartDetails.loadCartDetails();
-      if (this.cartService.isEmpty() || !this.cartDetails.selectedBranch()) {
+      if (this.cartService.isEmpty()) {
         await this.router.navigateByUrl('/carrito');
         return;
       }
-      if (!this.canSelectedBranchDeliver()) {
-        this.checkoutForm.controls.fulfillmentType.setValue('pickup');
-      }
+      this.preselectBranchWithWholeOrder();
+      this.adjustFulfillmentToSelectedBranch();
     } catch (error) {
       this.logger.logError('CheckoutPage.loadCartDetails', error);
       this.checkoutErrorMessage.set('No pudimos cargar tu carrito. Recarga la página.');
+    }
+  }
+
+  selectBranch(branchId: string): void {
+    this.cartDetails.branchSelection.selectBranch(branchId);
+    this.adjustFulfillmentToSelectedBranch();
+  }
+
+  /** Si no hay botica elegida (o la guardada no tiene todo), se propone la primera que sí lo tenga. */
+  private preselectBranchWithWholeOrder(): void {
+    const selectedBranch = this.cartDetails.selectedBranch();
+    if (selectedBranch && this.cartDetails.canBranchFulfillCart(selectedBranch.id)) {
+      return;
+    }
+    const firstCompleteBranch = this.branchOptions().find((branchOption) => branchOption.hasWholeOrder);
+    if (firstCompleteBranch) {
+      this.cartDetails.branchSelection.selectBranch(firstCompleteBranch.branch.id);
+    }
+  }
+
+  /** Una botica sin delivery solo permite recojo. */
+  private adjustFulfillmentToSelectedBranch(): void {
+    if (this.cartDetails.selectedBranch() && !this.canSelectedBranchDeliver()) {
+      this.checkoutForm.controls.fulfillmentType.setValue('pickup');
     }
   }
 
@@ -172,6 +202,7 @@ export class CheckoutPage implements OnInit {
     }
     const selectedBranch = this.cartDetails.selectedBranch();
     if (!selectedBranch) {
+      this.checkoutErrorMessage.set('Elige la botica que preparará tu pedido.');
       return;
     }
 

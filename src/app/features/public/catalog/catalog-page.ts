@@ -1,11 +1,8 @@
 import {
-  afterNextRender,
   Component,
   computed,
   effect,
-  ElementRef,
   inject,
-  Injector,
   input,
   OnInit,
   signal,
@@ -13,7 +10,10 @@ import {
 import { RouterLink } from '@angular/router';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import { BranchRepository } from '../../../shared/data-access/branch.repository';
-import { BranchSelectionService } from '../../../shared/data-access/branch-selection.service';
+import {
+  ALL_BRANCHES_OPTION,
+  BranchSelectionService,
+} from '../../../shared/data-access/branch-selection.service';
 import { CategoryRepository } from '../../../shared/data-access/category.repository';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
 import { Category } from '../../../shared/models/category';
@@ -45,9 +45,7 @@ export class CatalogPage implements OnInit {
   private readonly categoryRepository = inject(CategoryRepository);
   private readonly branchRepository = inject(BranchRepository);
   private readonly logger = inject(AppLoggerService);
-  private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly injector = inject(Injector);
-  readonly branchSelection = inject(BranchSelectionService);
+  private readonly branchSelection = inject(BranchSelectionService);
 
   /** `?categoria=analgesicos` desde enlaces externos o del inicio. */
   readonly categoria = input<string>();
@@ -69,7 +67,6 @@ export class CatalogPage implements OnInit {
   readonly visibleProductCards = computed<CatalogProductCard[]>(() => {
     const normalizedSearch = normalizeTextForSearch(this.searchText());
     const selectedCategoryId = this.selectedCategoryId();
-    const selectedBranchId = this.branchSelection.selectedBranchId();
     const categoryNameById = new Map(
       this.categories().map((category) => [category.id, category.name]),
     );
@@ -91,7 +88,7 @@ export class CatalogPage implements OnInit {
         categoryName: categoryNameById.get(product.categoryId) ?? '',
         availability: describeProductAvailability(
           product,
-          selectedBranchId,
+          ALL_BRANCHES_OPTION,
           this.activeBranchIds(),
         ),
       }))
@@ -126,7 +123,6 @@ export class CatalogPage implements OnInit {
       this.products.set(activeProducts);
       this.categories.set(activeCategories);
       this.branchSelection.setAvailableBranches(activeBranches);
-      this.revealSelectedBranchStop();
     } catch (error) {
       this.logger.logError('CatalogPage.loadCatalog', error);
       this.loadErrorMessage.set(
@@ -143,25 +139,6 @@ export class CatalogPage implements OnInit {
 
   selectCategory(categoryId: string): void {
     this.selectedCategoryId.set(categoryId);
-  }
-
-  /** La botica guardada puede quedar fuera de vista en la fila de paraderos: se centra al cargar. */
-  private revealSelectedBranchStop(): void {
-    afterNextRender(
-      () => {
-        const stopsRow = this.hostElement.nativeElement.querySelector<HTMLElement>('.catalog-stops');
-        const selectedStop = stopsRow?.querySelector<HTMLElement>('.catalog-stop.is-selected');
-        if (stopsRow && selectedStop) {
-          const stopLeft = selectedStop.getBoundingClientRect().left - stopsRow.getBoundingClientRect().left;
-          stopsRow.scrollLeft += stopLeft - (stopsRow.clientWidth - selectedStop.offsetWidth) / 2;
-        }
-      },
-      { injector: this.injector },
-    );
-  }
-
-  selectBranch(branchId: string): void {
-    this.branchSelection.selectBranch(branchId);
   }
 
   clearSearch(): void {

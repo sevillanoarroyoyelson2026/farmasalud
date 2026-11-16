@@ -17,26 +17,6 @@
   } @else {
     <div class="cart-layout">
       <div>
-        <label class="cart-branch-picker surface-card">
-          <span
-            ><i class="fas fa-store me-2" aria-hidden="true"></i
-            ><strong>Botica que atiende tu pedido</strong></span
-          >
-          <select class="form-select" (change)="changeSelectedBranch($event)">
-            <option value="" disabled [selected]="!cartDetails.branchSelection.selectedBranchId()">
-              Elige una botica
-            </option>
-            @for (branch of cartDetails.branchSelection.availableBranches(); track branch.id) {
-              <option
-                [value]="branch.id"
-                [selected]="cartDetails.branchSelection.selectedBranchId() === branch.id"
-              >
-                {{ branch.name }} — {{ branch.district }}
-              </option>
-            }
-          </select>
-        </label>
-
         <ul class="cart-line-list">
           @for (lineDetail of cartDetails.cartLineDetails(); track lineDetail.product.id) {
             <li class="cart-line surface-card">
@@ -56,15 +36,6 @@
                   <span class="status-badge is-warning mt-1"
                     ><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere
                     receta</span
-                  >
-                }
-                @if (
-                  cartDetails.branchSelection.selectedBranchId() &&
-                  !lineDetail.hasEnoughStockInBranch
-                ) {
-                  <span class="cart-line-warning"
-                    ><i class="fas fa-triangle-exclamation me-1" aria-hidden="true"></i>No hay
-                    suficiente stock en esta botica</span
                   >
                 }
               </div>
@@ -125,23 +96,8 @@
             receta médica.
           </p>
         }
-        <a
-          class="btn btn-primary w-100"
-          routerLink="/checkout"
-          [class.disabled]="
-            !cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()
-          "
-          [attr.aria-disabled]="
-            !cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()
-          "
-        >
-          Continuar con el pago
-        </a>
-        @if (!cartDetails.branchSelection.selectedBranchId()) {
-          <p class="form-text mb-0 mt-2">Elige la botica que atenderá tu pedido.</p>
-        } @else if (cartDetails.hasStockProblems()) {
-          <p class="form-text mb-0 mt-2">Ajusta las cantidades o elige otra botica.</p>
-        }
+        <a class="btn btn-primary w-100" routerLink="/checkout">Continuar con el pago</a>
+        <p class="form-text mb-0 mt-2">En el siguiente paso eliges la botica y la forma de entrega.</p>
         <a class="btn btn-link w-100 mt-1" routerLink="/catalogo">Seguir comprando</a>
       </aside>
     </div>

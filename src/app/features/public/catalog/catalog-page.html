@@ -39,49 +39,6 @@
   </header>
 
   <div class="container-xl catalog-body">
-    <!-- Paraderos: la botica elegida define la disponibilidad que se muestra -->
-    <div class="catalog-stops-header">
-      <h2 class="catalog-stops-title">Tu botica</h2>
-      <p class="catalog-stops-hint">
-        @if (branchSelection.selectedBranch(); as selectedBranch) {
-          Disponibilidad real en <strong>{{ selectedBranch.name }}</strong>,
-          {{ selectedBranch.district }}.
-        } @else {
-          Mostrando la disponibilidad de todas las boticas.
-        }
-      </p>
-    </div>
-    <div class="catalog-stops" role="group" aria-label="Elegir botica">
-      <button
-        type="button"
-        class="catalog-stop"
-        [class.is-selected]="branchSelection.selectedBranchId() === ''"
-        [attr.aria-pressed]="branchSelection.selectedBranchId() === ''"
-        (click)="selectBranch('')"
-      >
-        <span class="catalog-stop-marker" aria-hidden="true"><i class="fas fa-route"></i></span>
-        Todas
-      </button>
-      @for (
-        branch of branchSelection.availableBranches();
-        track branch.id;
-        let branchIndex = $index
-      ) {
-        <button
-          type="button"
-          class="catalog-stop"
-          [class.is-selected]="branchSelection.selectedBranchId() === branch.id"
-          [attr.aria-pressed]="branchSelection.selectedBranchId() === branch.id"
-          (click)="selectBranch(branch.id)"
-        >
-          <span class="catalog-stop-marker is-tabular" aria-hidden="true">{{
-            branchIndex + 1
-          }}</span>
-          {{ branch.name }}
-        </button>
-      }
-    </div>
-
     <div class="catalog-filters">
       <nav class="catalog-category-chips" aria-label="Categorías">
         <button
@@ -172,30 +129,6 @@
         }
       </ul>
 
-      <!-- Las boticas detrás del pedido: donde también puedes recoger -->
-      <section class="catalog-branches-band">
-        <div class="catalog-branches-photos">
-          <img
-            src="images/trujillo-town-hall-peru.jpg"
-            alt="Fachada celeste del municipio de Trujillo, en la Plaza de Armas"
-          />
-          <img
-            src="images/former-pharmacy-shelves-with-medicines.jpg"
-            alt="Estantes de madera con frascos de cerámica de una botica tradicional"
-          />
-          <img
-            src="images/pills-and-medicines-01.jpg"
-            alt="Frascos de medicinas de colores sobre fondo claro"
-          />
-        </div>
-        <div class="catalog-branches-text">
-          <h2>¿Prefieres recogerlo en tienda?</h2>
-          <p>
-            Nuestras boticas de Trujillo te esperan de lunes a sábado; elige tu paradero y revisa el
-            stock antes de salir de casa.
-          </p>
-        </div>
-      </section>
     }
   </div>
 </section>

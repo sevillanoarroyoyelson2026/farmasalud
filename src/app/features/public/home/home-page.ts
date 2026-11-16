@@ -2,7 +2,10 @@ import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angula
 import { RouterLink } from '@angular/router';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import { BranchRepository } from '../../../shared/data-access/branch.repository';
-import { BranchSelectionService } from '../../../shared/data-access/branch-selection.service';
+import {
+  ALL_BRANCHES_OPTION,
+  BranchSelectionService,
+} from '../../../shared/data-access/branch-selection.service';
 import { CategoryRepository } from '../../../shared/data-access/category.repository';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
 import { Category } from '../../../shared/models/category';
@@ -286,11 +289,10 @@ export class HomePage implements OnInit {
   }
 
   private toCardRows(products: Product[]): ProductCardRow[] {
-    const selectedBranchId = this.branchSelection.selectedBranchId();
     const activeBranchIds = this.branchSelection.availableBranches().map((branch) => branch.id);
     return products.map((product) => ({
       product,
-      availability: describeProductAvailability(product, selectedBranchId, activeBranchIds),
+      availability: describeProductAvailability(product, ALL_BRANCHES_OPTION, activeBranchIds),
     }));
   }
 }

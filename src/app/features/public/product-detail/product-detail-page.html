@@ -58,7 +58,7 @@
           <app-product-price [product]="loadedProduct" size="large" />
         </p>
 
-        @if (selectedBranchAvailability(); as availability) {
+        @if (storeAvailability(); as availability) {
           <span
             class="status-badge"
             [class.is-success]="availability.stockStatus === 'available'"
@@ -127,55 +127,6 @@
       </div>
     </article>
 
-    <section class="product-detail-branches">
-      <h2 class="product-detail-section-title">Disponibilidad por botica</h2>
-      <ol class="product-detail-branch-list enter-along-route">
-        @for (
-          branchAvailability of availabilityByBranch();
-          track branchAvailability.branch.id;
-          let branchIndex = $index
-        ) {
-          <li
-            class="product-detail-branch-stop"
-            [class.is-selected]="
-              branchSelection.selectedBranchId() === branchAvailability.branch.id
-            "
-            [class.is-out-of-stock]="branchAvailability.stockStatus === 'out_of_stock'"
-            [style.--enter-index]="branchIndex"
-          >
-            <span class="product-detail-branch-marker is-tabular" aria-hidden="true">{{
-              branchIndex + 1
-            }}</span>
-            <span class="product-detail-branch-text">
-              <strong>{{ branchAvailability.branch.name }}</strong>
-              <span class="panel-table-secondary"
-                >{{ branchAvailability.branch.address }},
-                {{ branchAvailability.branch.district }}</span
-              >
-            </span>
-            <span class="product-detail-branch-actions">
-              <span
-                class="status-badge"
-                [class.is-success]="branchAvailability.stockStatus === 'available'"
-                [class.is-warning]="branchAvailability.stockStatus === 'low_stock'"
-                [class.is-neutral]="branchAvailability.stockStatus === 'out_of_stock'"
-              >
-                {{ branchStockLabel[branchAvailability.stockStatus] }}
-              </span>
-              @if (branchSelection.selectedBranchId() !== branchAvailability.branch.id) {
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary"
-                  (click)="selectBranch(branchAvailability.branch.id)"
-                >
-                  Elegir<span class="visually-hidden"> {{ branchAvailability.branch.name }}</span>
-                </button>
-              }
-            </span>
-          </li>
-        }
-      </ol>
-    </section>
   } @else {
     <div class="panel-empty-state surface-card">
       <i class="fas fa-box-open" aria-hidden="true"></i>

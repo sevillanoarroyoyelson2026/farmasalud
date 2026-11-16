@@ -23,7 +23,47 @@
     <form class="checkout-layout" [formGroup]="checkoutForm" (ngSubmit)="placeOrder()" novalidate>
       <div class="checkout-steps">
         <fieldset class="checkout-step surface-card">
-          <legend class="checkout-step-title"><span>1</span>Entrega</legend>
+          <legend class="checkout-step-title"><span>1</span>Elige tu botica</legend>
+          <p class="checkout-step-hint">La botica que elijas preparará tu pedido o te lo entregará para recoger.</p>
+          <div class="checkout-branch-list" role="radiogroup" aria-label="Botica que atiende tu pedido">
+            @for (branchOption of branchOptions(); track branchOption.branch.id) {
+              <button
+                type="button"
+                role="radio"
+                class="checkout-branch"
+                [class.is-selected]="cartDetails.selectedBranch()?.id === branchOption.branch.id"
+                [class.is-incomplete]="!branchOption.hasWholeOrder"
+                [attr.aria-checked]="cartDetails.selectedBranch()?.id === branchOption.branch.id"
+                (click)="selectBranch(branchOption.branch.id)"
+              >
+                <span class="checkout-branch-check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                <span class="checkout-branch-text">
+                  <strong>{{ branchOption.branch.name }}</strong>
+                  <small>{{ branchOption.branch.address }}, {{ branchOption.branch.district }}</small>
+                </span>
+                <span class="checkout-branch-tags">
+                  @if (branchOption.hasWholeOrder) {
+                    <span class="status-badge is-success">Tiene todo tu pedido</span>
+                  } @else {
+                    <span class="status-badge is-warning">Falta stock</span>
+                  }
+                  @if (branchOption.branch.offersDelivery) {
+                    <span class="status-badge is-neutral"><i class="fas fa-motorcycle" aria-hidden="true"></i>Delivery</span>
+                  }
+                </span>
+              </button>
+            }
+          </div>
+          @if (cartDetails.selectedBranch() && cartDetails.hasStockProblems()) {
+            <p class="checkout-branch-warning" role="alert">
+              <i class="fas fa-triangle-exclamation me-1" aria-hidden="true"></i>Esta botica no tiene
+              stock suficiente de todo tu pedido. Elige otra o ajusta tu carrito.
+            </p>
+          }
+        </fieldset>
+
+        <fieldset class="checkout-step surface-card">
+          <legend class="checkout-step-title"><span>2</span>Entrega</legend>
           <div class="checkout-options">
             <label
               class="checkout-option"
@@ -132,7 +172,7 @@
 
         @if (cartDetails.requiresPrescription()) {
           <fieldset class="checkout-step surface-card">
-            <legend class="checkout-step-title"><span>2</span>Receta médica</legend>
+            <legend class="checkout-step-title"><span>3</span>Receta médica</legend>
             <p class="text-secondary small">
               Tu pedido incluye medicamentos que requieren receta. Sube una foto legible: un químico
               farmacéutico la validará antes de preparar tu pedido. Solo la ven tú y el personal de
@@ -171,7 +211,7 @@
 
         <fieldset class="checkout-step surface-card">
           <legend class="checkout-step-title">
-            <span>{{ cartDetails.requiresPrescription() ? 3 : 2 }}</span
+            <span>{{ cartDetails.requiresPrescription() ? 4 : 3 }}</span
             >Pago
           </legend>
           <div class="checkout-options">
@@ -305,6 +345,7 @@
             isWaitingForCardForm() ||
             isUploadingPrescription() ||
             !isEmailVerified() ||
+            !cartDetails.selectedBranch() ||
             cartDetails.hasStockProblems()
           "
         >

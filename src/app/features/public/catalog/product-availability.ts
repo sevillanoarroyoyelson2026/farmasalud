@@ -15,7 +15,7 @@ export interface ProductAvailability {
 /**
  * Disponibilidad que ve el cliente.
  * - Con botica elegida: estado en esa botica.
- * - Sin botica: en cuántas boticas activas hay stock.
+ * - Sin botica (toda la tienda): disponible si alguna botica activa tiene stock.
  */
 export function describeProductAvailability(
   product: Product,
@@ -32,15 +32,9 @@ export function describeProductAvailability(
     return { stockStatus, availabilityLabel: availabilityLabelByStatus[stockStatus] };
   }
 
-  const branchesWithStock = countBranchesWithStock(product, activeBranchIds);
-  if (branchesWithStock === 0) {
+  // En la tienda no se muestran boticas: basta con saber si hay stock en alguna.
+  if (countBranchesWithStock(product, activeBranchIds) === 0) {
     return { stockStatus: 'out_of_stock', availabilityLabel: 'Agotado' };
   }
-  return {
-    stockStatus: 'available',
-    availabilityLabel:
-      branchesWithStock === 1
-        ? 'Disponible en 1 botica'
-        : `Disponible en ${branchesWithStock} boticas`,
-  };
+  return { stockStatus: 'available', availabilityLabel: 'Disponible' };
 }

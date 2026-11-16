@@ -5,7 +5,7 @@ import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import { CartService, MAXIMUM_UNITS_PER_PRODUCT } from '../../../shared/data-access/cart.service';
 import { CartDetailsService } from './cart-details.service';
 
-/** Carrito: revisar cantidades y disponibilidad en la botica antes de pagar. */
+/** Carrito: revisar productos y cantidades. La botica se elige en el checkout. */
 @Component({
   selector: 'app-cart-page',
   imports: [RouterLink, CurrencyPipe],
@@ -24,10 +24,6 @@ export class CartPage implements OnInit {
     } catch (error) {
       this.logger.logError('CartPage.loadCartDetails', error);
     }
-  }
-
-  changeSelectedBranch(changeEvent: Event): void {
-    this.cartDetails.branchSelection.selectBranch((changeEvent.target as HTMLSelectElement).value);
   }
 
   increaseQuantity(productId: string): void {

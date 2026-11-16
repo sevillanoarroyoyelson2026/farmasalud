@@ -175,3 +175,98 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* -- Paso 1: elegir la botica (solo aquí, antes de pagar) -- */
+.checkout-step-hint {
+  margin: -0.25rem 0 1rem;
+  color: var(--color-text-secondary);
+}
+
+.checkout-branch-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 0.75rem;
+}
+
+.checkout-branch {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-items: start;
+  gap: 0.35rem 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  color: var(--color-text);
+  text-align: left;
+  transition:
+    border-color var(--transition-base),
+    background-color var(--transition-base),
+    transform 0.16s var(--ease-out-expo);
+}
+
+.checkout-branch:hover {
+  border-color: var(--route-cobalt);
+}
+
+.checkout-branch:active {
+  transform: scale(0.98);
+}
+
+.checkout-branch.is-selected {
+  border-color: var(--route-cobalt);
+  background: var(--route-cobalt-wash);
+}
+
+.checkout-branch.is-incomplete:not(.is-selected) {
+  opacity: 0.7;
+}
+
+.checkout-branch-check {
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-top: 0.1rem;
+  border: 2px solid var(--color-border-strong);
+  border-radius: 50%;
+  color: transparent;
+  font-size: 0.7rem;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.checkout-branch.is-selected .checkout-branch-check {
+  border-color: var(--route-cobalt);
+  background: var(--route-cobalt);
+  color: #fff;
+}
+
+.checkout-branch-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.checkout-branch-text small {
+  color: var(--color-text-secondary);
+}
+
+.checkout-branch-tags {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 2;
+  gap: 0.35rem;
+}
+
+.checkout-branch-warning {
+  margin: 0.85rem 0 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-warning-soft);
+  color: var(--route-ink);
+  font-weight: 500;
+}

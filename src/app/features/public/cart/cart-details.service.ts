@@ -50,6 +50,15 @@ export class CartDetailsService {
   );
   readonly selectedBranch = this.branchSelection.selectedBranch;
 
+  /** true si la botica tiene stock para todas las líneas del carrito (el servidor lo vuelve a validar). */
+  canBranchFulfillCart(branchId: string): boolean {
+    const loadedProducts = this.loadedProductsSignal();
+    return this.cartService.cartLines().every((cartLine) => {
+      const product = loadedProducts.get(cartLine.productId);
+      return product !== undefined && getStockInBranch(product, branchId) >= cartLine.quantity;
+    });
+  }
+
   /** Carga productos y boticas; quita del carrito los productos que ya no se venden. */
   async loadCartDetails(): Promise<void> {
     this.isLoading.set(true);
