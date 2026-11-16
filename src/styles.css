@@ -1,64 +1,99 @@
 /* ==========================================================
    FARMASALUD — Estilos globales y tokens de diseño
-   Paleta salud: verde azulado (confianza) + verde fresco (bienestar)
+   Mundo "Letrero de ruta": las boticas son paraderos de una ruta.
+   Esmalte claro de fondo, tinta azul noche, franja cobalto y marigold
+   como bandas estructurales. El verde se reserva SOLO para lo que está
+   en vivo (stock disponible, pedido en marcha); el rojo, para alertas.
    ========================================================== */
 :root {
-  --color-primary: #0f766e;
-  --color-primary-hover: #115e59;
-  --color-primary-soft: #ccfbf1;
-  --color-accent: #16a34a;
-  --color-accent-soft: #dcfce7;
-  --color-warning: #d97706;
-  --color-warning-soft: #fef3c7;
-  --color-danger: #dc2626;
-  --color-danger-soft: #fee2e2;
-  --color-info: #0369a1;
-  --color-info-soft: #e0f2fe;
+  /* Paleta de ruta */
+  --route-enamel: #f2f4f1;
+  --route-enamel-deep: #e6eae3;
+  --route-ink: #0f1a2e;
+  --route-ink-soft: #3d4a60;
+  --route-cobalt: #1440a8;
+  --route-cobalt-deep: #0c2c7a;
+  --route-cobalt-wash: #e4eafa;
+  --route-marigold: #ffbe1a;
+  --route-marigold-deep: #e9a400;
+  --route-marigold-wash: #fff3cc;
+  --route-live: #0e9a57;
+  --route-live-ink: #0a7444;
+  --route-live-wash: #dcf2e5;
+  --route-alert: #c42b26;
+  --route-alert-wash: #fde4e2;
 
-  --color-text: #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
-  --color-border: #e2e8f0;
+  /* Roles semánticos (los usan todas las superficies, incluidos los paneles) */
+  --color-primary: var(--route-cobalt);
+  --color-primary-hover: var(--route-cobalt-deep);
+  --color-primary-soft: var(--route-cobalt-wash);
+  --color-accent: var(--route-live-ink);
+  --color-accent-soft: var(--route-live-wash);
+  --color-warning: #a65a00;
+  --color-warning-soft: var(--route-marigold-wash);
+  --color-danger: var(--route-alert);
+  --color-danger-soft: var(--route-alert-wash);
+  --color-info: var(--route-cobalt);
+  --color-info-soft: var(--route-cobalt-wash);
+
+  --color-text: var(--route-ink);
+  --color-text-secondary: var(--route-ink-soft);
+  --color-text-muted: #5d6880;
+  --color-border: #d5dbd2;
+  --color-border-strong: #b9c1b5;
   --color-surface: #ffffff;
-  --color-background: #f6faf9;
+  --color-background: var(--route-enamel);
 
-  --color-sidebar: #0b1f1d;
-  --color-sidebar-text: #a7c4c0;
-  --color-sidebar-active: #5eead4;
+  --color-sidebar: var(--route-ink);
+  --color-sidebar-text: #b3bfd6;
+  --color-sidebar-active: var(--route-marigold);
 
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading: 'Plus Jakarta Sans', var(--font-body);
+  /* Tipografía: letra de rótulo condensada + cuerpo hiperlegible */
+  --font-body: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Archivo', 'Arial Narrow', sans-serif;
+  --font-stretch-sign: 72%;
+  --font-stretch-label: 85%;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1.25rem;
-  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.06);
-  --shadow-raised: 0 12px 32px rgba(15, 23, 42, 0.12);
-  --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --shadow-card: 0 1px 0 rgba(15, 26, 46, 0.05), 0 8px 20px -14px rgba(15, 26, 46, 0.35);
+  --shadow-raised: 0 2px 4px rgba(15, 26, 46, 0.06), 0 22px 44px -18px rgba(15, 26, 46, 0.4);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: 0.22s var(--ease-out-expo);
+
+  /* Línea de ruta */
+  --route-line-weight: 6px;
+  --route-stop-size: 2.75rem;
 
   /* Bootstrap hereda la paleta */
   --bs-primary: var(--color-primary);
-  --bs-primary-rgb: 15, 118, 110;
+  --bs-primary-rgb: 20, 64, 168;
   --bs-success: var(--color-accent);
-  --bs-success-rgb: 22, 163, 74;
+  --bs-success-rgb: 10, 116, 68;
   --bs-body-font-family: var(--font-body);
   --bs-body-color: var(--color-text);
   --bs-body-bg: var(--color-background);
   --bs-link-color: var(--color-primary);
-  --bs-link-color-rgb: 15, 118, 110;
+  --bs-link-color-rgb: 20, 64, 168;
   --bs-link-hover-color: var(--color-primary-hover);
   --bs-border-radius: var(--radius-sm);
+  --bs-border-color: var(--color-border);
 }
 
 html {
   scroll-behavior: smooth;
+  scrollbar-color: var(--color-border-strong) var(--color-background);
 }
 
 body {
   margin: 0;
   font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.55;
   color: var(--color-text);
   background: var(--color-background);
+  caret-color: var(--color-primary);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -68,27 +103,78 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   font-family: var(--font-heading);
-  font-weight: 700;
-  line-height: 1.25;
+  font-stretch: var(--font-stretch-sign);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
   color: var(--color-text);
+  text-wrap: balance;
+}
+
+a {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1.5px;
 }
 
 :focus-visible {
-  outline: 3px solid rgba(15, 118, 110, 0.45);
+  outline: 3px solid var(--route-marigold);
   outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--route-ink);
+  border-radius: var(--radius-sm);
 }
 
 ::selection {
-  background: var(--color-primary-soft);
+  background: var(--route-marigold);
+  color: var(--route-ink);
+}
+
+/* Cifras de precio, stock y tiempo siempre tabulares */
+.is-tabular,
+.product-price,
+.status-badge,
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Etiqueta de rótulo: mayúsculas condensadas para datos de ruta */
+.sign-label {
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* -- Botones -- */
 .btn {
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-weight: 700;
+  letter-spacing: 0.01em;
   border-radius: var(--radius-sm);
-  transition: all var(--transition-base);
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base),
+    transform 0.12s var(--ease-out-expo);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+
+.btn-lg {
+  min-height: 3.25rem;
+  padding-inline: 1.5rem;
 }
 
 .btn-primary {
@@ -98,8 +184,8 @@ h6 {
   --bs-btn-hover-border-color: var(--color-primary-hover);
   --bs-btn-active-bg: var(--color-primary-hover);
   --bs-btn-active-border-color: var(--color-primary-hover);
-  --bs-btn-disabled-bg: var(--color-primary);
-  --bs-btn-disabled-border-color: var(--color-primary);
+  --bs-btn-disabled-bg: #7d8ba6;
+  --bs-btn-disabled-border-color: #7d8ba6;
 }
 
 .btn-outline-primary {
@@ -108,18 +194,45 @@ h6 {
   --bs-btn-hover-bg: var(--color-primary);
   --bs-btn-hover-border-color: var(--color-primary);
   --bs-btn-active-bg: var(--color-primary-hover);
+  border-width: 2px;
+}
+
+/* Acción de letrero: marigold sobre cobalto o tinta */
+.btn-signal {
+  --bs-btn-color: var(--route-ink);
+  --bs-btn-bg: var(--route-marigold);
+  --bs-btn-border-color: var(--route-marigold);
+  --bs-btn-hover-color: var(--route-ink);
+  --bs-btn-hover-bg: #ffcd4d;
+  --bs-btn-hover-border-color: #ffcd4d;
+  --bs-btn-active-color: var(--route-ink);
+  --bs-btn-active-bg: var(--route-marigold-deep);
+  --bs-btn-active-border-color: var(--route-marigold-deep);
+  --bs-btn-disabled-color: var(--route-ink);
+  --bs-btn-disabled-bg: var(--route-marigold);
 }
 
 .form-control,
 .form-select {
+  min-height: 2.75rem;
   border-radius: var(--radius-sm);
-  border-color: var(--color-border);
+  border: 1.5px solid var(--color-border-strong);
+  background-color: var(--color-surface);
+}
+
+.form-control::placeholder {
+  color: var(--color-text-muted);
 }
 
 .form-control:focus,
 .form-select:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 0.2rem rgba(15, 118, 110, 0.15);
+  box-shadow: 0 0 0 3px rgba(20, 64, 168, 0.18);
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  border-color: var(--color-danger);
 }
 
 .form-check-input:checked {
@@ -133,6 +246,84 @@ h6 {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
+}
+
+/* -- Esqueletos de carga (reemplazan spinners mientras llega Firestore) -- */
+.skeleton-block {
+  display: block;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--route-enamel-deep) 25%,
+    #f7f8f6 50%,
+    var(--route-enamel-deep) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-sweep 1.4s linear infinite;
+}
+
+@keyframes skeleton-sweep {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* -- Entrada escalonada: el contenido es visible por defecto; solo se desliza -- */
+@media (prefers-reduced-motion: no-preference) {
+  .enter-along-route > * {
+    animation: enter-along-route 0.6s var(--ease-out-expo) both;
+    animation-delay: calc(min(var(--enter-index, 0), 12) * 45ms);
+  }
+}
+
+@keyframes enter-along-route {
+  from {
+    transform: translateX(-14px);
+    opacity: 0.001;
+  }
+}
+
+/* -- Aparición al hacer scroll: la sección llega a su paradero -- */
+.reveal-on-scroll {
+  --reveal-delay: 0ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-on-scroll:not(.is-revealed) {
+    opacity: 0.001;
+    transform: translateY(18px);
+  }
+
+  .reveal-on-scroll {
+    transition:
+      opacity 0.55s var(--ease-out-expo) var(--reveal-delay, 0ms),
+      transform 0.55s var(--ease-out-expo) var(--reveal-delay, 0ms);
+  }
+}
+
+/* -- Transición entre páginas: el contenido viaja a lo largo de la ruta -- */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    animation: route-depart 0.28s var(--ease-out-expo) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: route-arrive 0.42s var(--ease-out-expo) both;
+  }
+}
+
+@keyframes route-depart {
+  to {
+    transform: translateX(-28px);
+    opacity: 0;
+  }
+}
+
+@keyframes route-arrive {
+  from {
+    transform: translateX(36px);
+    opacity: 0;
+  }
 }
 
 .page-title {
@@ -247,41 +438,67 @@ h6 {
   }
 }
 
-/* -- Etiquetas de estado -- */
+/* -- Etiquetas de estado: el estado lleva marca (punto/forma) además de color -- */
 .status-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  gap: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   white-space: nowrap;
+}
+
+.status-badge::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: currentColor;
+  content: '';
 }
 
 .status-badge.is-success {
   background: var(--color-accent-soft);
-  color: #166534;
+  color: var(--route-live-ink);
 }
 
 .status-badge.is-warning {
   background: var(--color-warning-soft);
-  color: #92400e;
+  color: #7a4300;
+}
+
+.status-badge.is-warning::before {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.85);
 }
 
 .status-badge.is-danger {
   background: var(--color-danger-soft);
-  color: #991b1b;
+  color: #9b1f1b;
+}
+
+.status-badge.is-danger::before {
+  border-radius: 1px;
 }
 
 .status-badge.is-info {
   background: var(--color-info-soft);
-  color: #075985;
+  color: var(--route-cobalt-deep);
 }
 
 .status-badge.is-neutral {
-  background: #f1f5f9;
+  background: var(--route-enamel-deep);
   color: var(--color-text-secondary);
+}
+
+.status-badge.is-neutral::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -292,4 +509,19 @@ h6 {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* -- Esqueleto genérico de página (carrito, checkout) -- */
+.page-skeleton {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.page-skeleton-row {
+  height: 5.5rem;
+}
+
+.page-skeleton-row.is-short {
+  width: 40%;
+  height: 3rem;
 }

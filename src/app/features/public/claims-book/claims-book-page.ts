@@ -21,10 +21,25 @@ import { peruvianCellphoneValidator } from '../../../shared/validators/password-
   imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './claims-book-page.html',
   styles: `
-    .claims-page { max-width: 880px; padding-top: 2rem; padding-bottom: 3rem; }
-    .claims-card { padding: 1.5rem; margin-bottom: 1.5rem; }
-    .claim-item { padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
-    .claim-response { padding: 0.75rem; margin-top: 0.5rem; border-radius: var(--radius-sm); background: var(--color-accent-soft); }
+    .claims-page {
+      max-width: 880px;
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+    }
+    .claims-card {
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .claim-item {
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .claim-response {
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent-soft);
+    }
   `,
 })
 export class ClaimsBookPage implements OnInit {
@@ -44,14 +59,20 @@ export class ClaimsBookPage implements OnInit {
 
   readonly claimForm = this.formBuilder.nonNullable.group({
     claimType: ['complaint' as ClaimType],
-    fullName: [this.authService.currentSession()?.displayName ?? '', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
+    fullName: [
+      this.authService.currentSession()?.displayName ?? '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(80)],
+    ],
     documentNumber: ['', [Validators.required, Validators.pattern(/^\d{8}$|^\d{9,12}$/)]],
     address: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(160)]],
     phone: ['', [Validators.required, peruvianCellphoneValidator]],
     relatedOrderNumber: ['', [Validators.maxLength(20)]],
     claimedAmount: [null as number | null, [Validators.min(0), Validators.max(100000)]],
     description: ['', [Validators.required, Validators.minLength(20), Validators.maxLength(2000)]],
-    requestedSolution: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(1000)]],
+    requestedSolution: [
+      '',
+      [Validators.required, Validators.minLength(5), Validators.maxLength(1000)],
+    ],
     hasAcceptedTruthfulness: [false, [Validators.requiredTrue]],
   });
 
@@ -71,7 +92,11 @@ export class ClaimsBookPage implements OnInit {
     }
     this.isSubmitting.set(true);
     this.submitErrorMessage.set('');
-    const { hasAcceptedTruthfulness: _hasAccepted, claimedAmount, ...formValue } = this.claimForm.getRawValue();
+    const {
+      hasAcceptedTruthfulness: _hasAccepted,
+      claimedAmount,
+      ...formValue
+    } = this.claimForm.getRawValue();
     try {
       const submittedClaim = await this.customerServiceRepository.submitClaim({
         ...formValue,
@@ -80,7 +105,10 @@ export class ClaimsBookPage implements OnInit {
         relatedOrderNumber: formValue.relatedOrderNumber.trim().toUpperCase(),
         description: formValue.description.trim(),
         requestedSolution: formValue.requestedSolution.trim(),
-        claimedAmount: claimedAmount === null || claimedAmount === undefined || String(claimedAmount) === '' ? null : Number(claimedAmount),
+        claimedAmount:
+          claimedAmount === null || claimedAmount === undefined || String(claimedAmount) === ''
+            ? null
+            : Number(claimedAmount),
       });
       this.submittedClaimNumber.set(submittedClaim.claimNumber);
       this.claimForm.reset();

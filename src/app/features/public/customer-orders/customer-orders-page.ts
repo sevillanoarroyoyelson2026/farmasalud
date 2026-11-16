@@ -14,9 +14,13 @@ import { Order, ORDER_STATUS_LABEL, ORDER_STATUS_TONE } from '../../../shared/mo
     <section class="container-xl customer-orders-page">
       <h1 class="customer-orders-title">Mis pedidos</h1>
       @if (isLoading()) {
-        <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+        <div class="panel-empty-state">
+          <span class="spinner-border text-primary" role="status"></span>Cargando…
+        </div>
       } @else if (loadErrorMessage()) {
-        <div class="panel-empty-state surface-card"><i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}</div>
+        <div class="panel-empty-state surface-card">
+          <i class="fas fa-circle-exclamation" aria-hidden="true"></i>{{ loadErrorMessage() }}
+        </div>
       } @else if (orders().length === 0) {
         <div class="panel-empty-state surface-card">
           <i class="fas fa-receipt" aria-hidden="true"></i>
@@ -31,11 +35,14 @@ import { Order, ORDER_STATUS_LABEL, ORDER_STATUS_TONE } from '../../../shared/mo
                 <span>
                   <strong>{{ order.orderNumber }}</strong>
                   <span class="panel-table-secondary">
-                    {{ order.createdAt ? (order.createdAt | date: "dd/MM/yyyy HH:mm") : '' }} · {{ order.branchName }}
+                    {{ order.createdAt ? (order.createdAt | date: 'dd/MM/yyyy HH:mm') : '' }} ·
+                    {{ order.branchName }}
                   </span>
                 </span>
                 <span class="customer-order-card-side">
-                  <span class="status-badge" [class]="'status-badge ' + statusTone[order.status]">{{ statusLabel[order.status] }}</span>
+                  <span class="status-badge" [class]="'status-badge ' + statusTone[order.status]">{{
+                    statusLabel[order.status]
+                  }}</span>
                   <strong>{{ order.orderTotal | currency: 'PEN' : 'S/ ' }}</strong>
                 </span>
               </a>
@@ -46,15 +53,41 @@ import { Order, ORDER_STATUS_LABEL, ORDER_STATUS_TONE } from '../../../shared/mo
     </section>
   `,
   styles: `
-    .customer-orders-page { padding-top: 2rem; padding-bottom: 3rem; max-width: 860px; }
-    .customer-orders-title { margin-bottom: 1.25rem; font-size: clamp(1.5rem, 3vw, 2rem); }
-    .customer-order-list { display: flex; flex-direction: column; gap: 0.75rem; padding: 0; list-style: none; }
-    .customer-order-card {
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;
-      padding: 1rem 1.25rem; color: inherit; text-decoration: none; transition: box-shadow var(--transition-base);
+    .customer-orders-page {
+      padding-top: 2rem;
+      padding-bottom: 3rem;
+      max-width: 860px;
     }
-    .customer-order-card:hover { box-shadow: var(--shadow-raised); }
-    .customer-order-card-side { display: flex; align-items: center; gap: 1rem; }
+    .customer-orders-title {
+      margin-bottom: 1.25rem;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+    .customer-order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 0;
+      list-style: none;
+    }
+    .customer-order-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      color: inherit;
+      text-decoration: none;
+      transition: box-shadow var(--transition-base);
+    }
+    .customer-order-card:hover {
+      box-shadow: var(--shadow-raised);
+    }
+    .customer-order-card-side {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
   `,
 })
 export class CustomerOrdersPage implements OnInit {

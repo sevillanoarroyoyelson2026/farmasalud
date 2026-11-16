@@ -6,9 +6,17 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import { CulqiCheckoutService } from '../../../core/payments/culqi-checkout.service';
 import { CartService } from '../../../shared/data-access/cart.service';
-import { ImageUploadService, UploadedPrescriptionFile } from '../../../shared/data-access/image-upload.service';
+import {
+  ImageUploadService,
+  UploadedPrescriptionFile,
+} from '../../../shared/data-access/image-upload.service';
 import { OrderRepository } from '../../../shared/data-access/order.repository';
-import { CreateOrderRequest, DELIVERY_FEE_IN_SOLES, FulfillmentType, PaymentMethod } from '../../../shared/models/order';
+import {
+  CreateOrderRequest,
+  DELIVERY_FEE_IN_SOLES,
+  FulfillmentType,
+  PaymentMethod,
+} from '../../../shared/models/order';
 import { describeErrorForUser } from '../../../shared/utils/user-facing-error';
 import { peruvianCellphoneValidator } from '../../../shared/validators/password-strength.validator';
 import {
@@ -41,12 +49,16 @@ export class CheckoutPage implements OnInit {
 
   /** Con llave pública de Culqi se cobra de verdad; sin ella, pago simulado (proyecto académico). */
   readonly isRealCardPaymentEnabled = this.culqiCheckout.isEnabled();
-  private readonly cardPaymentMethod: PaymentMethod = this.isRealCardPaymentEnabled ? 'culqi_card' : 'simulated_card';
+  private readonly cardPaymentMethod: PaymentMethod = this.isRealCardPaymentEnabled
+    ? 'culqi_card'
+    : 'simulated_card';
 
   /** Una clave por visita al checkout: si el cliente pulsa dos veces, el servidor no duplica el pedido. */
   private readonly orderIdempotencyKey = crypto.randomUUID();
 
-  readonly isEmailVerified = computed(() => this.authService.currentSession()?.isEmailVerified === true);
+  readonly isEmailVerified = computed(
+    () => this.authService.currentSession()?.isEmailVerified === true,
+  );
   readonly uploadedPrescription = signal<UploadedPrescriptionFile | null>(null);
   readonly uploadedPrescriptionName = signal('');
   readonly isUploadingPrescription = signal(false);
@@ -60,7 +72,9 @@ export class CheckoutPage implements OnInit {
     addressReference: ['', [Validators.maxLength(160)]],
     contactPhone: ['', [Validators.required, peruvianCellphoneValidator]],
     customerNote: ['', [Validators.maxLength(300)]],
-    paymentMethod: [(this.culqiCheckout.isEnabled() ? 'culqi_card' : 'simulated_card') as PaymentMethod],
+    paymentMethod: [
+      (this.culqiCheckout.isEnabled() ? 'culqi_card' : 'simulated_card') as PaymentMethod,
+    ],
     cardHolderName: ['', [Validators.required, Validators.minLength(3)]],
     cardNumber: ['', [Validators.required, cardNumberValidator]],
     cardExpiration: ['', [Validators.required, cardExpirationValidator]],
@@ -70,18 +84,28 @@ export class CheckoutPage implements OnInit {
   readonly selectedFulfillmentType = signal<FulfillmentType>('delivery');
   readonly selectedPaymentMethod = signal<PaymentMethod>(this.cardPaymentMethod);
   readonly isWaitingForCardForm = signal(false);
-  readonly deliveryFee = computed(() => (this.selectedFulfillmentType() === 'delivery' ? DELIVERY_FEE_IN_SOLES : 0));
+  readonly deliveryFee = computed(() =>
+    this.selectedFulfillmentType() === 'delivery' ? DELIVERY_FEE_IN_SOLES : 0,
+  );
   readonly orderTotal = computed(() => this.cartDetails.itemsTotal() + this.deliveryFee());
-  readonly canSelectedBranchDeliver = computed(() => this.cartDetails.selectedBranch()?.offersDelivery === true);
+  readonly canSelectedBranchDeliver = computed(
+    () => this.cartDetails.selectedBranch()?.offersDelivery === true,
+  );
 
   constructor() {
     if (this.isRealCardPaymentEnabled) {
       // Con Culqi los datos de la tarjeta los pide el formulario de Culqi, no esta página.
-      this.toggleControls(['cardHolderName', 'cardNumber', 'cardExpiration', 'cardSecurityCode'], false);
+      this.toggleControls(
+        ['cardHolderName', 'cardNumber', 'cardExpiration', 'cardSecurityCode'],
+        false,
+      );
     }
     this.checkoutForm.controls.fulfillmentType.valueChanges.subscribe((fulfillmentType) => {
       this.selectedFulfillmentType.set(fulfillmentType);
-      this.toggleControls(['street', 'district', 'addressReference'], fulfillmentType === 'delivery');
+      this.toggleControls(
+        ['street', 'district', 'addressReference'],
+        fulfillmentType === 'delivery',
+      );
     });
     this.checkoutForm.controls.paymentMethod.valueChanges.subscribe((paymentMethod) => {
       this.selectedPaymentMethod.set(paymentMethod);
@@ -118,7 +142,9 @@ export class CheckoutPage implements OnInit {
     this.checkoutErrorMessage.set('');
     this.isUploadingPrescription.set(true);
     try {
-      this.uploadedPrescription.set(await this.imageUploadService.uploadPrescription(prescriptionImage));
+      this.uploadedPrescription.set(
+        await this.imageUploadService.uploadPrescription(prescriptionImage),
+      );
       this.uploadedPrescriptionName.set(prescriptionImage.name);
     } catch (error) {
       this.logger.logError('CheckoutPage.uploadPrescription', error);
@@ -159,7 +185,9 @@ export class CheckoutPage implements OnInit {
         );
       } catch (error) {
         this.logger.logError('CheckoutPage.requestCardToken', error);
-        this.checkoutErrorMessage.set(describeErrorForUser(error, 'No se pudo validar la tarjeta.'));
+        this.checkoutErrorMessage.set(
+          describeErrorForUser(error, 'No se pudo validar la tarjeta.'),
+        );
         return;
       } finally {
         this.isWaitingForCardForm.set(false);
@@ -168,12 +196,16 @@ export class CheckoutPage implements OnInit {
 
     this.isPlacingOrder.set(true);
     try {
-      const createdOrder = await this.orderRepository.createOrder(this.buildOrderRequest(selectedBranch.id, culqiToken));
+      const createdOrder = await this.orderRepository.createOrder(
+        this.buildOrderRequest(selectedBranch.id, culqiToken),
+      );
       this.cartService.clearCart();
       await this.router.navigate(['/mis-pedidos', createdOrder.orderId]);
     } catch (error) {
       this.logger.logError('CheckoutPage.placeOrder', error);
-      this.checkoutErrorMessage.set(describeErrorForUser(error, 'No pudimos registrar tu pedido. Inténtalo de nuevo.'));
+      this.checkoutErrorMessage.set(
+        describeErrorForUser(error, 'No pudimos registrar tu pedido. Inténtalo de nuevo.'),
+      );
     } finally {
       this.isPlacingOrder.set(false);
     }
@@ -189,18 +221,29 @@ export class CheckoutPage implements OnInit {
       items: this.cartService.cartLines().map((cartLine) => ({ ...cartLine })),
       fulfillmentType: formValue.fulfillmentType,
       deliveryAddress: isDelivery
-        ? { street: formValue.street.trim(), district: formValue.district.trim(), reference: formValue.addressReference.trim() }
+        ? {
+            street: formValue.street.trim(),
+            district: formValue.district.trim(),
+            reference: formValue.addressReference.trim(),
+          }
         : null,
       contactPhone: formValue.contactPhone.trim(),
       paymentMethod: formValue.paymentMethod,
-      simulatedCardLastDigits: isSimulatedCardPayment ? extractCardDigits(formValue.cardNumber).slice(-4) : null,
+      simulatedCardLastDigits: isSimulatedCardPayment
+        ? extractCardDigits(formValue.cardNumber).slice(-4)
+        : null,
       culqiToken,
-      prescriptionFile: this.cartDetails.requiresPrescription() ? this.uploadedPrescription() : null,
+      prescriptionFile: this.cartDetails.requiresPrescription()
+        ? this.uploadedPrescription()
+        : null,
       customerNote: formValue.customerNote.trim(),
     };
   }
 
-  private toggleControls(controlNames: (keyof typeof this.checkoutForm.controls)[], isEnabled: boolean): void {
+  private toggleControls(
+    controlNames: (keyof typeof this.checkoutForm.controls)[],
+    isEnabled: boolean,
+  ): void {
     for (const controlName of controlNames) {
       const formControl = this.checkoutForm.controls[controlName];
       if (isEnabled) {

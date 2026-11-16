@@ -2,7 +2,12 @@
   <h1 class="cart-title">Tu carrito</h1>
 
   @if (cartDetails.isLoading()) {
-    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    <div class="page-skeleton" aria-busy="true">
+      <span class="skeleton-block page-skeleton-row" aria-hidden="true"></span>
+      <span class="skeleton-block page-skeleton-row" aria-hidden="true"></span>
+      <span class="skeleton-block page-skeleton-row is-short" aria-hidden="true"></span>
+      <span class="visually-hidden" role="status">Cargando…</span>
+    </div>
   } @else if (cartDetails.cartLineDetails().length === 0) {
     <div class="panel-empty-state surface-card">
       <i class="fas fa-cart-shopping" aria-hidden="true"></i>
@@ -13,11 +18,19 @@
     <div class="cart-layout">
       <div>
         <label class="cart-branch-picker surface-card">
-          <span><i class="fas fa-store me-2" aria-hidden="true"></i><strong>Botica que atiende tu pedido</strong></span>
+          <span
+            ><i class="fas fa-store me-2" aria-hidden="true"></i
+            ><strong>Botica que atiende tu pedido</strong></span
+          >
           <select class="form-select" (change)="changeSelectedBranch($event)">
-            <option value="" disabled [selected]="!cartDetails.branchSelection.selectedBranchId()">Elige una botica</option>
+            <option value="" disabled [selected]="!cartDetails.branchSelection.selectedBranchId()">
+              Elige una botica
+            </option>
             @for (branch of cartDetails.branchSelection.availableBranches(); track branch.id) {
-              <option [value]="branch.id" [selected]="cartDetails.branchSelection.selectedBranchId() === branch.id">
+              <option
+                [value]="branch.id"
+                [selected]="cartDetails.branchSelection.selectedBranchId() === branch.id"
+              >
                 {{ branch.name }} — {{ branch.district }}
               </option>
             }
@@ -31,32 +44,63 @@
                 @if (lineDetail.product.imageUrl) {
                   <img [src]="lineDetail.product.imageUrl" [alt]="lineDetail.product.name" />
                 } @else {
-                  <i class="fas fa-capsules" aria-hidden="true"></i>
+                  <span aria-hidden="true">{{ lineDetail.product.name.charAt(0) }}</span>
                 }
               </a>
               <div class="cart-line-info">
-                <a class="cart-line-name" [routerLink]="['/producto', lineDetail.product.id]">{{ lineDetail.product.name }}</a>
+                <a class="cart-line-name" [routerLink]="['/producto', lineDetail.product.id]">{{
+                  lineDetail.product.name
+                }}</a>
                 <span class="panel-table-secondary">{{ lineDetail.product.presentation }}</span>
                 @if (lineDetail.product.requiresPrescription) {
-                  <span class="status-badge is-warning mt-1"><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere receta</span>
+                  <span class="status-badge is-warning mt-1"
+                    ><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere
+                    receta</span
+                  >
                 }
-                @if (cartDetails.branchSelection.selectedBranchId() && !lineDetail.hasEnoughStockInBranch) {
-                  <span class="cart-line-warning"><i class="fas fa-triangle-exclamation me-1" aria-hidden="true"></i>No hay suficiente stock en esta botica</span>
+                @if (
+                  cartDetails.branchSelection.selectedBranchId() &&
+                  !lineDetail.hasEnoughStockInBranch
+                ) {
+                  <span class="cart-line-warning"
+                    ><i class="fas fa-triangle-exclamation me-1" aria-hidden="true"></i>No hay
+                    suficiente stock en esta botica</span
+                  >
                 }
               </div>
-              <div class="cart-line-quantity" role="group" [attr.aria-label]="'Cantidad de ' + lineDetail.product.name">
-                <button type="button" class="btn btn-sm btn-light" aria-label="Quitar una unidad" (click)="decreaseQuantity(lineDetail.product.id)">
+              <div
+                class="cart-line-quantity"
+                role="group"
+                [attr.aria-label]="'Cantidad de ' + lineDetail.product.name"
+              >
+                <button
+                  type="button"
+                  class="btn btn-sm btn-light"
+                  aria-label="Quitar una unidad"
+                  (click)="decreaseQuantity(lineDetail.product.id)"
+                >
                   <i class="fas fa-minus" aria-hidden="true"></i>
                 </button>
                 <span aria-live="polite">{{ lineDetail.quantity }}</span>
-                <button type="button" class="btn btn-sm btn-light" aria-label="Agregar una unidad"
-                  [disabled]="lineDetail.quantity >= maximumUnitsPerProduct" (click)="increaseQuantity(lineDetail.product.id)">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-light"
+                  aria-label="Agregar una unidad"
+                  [disabled]="lineDetail.quantity >= maximumUnitsPerProduct"
+                  (click)="increaseQuantity(lineDetail.product.id)"
+                >
                   <i class="fas fa-plus" aria-hidden="true"></i>
                 </button>
               </div>
               <div class="cart-line-subtotal">
                 <strong>{{ lineDetail.subtotal | currency: 'PEN' : 'S/ ' }}</strong>
-                <button type="button" class="btn btn-sm btn-link text-danger p-0" (click)="removeProduct(lineDetail.product.id)">Quitar</button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-link text-danger p-0"
+                  (click)="removeProduct(lineDetail.product.id)"
+                >
+                  Quitar
+                </button>
               </div>
             </li>
           }
@@ -66,15 +110,31 @@
       <aside class="cart-summary surface-card">
         <h2 class="h6">Resumen</h2>
         <dl>
-          <div><dt>Productos ({{ cartService.totalUnits() }})</dt><dd>{{ cartDetails.itemsTotal() | currency: 'PEN' : 'S/ ' }}</dd></div>
-          <div><dt>Delivery</dt><dd class="text-muted">Se calcula al pagar</dd></div>
+          <div>
+            <dt>Productos ({{ cartService.totalUnits() }})</dt>
+            <dd>{{ cartDetails.itemsTotal() | currency: 'PEN' : 'S/ ' }}</dd>
+          </div>
+          <div>
+            <dt>Delivery</dt>
+            <dd class="text-muted">Se calcula al pagar</dd>
+          </div>
         </dl>
         @if (cartDetails.requiresPrescription()) {
-          <p class="cart-summary-note"><i class="fas fa-file-prescription me-1" aria-hidden="true"></i>Tendrás que adjuntar la receta médica.</p>
+          <p class="cart-summary-note">
+            <i class="fas fa-file-prescription me-1" aria-hidden="true"></i>Tendrás que adjuntar la
+            receta médica.
+          </p>
         }
-        <a class="btn btn-primary w-100" routerLink="/checkout"
-          [class.disabled]="!cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()"
-          [attr.aria-disabled]="!cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()">
+        <a
+          class="btn btn-primary w-100"
+          routerLink="/checkout"
+          [class.disabled]="
+            !cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()
+          "
+          [attr.aria-disabled]="
+            !cartDetails.branchSelection.selectedBranchId() || cartDetails.hasStockProblems()
+          "
+        >
           Continuar con el pago
         </a>
         @if (!cartDetails.branchSelection.selectedBranchId()) {

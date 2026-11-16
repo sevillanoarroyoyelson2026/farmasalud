@@ -42,7 +42,9 @@ export class RegisterPage {
 
     this.isSubmitting.set(true);
     this.errorMessage.set('');
-    const registrationResult = await this.authService.registerCustomer(this.registerForm.getRawValue());
+    const registrationResult = await this.authService.registerCustomer(
+      this.registerForm.getRawValue(),
+    );
     this.isSubmitting.set(false);
 
     if (!registrationResult.isSuccessful || !registrationResult.session) {

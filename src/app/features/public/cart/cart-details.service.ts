@@ -36,8 +36,11 @@ export class CartDetailsService {
       .filter((lineDetail): lineDetail is CartLineDetail => lineDetail !== null);
   });
 
-  readonly itemsTotal = computed(() =>
-    Math.round(this.cartLineDetails().reduce((total, lineDetail) => total + lineDetail.subtotal, 0) * 100) / 100,
+  readonly itemsTotal = computed(
+    () =>
+      Math.round(
+        this.cartLineDetails().reduce((total, lineDetail) => total + lineDetail.subtotal, 0) * 100,
+      ) / 100,
   );
   readonly requiresPrescription = computed(() =>
     this.cartLineDetails().some((lineDetail) => lineDetail.product.requiresPrescription),
@@ -54,7 +57,9 @@ export class CartDetailsService {
       const [activeBranches, cartProducts] = await Promise.all([
         this.branchRepository.findActiveBranches(),
         Promise.all(
-          this.cartService.cartLines().map((cartLine) => this.productRepository.findProductById(cartLine.productId)),
+          this.cartService
+            .cartLines()
+            .map((cartLine) => this.productRepository.findProductById(cartLine.productId)),
         ),
       ]);
       this.branchSelection.setAvailableBranches(activeBranches);
@@ -84,7 +89,9 @@ export class CartDetailsService {
       product,
       quantity: cartLine.quantity,
       subtotal: getEffectivePrice(product) * cartLine.quantity,
-      hasEnoughStockInBranch: Boolean(selectedBranchId) && getStockInBranch(product, selectedBranchId) >= cartLine.quantity,
+      hasEnoughStockInBranch:
+        Boolean(selectedBranchId) &&
+        getStockInBranch(product, selectedBranchId) >= cartLine.quantity,
     };
   }
 }

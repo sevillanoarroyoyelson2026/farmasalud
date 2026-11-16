@@ -2,7 +2,9 @@
   <aside class="panel-sidebar" aria-label="Menú del panel">
     <div class="panel-sidebar-header">
       <span class="panel-brand">
-        <span class="panel-brand-icon" aria-hidden="true"><i class="fas fa-prescription-bottle-medical"></i></span>
+        <span class="panel-brand-icon" aria-hidden="true"
+          ><i class="fas fa-prescription-bottle-medical"></i
+        ></span>
         <span class="panel-brand-name">Farmasalud</span>
       </span>
       <button
@@ -41,7 +43,12 @@
       <h1 class="panel-title">{{ panelTitle() }}</h1>
       <div class="panel-header-controls">
         <ng-content select="[panelHeaderControls]" />
-        <button type="button" class="panel-icon-button" (click)="goToStore()" title="Ir a la tienda">
+        <button
+          type="button"
+          class="panel-icon-button"
+          (click)="goToStore()"
+          title="Ir a la tienda"
+        >
           <i class="fas fa-store" aria-hidden="true"></i>
           <span class="panel-icon-label">Tienda</span>
         </button>
@@ -51,7 +58,12 @@
             <span>{{ roleDisplayName[session.role] }}</span>
           </span>
         }
-        <button type="button" class="panel-icon-button is-danger" (click)="signOut()" title="Cerrar sesión">
+        <button
+          type="button"
+          class="panel-icon-button is-danger"
+          (click)="signOut()"
+          title="Cerrar sesión"
+        >
           <i class="fas fa-right-from-bracket" aria-hidden="true"></i>
           <span class="panel-icon-label">Salir</span>
         </button>
@@ -65,13 +77,28 @@
 
   <nav class="panel-bottom-nav" aria-label="Accesos rápidos">
     @for (quickLink of mobileQuickLinks(); track quickLink.path) {
-      <a class="panel-bottom-link" [routerLink]="quickLink.path" routerLinkActive="is-active" (click)="closeMobileMoreSheet()">
+      <a
+        class="panel-bottom-link"
+        [routerLink]="quickLink.path"
+        routerLinkActive="is-active"
+        (click)="closeMobileMoreSheet()"
+      >
         <i [class]="quickLink.iconClass" aria-hidden="true"></i>
         <span>{{ quickLink.label }}</span>
       </a>
     }
-    <button type="button" class="panel-bottom-link" [class.is-active]="isMobileMoreSheetOpen()" (click)="toggleMobileMoreSheet()">
-      <i class="fas" [class.fa-ellipsis]="!isMobileMoreSheetOpen()" [class.fa-xmark]="isMobileMoreSheetOpen()" aria-hidden="true"></i>
+    <button
+      type="button"
+      class="panel-bottom-link"
+      [class.is-active]="isMobileMoreSheetOpen()"
+      (click)="toggleMobileMoreSheet()"
+    >
+      <i
+        class="fas"
+        [class.fa-ellipsis]="!isMobileMoreSheetOpen()"
+        [class.fa-xmark]="isMobileMoreSheetOpen()"
+        aria-hidden="true"
+      ></i>
       <span>Más</span>
     </button>
   </nav>
@@ -84,7 +111,12 @@
         <p class="panel-sheet-section">{{ navigationSection.sectionTitle }}</p>
         <div class="panel-sheet-grid">
           @for (navigationItem of navigationSection.items; track navigationItem.path) {
-            <a class="panel-sheet-link" [routerLink]="navigationItem.path" routerLinkActive="is-active" (click)="closeMobileMoreSheet()">
+            <a
+              class="panel-sheet-link"
+              [routerLink]="navigationItem.path"
+              routerLinkActive="is-active"
+              (click)="closeMobileMoreSheet()"
+            >
               <i [class]="navigationItem.iconClass" aria-hidden="true"></i>
               <span>{{ navigationItem.label }}</span>
             </a>

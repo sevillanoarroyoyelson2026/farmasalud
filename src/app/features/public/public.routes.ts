@@ -23,7 +23,8 @@ export const PUBLIC_ROUTES: Routes = [
         path: 'registro',
         title: 'Crear cuenta | Farmasalud',
         canActivate: [guestOnlyGuard],
-        loadComponent: () => import('./register/register-page').then((module) => module.RegisterPage),
+        loadComponent: () =>
+          import('./register/register-page').then((module) => module.RegisterPage),
       },
       {
         path: 'privacidad',
@@ -52,7 +53,8 @@ export const PUBLIC_ROUTES: Routes = [
         path: 'checkout',
         title: 'Finalizar compra | Farmasalud',
         canActivate: [requireAuthenticatedUserGuard, customerShoppingAreaGuard],
-        loadComponent: () => import('./checkout/checkout-page').then((module) => module.CheckoutPage),
+        loadComponent: () =>
+          import('./checkout/checkout-page').then((module) => module.CheckoutPage),
       },
       {
         path: 'libro-de-reclamaciones',
@@ -66,14 +68,18 @@ export const PUBLIC_ROUTES: Routes = [
         title: 'Mis pedidos | Farmasalud',
         canActivate: [requireAuthenticatedUserGuard, customerShoppingAreaGuard],
         loadComponent: () =>
-          import('./customer-orders/customer-orders-page').then((module) => module.CustomerOrdersPage),
+          import('./customer-orders/customer-orders-page').then(
+            (module) => module.CustomerOrdersPage,
+          ),
       },
       {
         path: 'mis-pedidos/:orderId',
         title: 'Seguimiento del pedido | Farmasalud',
         canActivate: [requireAuthenticatedUserGuard, customerShoppingAreaGuard],
         loadComponent: () =>
-          import('./customer-orders/customer-order-detail-page').then((module) => module.CustomerOrderDetailPage),
+          import('./customer-orders/customer-order-detail-page').then(
+            (module) => module.CustomerOrderDetailPage,
+          ),
       },
     ],
   },

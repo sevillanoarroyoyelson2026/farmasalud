@@ -1,16 +1,20 @@
 <section class="auth-page">
   <div class="container-xl auth-page-grid">
     <div class="auth-welcome">
-      <span class="auth-welcome-badge"><i class="fas fa-shield-heart me-2" aria-hidden="true"></i>Farmasalud · Trujillo</span>
       <h1 class="auth-welcome-title">Tu salud, <span>a un clic</span></h1>
       <p class="auth-welcome-text">
-        Ingresa para comprar medicamentos con disponibilidad real en tu botica, subir tu receta y seguir tu pedido
-        hasta la puerta de tu casa.
+        Ingresa para comprar medicamentos con disponibilidad real en tu botica, subir tu receta y
+        seguir tu pedido hasta la puerta de tu casa.
       </p>
       <ul class="auth-welcome-benefits">
         <li><i class="fas fa-circle-check" aria-hidden="true"></i>Stock real por botica</li>
-        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Validación de recetas por un farmacéutico</li>
-        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Delivery y seguimiento del pedido</li>
+        <li>
+          <i class="fas fa-circle-check" aria-hidden="true"></i>Validación de recetas por un
+          farmacéutico
+        </li>
+        <li>
+          <i class="fas fa-circle-check" aria-hidden="true"></i>Delivery y seguimiento del pedido
+        </li>
       </ul>
     </div>
 
@@ -20,12 +24,18 @@
         <p class="auth-card-subtitle">Elige cómo quieres ingresar</p>
       </header>
 
-      <button type="button" class="btn auth-google-button" (click)="loginWithGoogle()" [disabled]="isSubmitting()">
+      <button
+        type="button"
+        class="btn auth-google-button"
+        (click)="loginWithGoogle()"
+        [disabled]="isSubmitting()"
+      >
         <i class="fab fa-google me-2" aria-hidden="true"></i>Continuar con Google
       </button>
       <p class="auth-consent-note">
         Al continuar con Google aceptas nuestra
-        <a routerLink="/privacidad">política de privacidad</a> y el tratamiento de tus datos (Ley N.° 29733).
+        <a routerLink="/privacidad">política de privacidad</a> y el tratamiento de tus datos (Ley
+        N.° 29733).
       </p>
 
       <div class="auth-divider"><span>o con tu correo</span></div>
@@ -64,7 +74,12 @@
               (click)="togglePasswordVisibility()"
               [attr.aria-label]="isPasswordVisible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             >
-              <i class="fas" [class.fa-eye]="!isPasswordVisible()" [class.fa-eye-slash]="isPasswordVisible()" aria-hidden="true"></i>
+              <i
+                class="fas"
+                [class.fa-eye]="!isPasswordVisible()"
+                [class.fa-eye-slash]="isPasswordVisible()"
+                aria-hidden="true"
+              ></i>
             </button>
             @if (hasFieldError('password')) {
               <div class="invalid-feedback">Ingresa tu contraseña.</div>
@@ -73,7 +88,9 @@
         </div>
 
         <div class="text-end mb-3">
-          <button type="button" class="btn btn-link btn-sm p-0" (click)="sendPasswordResetLink()">¿Olvidaste tu contraseña?</button>
+          <button type="button" class="btn btn-link btn-sm p-0" (click)="sendPasswordResetLink()">
+            ¿Olvidaste tu contraseña?
+          </button>
         </div>
 
         @if (errorMessage()) {
@@ -85,7 +102,8 @@
 
         <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="isSubmitting()">
           @if (isSubmitting()) {
-            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Ingresando...
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span
+            >Ingresando...
           } @else {
             Iniciar sesión
           }

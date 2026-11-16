@@ -1,21 +1,38 @@
 <section class="container-xl product-detail-page">
-  <a routerLink="/catalogo" class="product-detail-back"><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Volver al catálogo</a>
+  <a routerLink="/catalogo" class="product-detail-back"
+    ><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Volver al catálogo</a
+  >
 
   @if (isLoading()) {
-    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    <div class="product-detail-grid" aria-busy="true">
+      <span class="product-detail-image skeleton-block" aria-hidden="true"></span>
+      <div class="product-detail-info" aria-hidden="true">
+        <span class="skeleton-block product-detail-skeleton-line is-short"></span>
+        <span class="skeleton-block product-detail-skeleton-line is-title"></span>
+        <span class="skeleton-block product-detail-skeleton-line"></span>
+        <span class="skeleton-block product-detail-skeleton-line is-medium"></span>
+      </div>
+      <span class="visually-hidden" role="status">Cargando producto…</span>
+    </div>
   } @else if (product(); as loadedProduct) {
     <article class="product-detail-grid">
       <div class="product-detail-image surface-card">
         @if (loadedProduct.imageUrl) {
           <img [src]="loadedProduct.imageUrl" [alt]="loadedProduct.name" />
         } @else {
-          <i class="fas fa-capsules" aria-hidden="true"></i>
+          <span class="product-detail-initial" aria-hidden="true">{{
+            loadedProduct.name.charAt(0)
+          }}</span>
         }
       </div>
 
       <div class="product-detail-info">
         @if (categoryName()) {
-          <a class="product-detail-category" routerLink="/catalogo" [queryParams]="{ categoria: loadedProduct.categoryId }">
+          <a
+            class="product-detail-category"
+            routerLink="/catalogo"
+            [queryParams]="{ categoria: loadedProduct.categoryId }"
+          >
             {{ categoryName() }}
           </a>
         }
@@ -24,20 +41,30 @@
 
         <dl class="product-detail-facts">
           @if (loadedProduct.genericName) {
-            <div><dt>Principio activo</dt><dd>{{ loadedProduct.genericName }}</dd></div>
+            <div>
+              <dt>Principio activo</dt>
+              <dd>{{ loadedProduct.genericName }}</dd>
+            </div>
           }
           @if (loadedProduct.laboratory) {
-            <div><dt>Laboratorio</dt><dd>{{ loadedProduct.laboratory }}</dd></div>
+            <div>
+              <dt>Laboratorio</dt>
+              <dd>{{ loadedProduct.laboratory }}</dd>
+            </div>
           }
         </dl>
 
-        <p class="product-detail-price"><app-product-price [product]="loadedProduct" size="large" /></p>
+        <p class="product-detail-price">
+          <app-product-price [product]="loadedProduct" size="large" />
+        </p>
 
         @if (selectedBranchAvailability(); as availability) {
-          <span class="status-badge"
+          <span
+            class="status-badge"
             [class.is-success]="availability.stockStatus === 'available'"
             [class.is-warning]="availability.stockStatus === 'low_stock'"
-            [class.is-neutral]="availability.stockStatus === 'out_of_stock'">
+            [class.is-neutral]="availability.stockStatus === 'out_of_stock'"
+          >
             {{ availability.availabilityLabel }}
           </span>
         }
@@ -45,26 +72,49 @@
         @if (loadedProduct.requiresPrescription) {
           <div class="product-detail-prescription" role="note">
             <i class="fas fa-file-prescription" aria-hidden="true"></i>
-            <span>Este medicamento <strong>requiere receta médica</strong>. Podrás subirla al hacer tu pedido y un químico farmacéutico la validará antes del despacho.</span>
+            <span
+              >Este medicamento <strong>requiere receta médica</strong>. Podrás subirla al hacer tu
+              pedido y un químico farmacéutico la validará antes del despacho.</span
+            >
           </div>
         }
 
         @if (!isStaffMember()) {
           <div class="product-detail-purchase">
             <div class="product-detail-quantity" role="group" aria-label="Cantidad">
-              <button type="button" class="btn btn-light" aria-label="Quitar una unidad" [disabled]="selectedQuantity() <= 1"
-                (click)="changeSelectedQuantity(-1)"><i class="fas fa-minus" aria-hidden="true"></i></button>
+              <button
+                type="button"
+                class="btn btn-light"
+                aria-label="Quitar una unidad"
+                [disabled]="selectedQuantity() <= 1"
+                (click)="changeSelectedQuantity(-1)"
+              >
+                <i class="fas fa-minus" aria-hidden="true"></i>
+              </button>
               <span aria-live="polite">{{ selectedQuantity() }}</span>
-              <button type="button" class="btn btn-light" aria-label="Agregar una unidad" [disabled]="selectedQuantity() >= maximumUnitsPerProduct"
-                (click)="changeSelectedQuantity(1)"><i class="fas fa-plus" aria-hidden="true"></i></button>
+              <button
+                type="button"
+                class="btn btn-light"
+                aria-label="Agregar una unidad"
+                [disabled]="selectedQuantity() >= maximumUnitsPerProduct"
+                (click)="changeSelectedQuantity(1)"
+              >
+                <i class="fas fa-plus" aria-hidden="true"></i>
+              </button>
             </div>
-            <button type="button" class="btn btn-primary btn-lg product-detail-buy" [disabled]="!canAddToCart()" (click)="addToCart()">
+            <button
+              type="button"
+              class="btn btn-primary btn-lg product-detail-buy"
+              [disabled]="!canAddToCart()"
+              (click)="addToCart()"
+            >
               <i class="fas fa-cart-plus me-2" aria-hidden="true"></i>Agregar al carrito
             </button>
           </div>
           @if (unitsInCart() > 0) {
             <p class="product-detail-in-cart" role="status">
-              <i class="fas fa-circle-check me-1" aria-hidden="true"></i>Tienes {{ unitsInCart() }} en tu carrito ·
+              <i class="fas fa-circle-check me-1" aria-hidden="true"></i>Tienes
+              {{ unitsInCart() }} en tu carrito ·
               <a routerLink="/carrito">Ir al carrito</a>
             </p>
           }
@@ -79,27 +129,52 @@
 
     <section class="product-detail-branches">
       <h2 class="product-detail-section-title">Disponibilidad por botica</h2>
-      <ul class="product-detail-branch-list">
-        @for (branchAvailability of availabilityByBranch(); track branchAvailability.branch.id) {
-          <li class="surface-card" [class.is-selected]="branchSelection.selectedBranchId() === branchAvailability.branch.id">
-            <span>
+      <ol class="product-detail-branch-list enter-along-route">
+        @for (
+          branchAvailability of availabilityByBranch();
+          track branchAvailability.branch.id;
+          let branchIndex = $index
+        ) {
+          <li
+            class="product-detail-branch-stop"
+            [class.is-selected]="
+              branchSelection.selectedBranchId() === branchAvailability.branch.id
+            "
+            [class.is-out-of-stock]="branchAvailability.stockStatus === 'out_of_stock'"
+            [style.--enter-index]="branchIndex"
+          >
+            <span class="product-detail-branch-marker is-tabular" aria-hidden="true">{{
+              branchIndex + 1
+            }}</span>
+            <span class="product-detail-branch-text">
               <strong>{{ branchAvailability.branch.name }}</strong>
-              <span class="panel-table-secondary">{{ branchAvailability.branch.address }}, {{ branchAvailability.branch.district }}</span>
+              <span class="panel-table-secondary"
+                >{{ branchAvailability.branch.address }},
+                {{ branchAvailability.branch.district }}</span
+              >
             </span>
             <span class="product-detail-branch-actions">
-              <span class="status-badge"
+              <span
+                class="status-badge"
                 [class.is-success]="branchAvailability.stockStatus === 'available'"
                 [class.is-warning]="branchAvailability.stockStatus === 'low_stock'"
-                [class.is-neutral]="branchAvailability.stockStatus === 'out_of_stock'">
+                [class.is-neutral]="branchAvailability.stockStatus === 'out_of_stock'"
+              >
                 {{ branchStockLabel[branchAvailability.stockStatus] }}
               </span>
               @if (branchSelection.selectedBranchId() !== branchAvailability.branch.id) {
-                <button type="button" class="btn btn-sm btn-link" (click)="selectBranch(branchAvailability.branch.id)">Elegir</button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="selectBranch(branchAvailability.branch.id)"
+                >
+                  Elegir<span class="visually-hidden"> {{ branchAvailability.branch.name }}</span>
+                </button>
               }
             </span>
           </li>
         }
-      </ul>
+      </ol>
     </section>
   } @else {
     <div class="panel-empty-state surface-card">

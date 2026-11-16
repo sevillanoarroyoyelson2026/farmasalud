@@ -54,7 +54,7 @@ export class CulqiCheckoutService {
       lang: 'auto',
       installments: false,
       paymentMethods: { tarjeta: true, yape: false, bancaMovil: false, agente: false, billetera: false, cuotealo: false },
-      style: { bannerColor: '#0f766e', buttonBackground: '#0f766e', priceColor: '#0f766e' },
+      style: { bannerColor: '#1440a8', buttonBackground: '#1440a8', priceColor: '#1440a8' },
     });
 
     return new Promise<string>((resolveToken, rejectToken) => {

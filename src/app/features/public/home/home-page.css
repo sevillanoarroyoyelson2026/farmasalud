@@ -1,224 +1,878 @@
-.home-hero {
-  padding: 4rem 0 3rem;
-  background:
-    radial-gradient(circle at 90% 0%, rgba(94, 234, 212, 0.28) 0%, transparent 45%),
-    linear-gradient(180deg, #ffffff 0%, var(--color-background) 100%);
+/* ==========================================================
+   Inicio — letrero de ruta, línea de boticas, tablero de ofertas
+   ========================================================== */
+
+/* -- Letrero: carrocería cobalto con la franja marigold abajo -- */
+.route-sign {
+  position: relative;
+  padding: clamp(2rem, 4.5vw, 3.25rem) 0 clamp(2.5rem, 4.5vw, 3.25rem);
+  background: var(--route-cobalt);
+  box-shadow: inset 0 -10px 0 var(--route-marigold);
+  color: #fff;
 }
 
-.home-hero-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  align-items: center;
-  gap: 3rem;
+.route-sign-inner {
   padding-inline: 1rem;
 }
 
-.home-hero-tag {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.4rem 0.85rem;
-  border-radius: 999px;
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-  font-size: 0.85rem;
-  font-weight: 700;
+.route-sign-title {
+  max-width: 21ch;
+  margin: 0 0 1.25rem;
+  color: #fff;
+  font-size: clamp(2.5rem, 6.4vw, 5rem);
+  font-stretch: 66%;
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
 }
 
-.home-hero-title {
-  margin: 1.25rem 0 1rem;
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.route-sign-title span {
+  color: var(--route-marigold);
 }
 
-.home-hero-title span {
-  color: var(--color-primary);
+.route-sign-text {
+  max-width: 46ch;
+  margin: 0 0 1.5rem;
+  color: #dce5fb;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
 }
 
-.home-hero-text {
-  max-width: 540px;
+/* Buscador: la acción primaria vive dentro del letrero */
+.route-sign-search {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  max-width: 44rem;
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: 0 18px 40px -18px rgba(5, 15, 45, 0.6);
+}
+
+.route-sign-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 1.15rem;
+  color: var(--color-text-muted);
   font-size: 1.1rem;
-  color: var(--color-text-secondary);
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
-.home-hero-actions {
+.route-sign-search-input {
+  min-width: 0;
+  min-height: 3.75rem;
+  padding: 0 1rem 0 3rem;
+  border: 0;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1.1rem;
+}
+
+.route-sign-search-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.route-sign-search-input:focus-visible {
+  box-shadow: none;
+  outline: none;
+}
+
+.route-sign-search:focus-within {
+  outline: 3px solid var(--route-marigold);
+  outline-offset: 3px;
+}
+
+.route-sign-search-button {
+  min-height: 3.75rem;
+  margin: 0;
+  padding-inline: 2rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+}
+
+.route-sign-secondary {
+  margin: 1.25rem 0 0;
+  color: #dce5fb;
+}
+
+/* Sellos de confianza: cortos, verificables, sin humo */
+.route-sign-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.75rem;
+  gap: 0.6rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
 }
 
-.home-hero-visual {
-  display: grid;
-  gap: 1rem;
-}
-
-.home-hero-card {
-  display: flex;
+.route-sign-trust li {
+  display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  max-width: 360px;
-  padding: 1rem 1.25rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  box-shadow: var(--shadow-card);
+  gap: 0.55rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-.home-hero-card.is-offset {
-  margin-left: 2.5rem;
+.route-sign-trust i {
+  color: var(--route-marigold);
 }
 
-.home-hero-card i {
-  display: grid;
-  flex-shrink: 0;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--color-primary-soft);
-  color: var(--color-primary);
-  font-size: 1.2rem;
-}
-
-.home-hero-card-title {
-  margin: 0;
+.route-sign-secondary a {
+  color: var(--route-marigold);
   font-weight: 700;
 }
 
-.home-hero-card-stock {
+/* -- Línea de ruta: las boticas como paraderos -- */
+.route-line-section {
+  padding-top: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.route-line-header {
   display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.route-line-title {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  text-transform: uppercase;
+}
+
+.route-line-hint {
+  margin: 0;
+  font-size: 0.95rem;
   color: var(--color-text-secondary);
 }
 
-.home-stock-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-accent);
+.route-line-hint a {
+  margin-left: 0.35rem;
+  font-weight: 700;
 }
 
-.home-steps {
-  padding: 3.5rem 1rem 0;
+.route-line-scroller {
+  overflow-x: auto;
+  padding: 0 1rem 1.25rem;
+  scroll-padding-inline: 1rem;
+  scroll-snap-type: x proximity;
+  scrollbar-color: var(--color-border-strong) transparent;
+  scrollbar-width: thin;
 }
 
-.home-section-title {
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
+.route-line-track {
+  position: relative;
+  min-width: calc(var(--stop-count, 6) * 9.5rem);
+  max-width: 1288px;
+  margin-inline: auto;
+  padding-top: 2.6rem;
+}
+
+.route-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--stop-count, 6), minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* El trazo de la ruta, de paradero en paradero */
+.route-line::before {
+  position: absolute;
+  top: calc(var(--route-stop-size) / 2 - var(--route-line-weight) / 2);
+  right: calc(50% / var(--stop-count, 6));
+  left: calc(50% / var(--stop-count, 6));
+  height: var(--route-line-weight);
+  border-radius: 3px;
+  background: var(--route-cobalt);
+  content: '';
+}
+
+.route-line-track.route-line::before {
+  top: calc(2.6rem + var(--route-stop-size) / 2 - var(--route-line-weight) / 2);
+}
+
+/* La combi que viaja hasta el paradero elegido */
+.route-line-vehicle {
+  position: absolute;
+  top: 0;
+  left: calc((var(--selected-index, 0) + 0.5) / var(--stop-count, 6) * 100%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  background: var(--route-marigold);
+  color: var(--route-ink);
+  font-size: 1.05rem;
+  opacity: 0;
+  transform: translateX(-50%) translateY(6px);
+  transition:
+    left 0.8s var(--ease-out-expo),
+    opacity 0.3s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo);
+}
+
+.route-line-vehicle::after {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  border: 6px solid transparent;
+  border-top-color: var(--route-marigold);
+  border-bottom: 0;
+  content: '';
+  transform: translateX(-50%);
+}
+
+.has-selection .route-line-vehicle {
+  opacity: 1;
+  transform: translateX(-50%);
+}
+
+.route-stop {
+  scroll-snap-align: center;
+}
+
+.route-stop-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 100%;
+  height: 100%;
+  padding: 0 0.4rem 0.75rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
   text-align: center;
 }
 
-.home-steps-grid {
+.route-stop-marker {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  place-items: center;
+  width: var(--route-stop-size);
+  height: var(--route-stop-size);
+  margin-bottom: 0.65rem;
+  border: 5px solid var(--route-cobalt);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--route-ink);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-sign);
+  font-size: 1.15rem;
+  font-weight: 900;
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base),
+    transform 0.4s var(--ease-out-expo);
+}
+
+.route-stop-name {
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.route-stop-district {
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+}
+
+.route-stop-stock {
+  margin-top: 0.35rem;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.route-stop-delivery {
+  margin-top: 0.3rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: var(--route-enamel-deep);
+  color: var(--color-text-secondary);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.route-stop-button:hover .route-stop-marker {
+  background: var(--route-marigold);
+  transform: translateY(-2px);
+}
+
+.route-stop-button:focus-visible {
+  box-shadow: none;
+}
+
+/* Paradero encendido: el verde es solo para lo que está en vivo */
+.route-stop-button.is-selected .route-stop-marker {
+  border-color: var(--route-live-ink);
+  background: var(--route-live);
+  color: #fff;
+  transform: scale(1.12);
+}
+
+.route-stop-button.is-selected .route-stop-stock {
+  color: var(--route-live-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .route-stop-button.is-selected .route-stop-marker {
+    animation: stop-lights-up 1.6s var(--ease-out-expo);
+  }
+}
+
+@keyframes stop-lights-up {
+  from {
+    box-shadow: 0 0 0 0 rgba(14, 154, 87, 0.55);
+  }
+  to {
+    box-shadow: 0 0 0 18px rgba(14, 154, 87, 0);
+  }
+}
+
+.route-stop.is-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.route-stop.is-skeleton .route-stop-marker {
+  border: 0;
+}
+
+.route-stop-skeleton-line {
+  width: 70%;
+  height: 0.85rem;
+}
+
+.route-stop-skeleton-line.is-short {
+  width: 45%;
+}
+
+/* -- Tablero de categorías: tarjetas que llevan al catálogo filtrado -- */
+.category-board {
+  padding: clamp(3rem, 6vw, 4.5rem) 1rem 0;
+}
+
+.category-board-title {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  text-transform: uppercase;
+}
+
+.category-board-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.home-step {
-  position: relative;
-  padding: 1.5rem;
+.category-board-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  color: var(--color-text);
+  text-decoration: none;
+  transition:
+    transform 0.18s var(--ease-out-expo),
+    box-shadow 0.18s var(--ease-out-expo),
+    border-color 0.18s var(--ease-out-expo);
 }
 
-.home-step-number {
-  position: absolute;
-  top: 1rem;
-  right: 1.25rem;
+.category-board-card:hover {
+  border-color: var(--route-cobalt);
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-3px);
+}
+
+.category-board-card:active {
+  transform: translateY(-1px) scale(0.985);
+}
+
+.category-board-icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--route-cobalt-wash);
+  color: var(--route-cobalt);
+  font-size: 1.2rem;
+  transition: background-color var(--transition-base);
+}
+
+.category-board-card:hover .category-board-icon {
+  background: var(--route-cobalt);
+  color: #fff;
+}
+
+.category-board-name {
   font-family: var(--font-heading);
-  font-size: 1.75rem;
+  font-stretch: var(--font-stretch-label);
+  font-size: 1.15rem;
   font-weight: 800;
-  color: var(--color-primary-soft);
+  line-height: 1.2;
 }
 
-.home-step-icon {
-  font-size: 1.5rem;
-  color: var(--color-primary);
-}
-
-.home-step-title {
-  margin: 1rem 0 0.4rem;
-  font-size: 1.05rem;
-}
-
-.home-step-text {
-  margin: 0;
-  font-size: 0.9rem;
+.category-board-description {
+  display: -webkit-box;
+  margin-top: 0.35rem;
+  overflow: hidden;
   color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-@media (max-width: 991.98px) {
-  .home-hero-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .home-hero-visual {
-    display: none;
-  }
-
-  .home-steps-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.category-board-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: 0.85rem;
 }
 
-@media (max-width: 575.98px) {
-  .home-hero {
-    padding-top: 2.5rem;
-  }
-
-  .home-steps-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .home-hero-actions .btn {
-    flex: 1 1 100%;
-  }
+.category-board-count {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.home-promotions {
-  padding-top: 2.5rem;
+.category-board-arrow {
+  color: var(--route-cobalt);
+  font-size: 0.9rem;
+  transition: transform 0.18s var(--ease-out-expo);
 }
 
-.home-promotions-header {
+.category-board-card:hover .category-board-arrow {
+  transform: translateX(4px);
+}
+
+/* -- Tablero de ofertas: filas como un tablero de salidas -- */
+.offers-board {
+  padding: clamp(3rem, 6vw, 4.5rem) 1rem 0;
+}
+
+.offers-board-header {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.5rem 1.5rem;
   margin-bottom: 1rem;
 }
 
-.home-promotions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+.offers-board-title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  text-transform: uppercase;
 }
 
-.home-promotion-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 1rem 1.1rem;
-  color: inherit;
-  text-decoration: none;
-  transition: box-shadow var(--transition-base);
-}
-
-.home-promotion-card:hover {
-  box-shadow: var(--shadow-raised);
-}
-
-.home-promotion-name {
-  font-family: var(--font-heading);
+.offers-board-link {
   font-weight: 700;
 }
 
-.home-promotion-presentation {
-  font-size: 0.82rem;
+.offers-board-list {
+  margin: 0;
+  padding: 0;
+  border-top: 4px solid var(--route-ink);
+  list-style: none;
+}
+
+.offers-board-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.25rem 3.25rem minmax(0, 1fr) auto auto auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 0.75rem;
+  border-bottom: 1px solid var(--color-border-strong);
+  transition: background-color var(--transition-base);
+}
+
+/* Miniatura del producto: redonda, sobre placa esmaltada */
+.offers-board-thumb {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--route-enamel-deep);
+  color: var(--color-text-muted);
+  font-size: 1.2rem;
+}
+
+.offers-board-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s var(--ease-out-expo);
+}
+
+.offers-board-row:hover .offers-board-thumb img {
+  transform: scale(1.07);
+}
+
+.offers-board-row:hover {
+  background: var(--color-surface);
+}
+
+.offers-board-discount {
+  display: grid;
+  place-items: center;
+  min-height: 3rem;
+  border-radius: var(--radius-sm);
+  background: var(--route-marigold);
+  color: var(--route-ink);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-sign);
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.offers-board-product {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.offers-board-availability {
+  font-size: 0.85rem;
+}
+
+.offers-board-name {
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* Toda la fila es clicable, salvo el botón de agregar */
+.offers-board-name::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+}
+
+.offers-board-row:hover .offers-board-name {
+  color: var(--route-cobalt);
+}
+
+.offers-board-presentation {
+  overflow: hidden;
   color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.offers-board-add {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-width: 7.5rem;
+  min-height: 44px;
+}
+
+/* -- Franja de cifras: datos reales que refuerzan confianza -- */
+.home-stats {
+  margin-top: clamp(3.5rem, 7vw, 5rem);
+  background: var(--route-ink);
+  box-shadow: inset 0 6px 0 var(--route-cobalt);
+  color: #fff;
+}
+
+.home-stats-inner {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  padding: clamp(2.25rem, 5vw, 3.25rem) 1rem;
+}
+
+.home-stat {
+  text-align: center;
+}
+
+.home-stat-number {
+  display: block;
+  color: var(--route-marigold);
+  font-family: var(--font-heading);
+  font-stretch: 66%;
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.home-stat-label {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--color-sidebar-text);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-label);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* -- La compra como ruta de cuatro paraderos -- */
+.purchase-route {
+  padding: clamp(3.5rem, 7vw, 5rem) 1rem 0;
+}
+
+.purchase-route-title {
+  margin: 0 0 2rem;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  text-transform: uppercase;
+}
+
+.purchase-route-list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.purchase-route-list::before {
+  position: absolute;
+  top: calc(var(--route-stop-size) / 2 - 2px);
+  right: calc(25% - var(--route-stop-size));
+  left: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, var(--route-cobalt) 0 18px, transparent 18px 28px);
+  content: '';
+}
+
+.purchase-route-step {
+  position: relative;
+}
+
+.purchase-route-marker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--route-stop-size);
+  height: var(--route-stop-size);
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: var(--route-cobalt);
+  color: var(--route-marigold);
+  font-family: var(--font-heading);
+  font-stretch: var(--font-stretch-sign);
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.purchase-route-step-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+  font-stretch: var(--font-stretch-label);
+}
+
+.purchase-route-step-title i {
+  color: var(--route-cobalt);
+  font-size: 1rem;
+}
+
+.purchase-route-step-text {
+  max-width: 30ch;
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* -- Cierre: tablero nocturno con la acción final -- */
+.route-close {
+  margin-top: clamp(4rem, 8vw, 6rem);
+  background: var(--route-ink);
+  box-shadow: inset 0 6px 0 var(--route-marigold);
+}
+
+.route-close-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 2rem;
+  padding: clamp(2.5rem, 5vw, 3.5rem) 1rem;
+}
+
+.route-close-title {
+  max-width: 20ch;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  text-transform: uppercase;
+}
+
+/* El pie de página ya trae su franja: el cierre empalma con él */
+:host {
+  display: block;
+  margin-bottom: -5rem;
+}
+
+/* -- Responsivo -- */
+@media (max-width: 991.98px) {
+  .offers-board-row {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    grid-template-areas:
+      'discount thumb'
+      'discount product'
+      'discount availability'
+      'discount price'
+      'add add';
+    gap: 0.5rem 1rem;
+  }
+
+  .offers-board-discount {
+    grid-area: discount;
+    align-self: start;
+  }
+
+  .offers-board-thumb {
+    grid-area: thumb;
+    justify-self: start;
+  }
+
+  .offers-board-product {
+    grid-area: product;
+  }
+
+  .offers-board-availability {
+    grid-area: availability;
+    justify-self: start;
+  }
+
+  .offers-board-price {
+    grid-area: price;
+    justify-self: start;
+  }
+
+  .offers-board-add {
+    grid-area: add;
+    justify-self: stretch;
+    margin-top: 0.25rem;
+  }
+
+  .purchase-route-list {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding-left: calc(var(--route-stop-size) + 1.25rem);
+  }
+
+  .purchase-route-list::before {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: calc(var(--route-stop-size) / 2 - 2px);
+    right: auto;
+    width: 4px;
+    height: auto;
+    background: repeating-linear-gradient(
+      180deg,
+      var(--route-cobalt) 0 18px,
+      transparent 18px 28px
+    );
+  }
+
+  .purchase-route-marker {
+    position: absolute;
+    top: -0.35rem;
+    left: calc(-1 * (var(--route-stop-size) + 1.25rem));
+    margin: 0;
+  }
+
+  .category-board-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-stats-inner {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .category-board-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-stats-inner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .route-sign-search {
+    grid-template-columns: 1fr;
+    background: transparent;
+    box-shadow: none;
+    gap: 0.6rem;
+  }
+
+  .route-sign-search-input {
+    border-radius: var(--radius-sm);
+    background: #fff;
+  }
+
+  .route-sign-search-button {
+    border-radius: var(--radius-sm);
+  }
+
+  .route-sign-search-icon {
+    top: 1.875rem;
+  }
+
+  .route-sign-search:focus-within {
+    outline: none;
+  }
+
+  .route-sign-search-input:focus-visible {
+    outline: 3px solid var(--route-marigold);
+    outline-offset: 2px;
+  }
+
+  .route-close-inner .btn {
+    width: 100%;
+  }
 }

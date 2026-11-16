@@ -1,15 +1,21 @@
 <section class="auth-page">
   <div class="container-xl auth-page-grid">
     <div class="auth-welcome">
-      <span class="auth-welcome-badge"><i class="fas fa-user-plus me-2" aria-hidden="true"></i>Nueva cuenta</span>
       <h1 class="auth-welcome-title">Crea tu cuenta <span>en un minuto</span></h1>
       <p class="auth-welcome-text">
-        Guarda tus datos de entrega, revisa el historial de tus compras y recibe la confirmación de cada pedido.
+        Guarda tus datos de entrega, revisa el historial de tus compras y recibe la confirmación de
+        cada pedido.
       </p>
       <ul class="auth-welcome-benefits">
-        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Tus datos protegidos y cifrados</li>
-        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Promociones vigentes de tu botica</li>
-        <li><i class="fas fa-circle-check" aria-hidden="true"></i>Historial de pedidos y recetas</li>
+        <li>
+          <i class="fas fa-circle-check" aria-hidden="true"></i>Tus datos protegidos y cifrados
+        </li>
+        <li>
+          <i class="fas fa-circle-check" aria-hidden="true"></i>Promociones vigentes de tu botica
+        </li>
+        <li>
+          <i class="fas fa-circle-check" aria-hidden="true"></i>Historial de pedidos y recetas
+        </li>
       </ul>
     </div>
 
@@ -50,7 +56,9 @@
         </div>
 
         <div class="mb-3">
-          <label for="register-phone" class="form-label">Celular <span class="text-muted fw-normal">(opcional)</span></label>
+          <label for="register-phone" class="form-label"
+            >Celular <span class="text-muted fw-normal">(opcional)</span></label
+          >
           <input
             id="register-phone"
             type="tel"
@@ -84,13 +92,20 @@
               (click)="togglePasswordVisibility()"
               [attr.aria-label]="isPasswordVisible() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
             >
-              <i class="fas" [class.fa-eye]="!isPasswordVisible()" [class.fa-eye-slash]="isPasswordVisible()" aria-hidden="true"></i>
+              <i
+                class="fas"
+                [class.fa-eye]="!isPasswordVisible()"
+                [class.fa-eye-slash]="isPasswordVisible()"
+                aria-hidden="true"
+              ></i>
             </button>
             @if (hasFieldError('password')) {
               <div class="invalid-feedback">Usa al menos 8 caracteres con letras y números.</div>
             }
           </div>
-          <div id="register-password-help" class="form-text">Mínimo 8 caracteres, con letras y números.</div>
+          <div id="register-password-help" class="form-text">
+            Mínimo 8 caracteres, con letras y números.
+          </div>
         </div>
 
         <div class="form-check mb-3">
@@ -102,8 +117,9 @@
             [class.is-invalid]="hasFieldError('hasAcceptedPrivacyPolicy')"
           />
           <label for="register-privacy-consent" class="form-check-label small">
-            Acepto la <a routerLink="/privacidad" target="_blank">política de privacidad</a> y autorizo el tratamiento de
-            mis datos personales para gestionar mis pedidos (Ley N.° 29733).
+            Acepto la <a routerLink="/privacidad" target="_blank">política de privacidad</a> y
+            autorizo el tratamiento de mis datos personales para gestionar mis pedidos (Ley N.°
+            29733).
           </label>
           @if (hasFieldError('hasAcceptedPrivacyPolicy')) {
             <div class="invalid-feedback">Necesitamos tu autorización para crear la cuenta.</div>
@@ -116,7 +132,8 @@
 
         <button type="submit" class="btn btn-primary w-100 py-2" [disabled]="isSubmitting()">
           @if (isSubmitting()) {
-            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Creando cuenta...
+            <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Creando
+            cuenta...
           } @else {
             Crear cuenta
           }

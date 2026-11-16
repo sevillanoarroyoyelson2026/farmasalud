@@ -1,73 +1,149 @@
 <section class="container-xl claims-page">
-  <h1 class="h2"><i class="fas fa-book-open me-2 text-primary" aria-hidden="true"></i>Libro de Reclamaciones</h1>
+  <h1 class="h2">
+    <i class="fas fa-book-open me-2 text-primary" aria-hidden="true"></i>Libro de Reclamaciones
+  </h1>
   <p class="text-secondary">
-    Farmasalud E.I.R.L. · Trujillo, La Libertad. Responderemos en un plazo máximo de {{ responseDeadlineDays }} días hábiles.
-    <strong>Reclamo:</strong> disconformidad con un producto o servicio. <strong>Queja:</strong> malestar por la atención recibida.
+    Farmasalud E.I.R.L. · Trujillo, La Libertad. Responderemos en un plazo máximo de
+    {{ responseDeadlineDays }} días hábiles. <strong>Reclamo:</strong> disconformidad con un
+    producto o servicio. <strong>Queja:</strong> malestar por la atención recibida.
   </p>
 
   @if (submittedClaimNumber()) {
     <div class="alert alert-success" role="status">
       <i class="fas fa-circle-check me-1" aria-hidden="true"></i>
-      Registramos tu {{ claimForm.controls.claimType.value === 'grievance' ? 'queja' : 'reclamo' }} con el número
+      Registramos tu
+      {{ claimForm.controls.claimType.value === 'grievance' ? 'queja' : 'reclamo' }} con el número
       <strong>{{ submittedClaimNumber() }}</strong>. Te enviaremos la respuesta a este canal.
     </div>
   }
 
-  <form class="surface-card claims-card" [formGroup]="claimForm" (ngSubmit)="submitClaim()" novalidate>
+  <form
+    class="surface-card claims-card"
+    [formGroup]="claimForm"
+    (ngSubmit)="submitClaim()"
+    novalidate
+  >
     <div class="panel-form-grid">
       <fieldset class="is-full-width">
         <legend class="form-label">Tipo</legend>
         <div class="form-check form-check-inline">
-          <input id="claim-type-complaint" class="form-check-input" type="radio" formControlName="claimType" value="complaint" />
+          <input
+            id="claim-type-complaint"
+            class="form-check-input"
+            type="radio"
+            formControlName="claimType"
+            value="complaint"
+          />
           <label class="form-check-label" for="claim-type-complaint">Reclamo</label>
         </div>
         <div class="form-check form-check-inline">
-          <input id="claim-type-grievance" class="form-check-input" type="radio" formControlName="claimType" value="grievance" />
+          <input
+            id="claim-type-grievance"
+            class="form-check-input"
+            type="radio"
+            formControlName="claimType"
+            value="grievance"
+          />
           <label class="form-check-label" for="claim-type-grievance">Queja</label>
         </div>
       </fieldset>
       <div>
         <label class="form-label" for="claim-name">Nombre completo</label>
-        <input id="claim-name" class="form-control" formControlName="fullName" autocomplete="name" [class.is-invalid]="hasFieldError('fullName')" />
+        <input
+          id="claim-name"
+          class="form-control"
+          formControlName="fullName"
+          autocomplete="name"
+          [class.is-invalid]="hasFieldError('fullName')"
+        />
         <div class="invalid-feedback">Escribe tu nombre completo.</div>
       </div>
       <div>
         <label class="form-label" for="claim-document">DNI / CE</label>
-        <input id="claim-document" class="form-control" formControlName="documentNumber" inputmode="numeric" [class.is-invalid]="hasFieldError('documentNumber')" />
+        <input
+          id="claim-document"
+          class="form-control"
+          formControlName="documentNumber"
+          inputmode="numeric"
+          [class.is-invalid]="hasFieldError('documentNumber')"
+        />
         <div class="invalid-feedback">DNI de 8 dígitos o carné de extranjería.</div>
       </div>
       <div>
         <label class="form-label" for="claim-address">Dirección</label>
-        <input id="claim-address" class="form-control" formControlName="address" autocomplete="street-address" [class.is-invalid]="hasFieldError('address')" />
+        <input
+          id="claim-address"
+          class="form-control"
+          formControlName="address"
+          autocomplete="street-address"
+          [class.is-invalid]="hasFieldError('address')"
+        />
         <div class="invalid-feedback">Escribe tu dirección.</div>
       </div>
       <div>
         <label class="form-label" for="claim-phone">Celular</label>
-        <input id="claim-phone" class="form-control" formControlName="phone" inputmode="numeric" [class.is-invalid]="hasFieldError('phone')" />
+        <input
+          id="claim-phone"
+          class="form-control"
+          formControlName="phone"
+          inputmode="numeric"
+          [class.is-invalid]="hasFieldError('phone')"
+        />
         <div class="invalid-feedback">9 dígitos, empieza con 9.</div>
       </div>
       <div>
         <label class="form-label" for="claim-order">N.° de pedido (opcional)</label>
-        <input id="claim-order" class="form-control text-uppercase" formControlName="relatedOrderNumber" placeholder="FS-000123" />
+        <input
+          id="claim-order"
+          class="form-control text-uppercase"
+          formControlName="relatedOrderNumber"
+          placeholder="FS-000123"
+        />
       </div>
       <div>
         <label class="form-label" for="claim-amount">Monto reclamado S/ (opcional)</label>
-        <input id="claim-amount" type="number" min="0" step="0.01" class="form-control" formControlName="claimedAmount" />
+        <input
+          id="claim-amount"
+          type="number"
+          min="0"
+          step="0.01"
+          class="form-control"
+          formControlName="claimedAmount"
+        />
       </div>
       <div class="is-full-width">
         <label class="form-label" for="claim-description">Detalle</label>
-        <textarea id="claim-description" class="form-control" rows="4" formControlName="description" [class.is-invalid]="hasFieldError('description')"></textarea>
+        <textarea
+          id="claim-description"
+          class="form-control"
+          rows="4"
+          formControlName="description"
+          [class.is-invalid]="hasFieldError('description')"
+        ></textarea>
         <div class="invalid-feedback">Cuéntanos qué pasó (mínimo 20 caracteres).</div>
       </div>
       <div class="is-full-width">
         <label class="form-label" for="claim-solution">¿Qué solución esperas?</label>
-        <textarea id="claim-solution" class="form-control" rows="2" formControlName="requestedSolution" [class.is-invalid]="hasFieldError('requestedSolution')"></textarea>
+        <textarea
+          id="claim-solution"
+          class="form-control"
+          rows="2"
+          formControlName="requestedSolution"
+          [class.is-invalid]="hasFieldError('requestedSolution')"
+        ></textarea>
         <div class="invalid-feedback">Indica el pedido del consumidor.</div>
       </div>
       <div class="is-full-width form-check">
-        <input id="claim-truthful" class="form-check-input" type="checkbox" formControlName="hasAcceptedTruthfulness"
-          [class.is-invalid]="hasFieldError('hasAcceptedTruthfulness')" />
-        <label class="form-check-label" for="claim-truthful">Declaro que la información es verdadera.</label>
+        <input
+          id="claim-truthful"
+          class="form-check-input"
+          type="checkbox"
+          formControlName="hasAcceptedTruthfulness"
+          [class.is-invalid]="hasFieldError('hasAcceptedTruthfulness')"
+        />
+        <label class="form-check-label" for="claim-truthful"
+          >Declaro que la información es verdadera.</label
+        >
       </div>
     </div>
     @if (submitErrorMessage()) {
@@ -75,7 +151,9 @@
     }
     <div class="panel-form-actions">
       <button type="submit" class="btn btn-primary" [disabled]="isSubmitting()">
-        @if (isSubmitting()) { <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span> }
+        @if (isSubmitting()) {
+          <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+        }
         Enviar
       </button>
     </div>
@@ -87,12 +165,18 @@
       <article class="surface-card claim-item">
         <div class="d-flex flex-wrap justify-content-between gap-2">
           <strong>{{ claim.claimNumber }} · {{ claimTypeLabel[claim.claimType] }}</strong>
-          <span [class]="'status-badge ' + claimStatusTone[claim.status]">{{ claimStatusLabel[claim.status] }}</span>
+          <span [class]="'status-badge ' + claimStatusTone[claim.status]">{{
+            claimStatusLabel[claim.status]
+          }}</span>
         </div>
-        <p class="panel-table-secondary mb-1">{{ claim.createdAt ? (claim.createdAt | date: 'dd/MM/yyyy HH:mm') : '' }}</p>
+        <p class="panel-table-secondary mb-1">
+          {{ claim.createdAt ? (claim.createdAt | date: 'dd/MM/yyyy HH:mm') : '' }}
+        </p>
         <p class="mb-0">{{ claim.description }}</p>
         @if (claim.response) {
-          <div class="claim-response"><strong>Respuesta de Farmasalud:</strong> {{ claim.response }}</div>
+          <div class="claim-response">
+            <strong>Respuesta de Farmasalud:</strong> {{ claim.response }}
+          </div>
         }
       </article>
     }

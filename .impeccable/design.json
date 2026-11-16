@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T07:09:38.605Z",
+  "title": "Design System: Farmasalud",
+  "extensions": {
+    "colorMeta": {
+      "route-enamel": {
+        "role": "neutral",
+        "displayName": "Esmalte de carrocería",
+        "canonical": "oklch(96.5% 0.004 134.8)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#262725",
+          "#444643",
+          "#656764",
+          "#888a87",
+          "#adaeac",
+          "#d0d1cf",
+          "#eeefed"
+        ]
+      },
+      "route-enamel-deep": {
+        "role": "neutral",
+        "displayName": "Esmalte profundo",
+        "canonical": "oklch(93.2% 0.010 131.4)",
+        "tonalRamp": [
+          "#0a0c0a",
+          "#252723",
+          "#434641",
+          "#646761",
+          "#878a84",
+          "#acafa9",
+          "#cfd2cd",
+          "#edefec"
+        ]
+      },
+      "route-ink": {
+        "role": "neutral",
+        "displayName": "Tinta azul noche",
+        "canonical": "oklch(21.9% 0.043 261.6)",
+        "tonalRamp": [
+          "#070b13",
+          "#1d2737",
+          "#38455c",
+          "#59677f",
+          "#7b8aa4",
+          "#9fafca",
+          "#c6d2e5",
+          "#e8effb"
+        ]
+      },
+      "route-ink-soft": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "oklch(40.7% 0.041 260.8)",
+        "tonalRamp": [
+          "#070b13",
+          "#1d2736",
+          "#39455b",
+          "#59677e",
+          "#7b8aa2",
+          "#a0afc8",
+          "#c7d2e4",
+          "#e8effb"
+        ]
+      },
+      "route-cobalt": {
+        "role": "primary",
+        "displayName": "Cobalto de ruta",
+        "canonical": "oklch(41.5% 0.174 263.4)",
+        "tonalRamp": [
+          "#00062a",
+          "#011b67",
+          "#0d38a0",
+          "#2e5ec8",
+          "#5083f1",
+          "#83adff",
+          "#bad2fe",
+          "#e7effe"
+        ]
+      },
+      "route-cobalt-deep": {
+        "role": "primary",
+        "displayName": "Cobalto profundo",
+        "canonical": "oklch(32.8% 0.138 263.6)",
+        "tonalRamp": [
+          "#010824",
+          "#08205a",
+          "#1c3e8d",
+          "#3b62b4",
+          "#5d86dc",
+          "#84acff",
+          "#bad1ff",
+          "#e7effe"
+        ]
+      },
+      "route-cobalt-wash": {
+        "role": "primary",
+        "displayName": "Lavado cobalto",
+        "canonical": "oklch(93.7% 0.023 269.4)",
+        "tonalRamp": [
+          "#090b0f",
+          "#23262f",
+          "#404551",
+          "#616673",
+          "#838997",
+          "#a8aebd",
+          "#cdd1dc",
+          "#eceef5"
+        ]
+      },
+      "route-marigold": {
+        "role": "secondary",
+        "displayName": "Marigold de señal",
+        "canonical": "oklch(83.9% 0.168 82.8)",
+        "tonalRamp": [
+          "#130900",
+          "#342300",
+          "#5a4000",
+          "#835f02",
+          "#af8006",
+          "#dda300",
+          "#f7ca73",
+          "#ffecca"
+        ]
+      },
+      "route-marigold-deep": {
+        "role": "secondary",
+        "displayName": "Marigold profundo",
+        "canonical": "oklch(76.5% 0.159 78.4)",
+        "tonalRamp": [
+          "#140900",
+          "#352200",
+          "#5c3f00",
+          "#865d02",
+          "#b47e00",
+          "#e3a005",
+          "#f9c87a",
+          "#ffeccf"
+        ]
+      },
+      "route-marigold-wash": {
+        "role": "secondary",
+        "displayName": "Lavado marigold",
+        "canonical": "oklch(96.4% 0.052 92.9)",
+        "tonalRamp": [
+          "#0e0b02",
+          "#2d260d",
+          "#4f4423",
+          "#706643",
+          "#948965",
+          "#b9ae89",
+          "#d9d1b7",
+          "#f4eede"
+        ]
+      },
+      "marigold-hover": {
+        "role": "secondary",
+        "displayName": "Marigold encendido",
+        "canonical": "oklch(87.0% 0.151 87.0)",
+        "tonalRamp": [
+          "#120a00",
+          "#322400",
+          "#574101",
+          "#7f6104",
+          "#ab8300",
+          "#d7a60e",
+          "#efcd7e",
+          "#ffedc4"
+        ]
+      },
+      "route-live": {
+        "role": "tertiary",
+        "displayName": "Verde en vivo",
+        "canonical": "oklch(60.4% 0.148 154.4)",
+        "tonalRamp": [
+          "#001004",
+          "#003016",
+          "#00542c",
+          "#007a43",
+          "#20a25f",
+          "#52c983",
+          "#9ae5b3",
+          "#cefcdb"
+        ]
+      },
+      "route-live-ink": {
+        "role": "tertiary",
+        "displayName": "Tinta en vivo",
+        "canonical": "oklch(49.3% 0.116 156.0)",
+        "tonalRamp": [
+          "#001005",
+          "#002f18",
+          "#01532f",
+          "#157949",
+          "#449e6b",
+          "#6bc48f",
+          "#a6e1bb",
+          "#d4f9e0"
+        ]
+      },
+      "route-live-wash": {
+        "role": "tertiary",
+        "displayName": "Lavado en vivo",
+        "canonical": "oklch(94.1% 0.029 159.9)",
+        "tonalRamp": [
+          "#070d09",
+          "#1d2a23",
+          "#384a40",
+          "#586b60",
+          "#7b8f83",
+          "#9fb4a8",
+          "#c6d5cc",
+          "#e8f1eb"
+        ]
+      },
+      "route-alert": {
+        "role": "tertiary",
+        "displayName": "Rojo de alerta",
+        "canonical": "oklch(53.7% 0.190 27.8)",
+        "tonalRamp": [
+          "#200000",
+          "#500002",
+          "#860006",
+          "#ba1f1d",
+          "#e54d43",
+          "#ff8578",
+          "#febfb6",
+          "#ffe9e5"
+        ]
+      },
+      "route-alert-wash": {
+        "role": "tertiary",
+        "displayName": "Lavado de alerta",
+        "canonical": "oklch(93.9% 0.028 23.1)",
+        "tonalRamp": [
+          "#100909",
+          "#302221",
+          "#533f3e",
+          "#75605f",
+          "#998381",
+          "#bfa8a6",
+          "#decccb",
+          "#f7ebeb"
+        ]
+      },
+      "warning-ink": {
+        "role": "tertiary",
+        "displayName": "Ámbar de advertencia",
+        "canonical": "oklch(54.6% 0.129 58.9)",
+        "tonalRamp": [
+          "#180600",
+          "#3d1d00",
+          "#693600",
+          "#985100",
+          "#c2732b",
+          "#ea9854",
+          "#fec395",
+          "#ffeadb"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Gris de horario",
+        "canonical": "oklch(51.7% 0.040 265.7)",
+        "tonalRamp": [
+          "#080b13",
+          "#1f2636",
+          "#3b455b",
+          "#5b667e",
+          "#7e89a2",
+          "#a2aec8",
+          "#c8d1e4",
+          "#e9effb"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Borde suave",
+        "canonical": "oklch(88.4% 0.014 134.9)",
+        "tonalRamp": [
+          "#0a0c09",
+          "#242822",
+          "#42473f",
+          "#636860",
+          "#868b83",
+          "#aab0a7",
+          "#ced2cc",
+          "#edefeb"
+        ]
+      },
+      "border-strong": {
+        "role": "neutral",
+        "displayName": "Borde fuerte",
+        "canonical": "oklch(80.1% 0.019 134.9)",
+        "tonalRamp": [
+          "#0a0c09",
+          "#232821",
+          "#41473d",
+          "#62695e",
+          "#848c81",
+          "#a9b1a5",
+          "#cdd3ca",
+          "#ecf0ea"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superficie",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "cobalt-mist": {
+        "role": "neutral",
+        "displayName": "Niebla cobalto",
+        "canonical": "oklch(92.2% 0.031 268.0)",
+        "tonalRamp": [
+          "#090b11",
+          "#212633",
+          "#3e4556",
+          "#5e6679",
+          "#81899d",
+          "#a5aec3",
+          "#cbd1e0",
+          "#eaeef8"
+        ]
+      },
+      "night-board-text": {
+        "role": "neutral",
+        "displayName": "Texto de tablero nocturno",
+        "tonalRamp": [
+          "#070b13",
+          "#1d2737",
+          "#38455c",
+          "#59677f",
+          "#7b8aa4",
+          "#9fafca",
+          "#c6d2e5",
+          "#e8effb"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display de letrero",
+        "purpose": "Solo el titular de un letrero (inicio, catálogo); MAYÚSCULAS, ancho 66%."
+      },
+      "headline": {
+        "displayName": "Titular de sección",
+        "purpose": "Títulos de sección y de página en MAYÚSCULAS, ancho 68–72%."
+      },
+      "title": {
+        "displayName": "Título de rótulo",
+        "purpose": "Nombres de producto, paradero y paso; ancho 85%."
+      },
+      "numeral": {
+        "displayName": "Cifra de rótulo",
+        "purpose": "Precios, números de paradero y descuentos, siempre tabulares."
+      },
+      "body": {
+        "displayName": "Cuerpo hiperlegible",
+        "purpose": "Texto corrido y descripciones, 46–68ch."
+      },
+      "label": {
+        "displayName": "Etiqueta de rótulo",
+        "purpose": "Navegación, botones, estados, títulos del pie; MAYÚSCULAS con tracking."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-card",
+        "value": "0 1px 0 rgba(15, 26, 46, 0.05), 0 8px 20px -14px rgba(15, 26, 46, 0.35)",
+        "purpose": "Superficies de contenido en reposo."
+      },
+      {
+        "name": "shadow-raised",
+        "value": "0 2px 4px rgba(15, 26, 46, 0.06), 0 22px 44px -18px rgba(15, 26, 46, 0.4)",
+        "purpose": "Hover de tarjeta de producto, menús, aviso de carrito, menú móvil."
+      },
+      {
+        "name": "route-stripes",
+        "value": "inset 0 -4px 0 #ffbe1a, inset 0 -9px 0 #1440a8",
+        "purpose": "Franjas de carrocería cobalto + marigold bajo la cabecera."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 5px #0f1a2e (con outline 3px #ffbe1a, offset 2px)",
+        "purpose": "Foco visible universal."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Curva única de todo el sistema."
+      },
+      {
+        "name": "transition-base",
+        "value": "0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Cambios de color y borde en controles."
+      },
+      {
+        "name": "enter-along-route",
+        "value": "translateX(-14px) a 0, 0.6s, 45ms por elemento (máx. 12)",
+        "purpose": "Entrada escalonada de paraderos y filas."
+      },
+      {
+        "name": "reveal-on-scroll",
+        "value": "translateY(18px) a 0, 0.55s",
+        "purpose": "Llegada de secciones al hacer scroll."
+      },
+      {
+        "name": "route-view-transition",
+        "value": "sale -28px en 0.28s; entra desde +36px en 0.42s",
+        "purpose": "Transición entre páginas de la tienda; omitida en /admin y /trabajador."
+      },
+      {
+        "name": "stop-lights-up",
+        "value": "pulso verde de 0 a 18px, 1.6s",
+        "purpose": "Encendido del paradero seleccionado."
+      },
+      {
+        "name": "skeleton-sweep",
+        "value": "1.4s linear infinite",
+        "purpose": "Esqueletos de carga en lugar de spinners."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "576px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "992px"
+      },
+      {
+        "name": "xl",
+        "value": "1200px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción de compra (Agregar, Crear cuenta).",
+      "html": "<button class=\"ds-btn-primary\">Agregar</button>",
+      "css": ".ds-btn-primary{min-height:44px;padding:0.45rem 1rem;border:1px solid #1440a8;border-radius:4px;background:#1440a8;color:#fff;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:700;font-size:1rem;letter-spacing:0.01em;transition:background-color .22s cubic-bezier(0.16,1,0.3,1),transform .12s cubic-bezier(0.16,1,0.3,1)}.ds-btn-primary:hover{background:#0c2c7a;border-color:#0c2c7a}.ds-btn-primary:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}.ds-btn-primary:active{transform:translateY(1px) scale(0.985)}"
+    },
+    {
+      "name": "Botón de señal",
+      "kind": "button",
+      "refersTo": "button-signal",
+      "description": "Señal principal marigold sobre cobalto o tinta (Buscar, Ver catálogo).",
+      "html": "<div class=\"ds-sign\"><button class=\"ds-btn-signal\">Buscar</button></div>",
+      "css": ".ds-sign{padding:24px;background:#1440a8;box-shadow:inset 0 -8px 0 #ffbe1a}.ds-btn-signal{min-height:3.25rem;padding:0 1.5rem;border:1px solid #ffbe1a;border-radius:4px;background:#ffbe1a;color:#0f1a2e;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:700;font-size:1.15rem;text-transform:uppercase;transition:background-color .22s cubic-bezier(0.16,1,0.3,1),transform .12s cubic-bezier(0.16,1,0.3,1)}.ds-btn-signal:hover{background:#ffcd4d;border-color:#ffcd4d}.ds-btn-signal:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}.ds-btn-signal:active{background:#e9a400;transform:translateY(1px) scale(0.985)}"
+    },
+    {
+      "name": "Botón con borde",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Acción secundaria (Iniciar sesión).",
+      "html": "<button class=\"ds-btn-outline\">Iniciar sesión</button>",
+      "css": ".ds-btn-outline{min-height:44px;padding:0.45rem 1rem;border:2px solid #1440a8;border-radius:4px;background:transparent;color:#1440a8;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:700;font-size:1rem;transition:background-color .22s cubic-bezier(0.16,1,0.3,1),color .22s cubic-bezier(0.16,1,0.3,1)}.ds-btn-outline:hover{background:#1440a8;color:#fff}.ds-btn-outline:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Campo de formulario con borde fuerte y foco cobalto.",
+      "html": "<input class=\"ds-input\" placeholder=\"Paracetamol, ibuprofeno…\" />",
+      "css": ".ds-input{min-height:2.75rem;padding:0.4rem 0.75rem;border:1.5px solid #b9c1b5;border-radius:4px;background:#fff;color:#0f1a2e;font-family:'Atkinson Hyperlegible Next','Segoe UI',system-ui,sans-serif;font-size:1rem}.ds-input::placeholder{color:#5d6880}.ds-input:focus{outline:none;border-color:#1440a8;box-shadow:0 0 0 3px rgba(20,64,168,0.18)}"
+    },
+    {
+      "name": "Navegación de tienda",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Cabecera con placa de marca, enlaces de rótulo y las dos franjas.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-plate\">F</span><span class=\"ds-nav-brand\">Farmasalud</span><a class=\"ds-nav-link is-active\" href=\"#\">Inicio</a><a class=\"ds-nav-link\" href=\"#\">Catálogo</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:0.75rem;min-height:72px;padding:0 1rem 9px;background:#fff;box-shadow:inset 0 -4px 0 #ffbe1a,inset 0 -9px 0 #1440a8}.ds-nav-plate{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:4px;background:#1440a8;color:#ffbe1a;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:72%;font-weight:900;font-size:1.55rem}.ds-nav-brand{margin-right:1rem;color:#0f1a2e;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:72%;font-weight:900;font-size:1.55rem;text-transform:uppercase}.ds-nav-link{position:relative;padding:0.6rem 0.75rem;color:#3d4a60;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:700;font-size:0.95rem;letter-spacing:0.04em;text-transform:uppercase;text-decoration:none;transition:color .22s cubic-bezier(0.16,1,0.3,1)}.ds-nav-link::after{content:'';position:absolute;left:0.75rem;right:0.75rem;bottom:0.3rem;height:3px;background:#1440a8;transform:scaleX(0);transform-origin:left;transition:transform .3s cubic-bezier(0.16,1,0.3,1)}.ds-nav-link:hover{color:#0f1a2e}.ds-nav-link:hover::after{transform:scaleX(0.5)}.ds-nav-link.is-active{color:#1440a8}.ds-nav-link.is-active::after{transform:scaleX(1)}.ds-nav-link:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}"
+    },
+    {
+      "name": "Chip de categoría",
+      "kind": "chip",
+      "refersTo": "chip-category",
+      "description": "Filtro de categoría del catálogo.",
+      "html": "<button class=\"ds-chip\">Analgésicos</button> <button class=\"ds-chip is-selected\">Vitaminas</button>",
+      "css": ".ds-chip{min-height:40px;padding:0.35rem 0.9rem;border:1.5px solid transparent;border-radius:4px;background:#e6eae3;color:#3d4a60;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:700;font-size:0.95rem;transition:background-color .22s cubic-bezier(0.16,1,0.3,1),color .22s cubic-bezier(0.16,1,0.3,1),border-color .22s cubic-bezier(0.16,1,0.3,1)}.ds-chip:hover{border-color:#1440a8;color:#1440a8}.ds-chip.is-selected{background:#1440a8;color:#fff}.ds-chip:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}"
+    },
+    {
+      "name": "Etiquetas de estado",
+      "kind": "chip",
+      "refersTo": "status-badge-live",
+      "description": "Estado con lavado, tinta y marca de forma además del color.",
+      "html": "<span class=\"ds-badge is-success\">Disponible</span> <span class=\"ds-badge is-warning\">Pocas unidades</span> <span class=\"ds-badge is-danger\">Cancelado</span> <span class=\"ds-badge is-neutral\">Agotado</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;gap:0.4rem;padding:0.2rem 0.55rem;border-radius:4px;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:700;font-size:0.78rem;letter-spacing:0.01em;font-variant-numeric:tabular-nums;white-space:nowrap}.ds-badge::before{content:'';width:0.5rem;height:0.5rem;flex-shrink:0;border-radius:50%;background:currentColor}.ds-badge.is-success{background:#dcf2e5;color:#0a7444}.ds-badge.is-warning{background:#fff3cc;color:#7a4300}.ds-badge.is-warning::before{border-radius:1px;transform:rotate(45deg) scale(0.85)}.ds-badge.is-danger{background:#fde4e2;color:#9b1f1b}.ds-badge.is-danger::before{border-radius:1px}.ds-badge.is-neutral{background:#e6eae3;color:#3d4a60}.ds-badge.is-neutral::before{background:transparent;box-shadow:inset 0 0 0 1.5px currentColor}"
+    },
+    {
+      "name": "Tarjeta de producto",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "Tarjeta del catálogo, clicable entera; sube al pasar el cursor.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-img\">P</div><div class=\"ds-card-body\"><a class=\"ds-card-name\" href=\"#\">Paracetamol 500 mg</a><span class=\"ds-card-pres\">Caja x 100 tabletas</span><span class=\"ds-card-price\">S/ 12,50</span></div></article>",
+      "css": ".ds-card{width:240px;overflow:hidden;border:1px solid #d5dbd2;border-radius:6px;background:#fff;transition:border-color .22s cubic-bezier(0.16,1,0.3,1),box-shadow .35s cubic-bezier(0.16,1,0.3,1),transform .35s cubic-bezier(0.16,1,0.3,1)}.ds-card:hover{border-color:#b9c1b5;box-shadow:0 2px 4px rgba(15,26,46,0.06),0 22px 44px -18px rgba(15,26,46,0.4);transform:translateY(-3px)}.ds-card-img{display:grid;place-items:center;aspect-ratio:16/10;border-bottom:1px solid #d5dbd2;background:#f2f4f1;color:#c3cde6;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:72%;font-weight:900;font-size:3.5rem}.ds-card-body{display:flex;flex-direction:column;gap:0.2rem;padding:0.9rem 1rem 1rem}.ds-card-name{color:#0f1a2e;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:800;font-size:1.15rem;line-height:1.2;text-decoration:none}.ds-card-name:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}.ds-card-pres{color:#3d4a60;font-family:'Atkinson Hyperlegible Next',sans-serif;font-size:0.875rem}.ds-card-price{margin-top:0.6rem;color:#0f1a2e;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:900;font-size:1.3rem;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Línea de ruta",
+      "kind": "custom",
+      "refersTo": "route-stop-marker",
+      "description": "Selector de botica: paraderos numerados sobre la línea de 6px; el elegido se enciende en verde.",
+      "html": "<ol class=\"ds-route\"><li><button class=\"ds-stop\"><span class=\"ds-stop-marker\">1</span>Centro</button></li><li><button class=\"ds-stop is-selected\"><span class=\"ds-stop-marker\">2</span>El Bosque</button></li><li><button class=\"ds-stop\"><span class=\"ds-stop-marker\">3</span>El Molino</button></li></ol>",
+      "css": ".ds-route{position:relative;display:grid;grid-template-columns:repeat(3,1fr);width:420px;margin:0;padding:0;list-style:none}.ds-route::before{content:'';position:absolute;top:calc(1.375rem - 3px);left:16.66%;right:16.66%;height:6px;border-radius:3px;background:#1440a8}.ds-stop{display:flex;flex-direction:column;align-items:center;gap:0.15rem;width:100%;padding:0 0.4rem 0.75rem;border:0;border-radius:4px;background:none;color:#0f1a2e;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:85%;font-weight:800;font-size:1.05rem}.ds-stop-marker{position:relative;z-index:1;display:grid;place-items:center;width:2.75rem;height:2.75rem;margin-bottom:0.65rem;border:5px solid #1440a8;border-radius:50%;background:#fff;color:#0f1a2e;font-stretch:72%;font-weight:900;font-size:1.15rem;transition:background-color .22s cubic-bezier(0.16,1,0.3,1),border-color .22s cubic-bezier(0.16,1,0.3,1),color .22s cubic-bezier(0.16,1,0.3,1),transform .4s cubic-bezier(0.16,1,0.3,1)}.ds-stop:hover .ds-stop-marker{background:#ffbe1a;transform:translateY(-2px)}.ds-stop.is-selected .ds-stop-marker{border-color:#0a7444;background:#0e9a57;color:#fff;transform:scale(1.12)}.ds-stop:focus-visible{outline:3px solid #ffbe1a;outline-offset:2px;box-shadow:0 0 0 5px #0f1a2e}"
+    },
+    {
+      "name": "Placa de descuento",
+      "kind": "custom",
+      "refersTo": "discount-plate",
+      "description": "Porcentaje del tablero de ofertas en cifra de rótulo.",
+      "html": "<span class=\"ds-discount\">-20%</span>",
+      "css": ".ds-discount{display:inline-grid;place-items:center;min-width:5.25rem;min-height:3rem;border-radius:4px;background:#ffbe1a;color:#0f1a2e;font-family:'Archivo','Arial Narrow',sans-serif;font-stretch:72%;font-weight:900;font-size:1.5rem;font-variant-numeric:tabular-nums}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Letrero de ruta",
+    "overview": "Las diez boticas de Farmasalud son paraderos de una sola ruta trujillana, y la tienda está pintada como la carrocería y los tableros de una micro: esmalte claro de fondo, franjas cobalto y marigold a todo el ancho, tinta azul noche para el texto y los tableros nocturnos, y una letra de rótulo condensada para todo lo que se lee de lejos. Las boticas se eligen como paraderos numerados sobre una línea gruesa, y el pedido luego avanza por esa misma línea.\n\nEl sistema es plano y gráfico, no flotante: la profundidad se pinta con franjas (sombras `inset` de color sólido) antes que con elevación. El color es estructural (bandas, letreros, placas) y tiene funciones fijas: el cobalto es la ruta y la acción, el marigold es la señal, el verde aparece solo cuando algo está en vivo y el rojo solo cuando algo está mal. La densidad es de tienda práctica para celular: objetivos táctiles de 44px, cifras tabulares, cuerpo hiperlegible.\n\nAlcance: las superficies de la tienda (layout público, inicio, catálogo, ficha, carrito, checkout, seguimiento, autenticación) están construidas en este mundo. Los paneles de personal (`/admin`, `/trabajador`) solo heredan los valores de los tokens y todavía no se han rediseñado; sus tablas y su barra lateral conservan patrones anteriores y no son referencia de este sistema. La transición de ruta entre páginas se omite a propósito en esos paneles.",
+    "keyCharacteristics": [
+      "Franjas de carrocería cobalto + marigold como firma estructural (cabecera, letreros, pie, cierres).",
+      "Titulares en Archivo condensado (ancho 66–72%, peso 800–900) en mayúsculas; cuerpo en Atkinson Hyperlegible Next.",
+      "Paraderos numerados (círculos con borde cobalto) sobre una línea de ruta de 6px; el seleccionado se enciende en verde.",
+      "Esquinas casi rectas (4–6px); el círculo se reserva para paraderos y marcas de estado.",
+      "Movimiento como deslizamiento horizontal a lo largo de la ruta, siempre con `prefers-reduced-motion` respetado."
+    ],
+    "rules": [
+      {
+        "name": "The Live Green Rule",
+        "body": "El verde significa \"en vivo\": stock disponible, paradero elegido, pedido en marcha, recién agregado. Nunca se usa como color de marca, de decoración ni de botón primario.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Stripe Rule",
+        "body": "Cuando una banda de ruta separa regiones, va en pareja cobalto + marigold, pintada como sombra `inset` sólida o borde (cabecera: 5px cobalto + 4px marigold; pie: 9px cobalto + 4px marigold), nunca como degradado.",
+        "section": "colors"
+      },
+      {
+        "name": "The Signal Scarcity Rule",
+        "body": "Hay como máximo una acción marigold por región: el marigold marca la señal principal y pierde fuerza si se reparte.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sign Letter Rule",
+        "body": "Archivo siempre lleva `font-stretch` (66–72% para titulares, 85% para etiquetas, botones y nombres); sin ancho, deja de ser letra de rótulo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Precios, stock, cantidades, números de paradero y tiempos usan cifras tabulares.",
+        "section": "typography"
+      },
+      {
+        "name": "The Painted Depth Rule",
+        "body": "Primero franja, después sombra: una región se distingue con una banda pintada o un cambio de fondo (esmalte, blanco, tinta) antes de recurrir a la elevación.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do separar regiones con la pareja de franjas cobalto + marigold pintadas como sombra `inset` sólida o borde.",
+      "Do reservar el verde vivo para lo que ocurre ahora (stock disponible, paradero elegido, paso actual, recién agregado).",
+      "Do poner `font-stretch` en todo uso de Archivo: 66–72% en titulares, 85% en etiquetas, botones y nombres.",
+      "Do usar cifras tabulares para precios, stock, cantidades y números de paradero.",
+      "Do acompañar el color de estado con una marca de forma (círculo, rombo, cuadrado, círculo hueco).",
+      "Do mantener esquinas de 4–6px y reservar el círculo para paraderos y marcas de estado.",
+      "Do mover a lo largo de la ruta (desplazamiento horizontal) y respetar `prefers-reduced-motion`.",
+      "Do dar 44px mínimos a todo control táctil."
+    ],
+    "donts": [
+      "Don't usar verde para marca, decoración o acciones primarias; la acción es cobalto y la señal es marigold.",
+      "Don't usar rojo fuera de errores, validación y acciones destructivas.",
+      "Don't volver a la farmacia blanca con teal, los íconos de pastilla ni el hero de tres tarjetas flotantes.",
+      "Don't pintar las franjas de ruta con degradados de color; los únicos degradados del sistema son los tramos punteados de la ruta y el barrido de los esqueletos.",
+      "Don't usar Archivo sin ancho condensado ni titulares en Atkinson.",
+      "Don't tomar los paneles `/admin` y `/trabajador` como referencia de este mundo hasta que se rediseñen."
+    ]
+  }
+}

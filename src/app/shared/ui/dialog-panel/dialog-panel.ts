@@ -11,10 +11,20 @@ let nextDialogNumber = 0;
   template: `
     @if (isOpen()) {
       <div class="dialog-backdrop" (click)="closeRequested.emit()"></div>
-      <section class="dialog-panel" role="dialog" aria-modal="true" [attr.aria-labelledby]="dialogTitleId">
+      <section
+        class="dialog-panel"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-labelledby]="dialogTitleId"
+      >
         <header class="dialog-header">
           <h2 class="dialog-title" [id]="dialogTitleId">{{ dialogTitle() }}</h2>
-          <button type="button" class="btn-close" aria-label="Cerrar" (click)="closeRequested.emit()"></button>
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Cerrar"
+            (click)="closeRequested.emit()"
+          ></button>
         </header>
         <div class="dialog-body">
           <ng-content />

@@ -1,0 +1,342 @@
+- generic [ref=f2e4]:
+  - banner [ref=f2e5]:
+    - navigation "Navegación principal" [ref=f2e6]:
+      - link "Farmasalud" [ref=f2e7] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=f2e8]: F
+      - text: 
+      - generic [ref=f2e10]:
+        - list [ref=f2e11]:
+          - listitem [ref=f2e12]:
+            - link "Inicio" [ref=f2e13] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f2e14]:
+            - link "Catálogo" [active] [ref=f2e15] [cursor=pointer]:
+              - /url: /catalogo
+        - generic [ref=f2e16]:
+          - link "Ver carrito" [ref=f2e17] [cursor=pointer]:
+            - /url: /carrito
+            - generic [aria-hidden] [ref=f2e18]: 
+            - generic [ref=f2e19]: Carrito
+          - link "Iniciar sesión" [ref=f2e20] [cursor=pointer]:
+            - /url: /login
+          - link "Crear cuenta" [ref=f2e21] [cursor=pointer]:
+            - /url: /registro
+  - main [ref=f2e22]:
+    - generic [ref=f2e24]:
+      - generic [ref=f2e26]:
+        - heading "Catálogo" [level=1] [ref=f2e27]
+        - generic [ref=f2e28]:
+          - generic [aria-hidden]: 
+          - searchbox "Buscar productos" [ref=f2e29]
+      - generic [ref=f2e30]:
+        - generic [ref=f2e31]:
+          - heading "Tu botica" [level=2] [ref=f2e32]
+          - paragraph [ref=f2e33]: Mostrando la disponibilidad de todas las boticas.
+        - group "Elegir botica" [ref=f2e34]:
+          - button "Todas" [pressed] [ref=f2e35] [cursor=pointer]:
+            - generic [ref=f2e37]: 
+            - text: Todas
+          - button "Botica Centro Histórico" [ref=f2e38] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e39]: "1"
+            - text: Botica Centro Histórico
+          - button "Botica el Bosque" [ref=f2e40] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e41]: "2"
+            - text: Botica el Bosque
+          - button "Botica el Molino" [ref=f2e42] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e43]: "3"
+            - text: Botica el Molino
+          - button "Botica Florencia de Mora" [ref=f2e44] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e45]: "4"
+            - text: Botica Florencia de Mora
+          - button "Botica La Esperanza" [ref=f2e46] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e47]: "5"
+            - text: Botica La Esperanza
+          - button "Botica Víctor Larco" [ref=f2e48] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f2e49]: "6"
+            - text: Botica Víctor Larco
+        - generic [ref=f2e50]:
+          - navigation "Categorías" [ref=f2e51]:
+            - button "Todo" [pressed] [ref=f2e52] [cursor=pointer]
+            - button "Analgésicos y antiinflamatorios" [ref=f2e53] [cursor=pointer]
+            - button "Antibióticos" [ref=f2e54] [cursor=pointer]
+            - button "Antigripales y respiratorio" [ref=f2e55] [cursor=pointer]
+            - button "Bebés y mamá" [ref=f2e56] [cursor=pointer]
+            - button "Cuidado personal" [ref=f2e57] [cursor=pointer]
+            - button "Primeros auxilios" [ref=f2e58] [cursor=pointer]
+            - button "Vitaminas y suplementos" [ref=f2e59] [cursor=pointer]
+          - generic [ref=f2e60]:
+            - switch "Solo disponibles" [ref=f2e61] [cursor=pointer]
+            - generic [ref=f2e62]: Solo disponibles
+        - paragraph [ref=f2e63]: 18 productos
+        - generic [ref=f2e64]:
+          - article [ref=f2e65]:
+            - generic [aria-hidden] [ref=f2e67]: A
+            - generic [ref=f2e68]:
+              - generic [ref=f2e69]: Primeros auxilios
+              - link "Agua oxigenada 10 vol." [ref=f2e70] [cursor=pointer]:
+                - /url: /producto/agua-oxigenada-120
+              - generic [ref=f2e71]: Frasco x 120 ml
+              - generic [ref=f2e72]: Disponible en 6 boticas
+              - generic [ref=f2e73]:
+                - generic [ref=f2e74]: S/ 3.50
+                - button "Agregar Agua oxigenada 10 vol. al carrito" [ref=f2e77] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e78]: 
+          - article [ref=f2e79]:
+            - generic [aria-hidden] [ref=f2e81]: A
+            - generic [ref=f2e82]:
+              - generic [ref=f2e83]: Cuidado personal
+              - link "Alcohol en gel 70 %" [ref=f2e84] [cursor=pointer]:
+                - /url: /producto/alcohol-gel-500
+              - generic [ref=f2e85]: Frasco x 500 ml
+              - generic [ref=f2e86]: Disponible en 6 boticas
+              - generic [ref=f2e87]:
+                - generic [ref=f2e88]: S/ 13.50
+                - button "Agregar Alcohol en gel 70 % al carrito" [ref=f2e91] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e92]: 
+          - article [ref=f2e93]:
+            - generic [aria-hidden] [ref=f2e95]: A
+            - generic [ref=f2e96]:
+              - generic [ref=f2e97]: Antigripales y respiratorio
+              - link "Ambroxol jarabe 30 mg/5 ml" [ref=f2e98] [cursor=pointer]:
+                - /url: /producto/jarabe-ambroxol-120
+              - generic [ref=f2e99]: Frasco x 120 ml
+              - generic [ref=f2e100]: Disponible en 6 boticas
+              - generic [ref=f2e101]:
+                - generic [ref=f2e102]: S/ 11.20
+                - button "Agregar Ambroxol jarabe 30 mg/5 ml al carrito" [ref=f2e105] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e106]: 
+          - article [ref=f2e107]:
+            - generic [ref=f2e108]:
+              - generic [aria-hidden] [ref=f2e109]: A
+              - generic [ref=f2e110]:
+                - generic [aria-hidden] [ref=f2e111]: 
+                - text: Con receta
+            - generic [ref=f2e112]:
+              - generic [ref=f2e113]: Antibióticos
+              - link "Amoxicilina 500 mg" [ref=f2e114] [cursor=pointer]:
+                - /url: /producto/amoxicilina-500-x100
+              - generic [ref=f2e115]: Caja x 100 cápsulas
+              - generic [ref=f2e116]: Disponible en 6 boticas
+              - generic [ref=f2e117]:
+                - generic [ref=f2e118]: S/ 32.00
+                - button "Agregar Amoxicilina 500 mg al carrito" [ref=f2e121] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e122]: 
+          - article [ref=f2e123]:
+            - generic [aria-hidden] [ref=f2e125]: A
+            - generic [ref=f2e126]:
+              - generic [ref=f2e127]: Antigripales y respiratorio
+              - link "Antigripal Noche" [ref=f2e128] [cursor=pointer]:
+                - /url: /producto/antigripal-noche-x12
+              - generic [ref=f2e129]: Caja x 12 tabletas
+              - generic [ref=f2e130]: Disponible en 6 boticas
+              - generic [ref=f2e131]:
+                - generic [ref=f2e133]:
+                  - generic [ref=f2e134]: S/ 8.91
+                  - generic [ref=f2e135]: S/ 9.90
+                  - generic [ref=f2e136]: "-10%"
+                - button "Agregar Antigripal Noche al carrito" [ref=f2e137] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e138]: 
+          - article [ref=f2e139]:
+            - generic [ref=f2e140]:
+              - generic [aria-hidden] [ref=f2e141]: A
+              - generic [ref=f2e142]:
+                - generic [aria-hidden] [ref=f2e143]: 
+                - text: Con receta
+            - generic [ref=f2e144]:
+              - generic [ref=f2e145]: Antibióticos
+              - link "Azitromicina 500 mg" [ref=f2e146] [cursor=pointer]:
+                - /url: /producto/azitromicina-500-x3
+              - generic [ref=f2e147]: Caja x 3 tabletas
+              - generic [ref=f2e148]: Disponible en 6 boticas
+              - generic [ref=f2e149]:
+                - generic [ref=f2e150]: S/ 15.90
+                - button "Agregar Azitromicina 500 mg al carrito" [ref=f2e153] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e154]: 
+          - article [ref=f2e155]:
+            - generic [ref=f2e156]:
+              - generic [aria-hidden] [ref=f2e157]: C
+              - generic [ref=f2e158]:
+                - generic [aria-hidden] [ref=f2e159]: 
+                - text: Con receta
+            - generic [ref=f2e160]:
+              - generic [ref=f2e161]: Antibióticos
+              - link "Cefalexina 500 mg" [ref=f2e162] [cursor=pointer]:
+                - /url: /producto/cefalexina-500-x10
+              - generic [ref=f2e163]: Blíster x 10 cápsulas
+              - generic [ref=f2e164]: Disponible en 6 boticas
+              - generic [ref=f2e165]:
+                - generic [ref=f2e166]: S/ 9.50
+                - button "Agregar Cefalexina 500 mg al carrito" [ref=f2e169] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e170]: 
+          - article [ref=f2e171]:
+            - generic [aria-hidden] [ref=f2e173]: D
+            - generic [ref=f2e174]:
+              - generic [ref=f2e175]: Analgésicos y antiinflamatorios
+              - link "Diclofenaco gel 1 %" [ref=f2e176] [cursor=pointer]:
+                - /url: /producto/diclofenaco-gel-50g
+              - generic [ref=f2e177]: Tubo x 50 g
+              - generic [ref=f2e178]: Disponible en 6 boticas
+              - generic [ref=f2e179]:
+                - generic [ref=f2e180]: S/ 14.50
+                - button "Agregar Diclofenaco gel 1 % al carrito" [ref=f2e183] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e184]: 
+          - article [ref=f2e185]:
+            - generic [aria-hidden] [ref=f2e187]: G
+            - generic [ref=f2e188]:
+              - generic [ref=f2e189]: Primeros auxilios
+              - link "Gasas estériles 10 x 10 cm" [ref=f2e190] [cursor=pointer]:
+                - /url: /producto/gasas-esteriles-x10
+              - generic [ref=f2e191]: Sobre x 10 unidades
+              - generic [ref=f2e192]: Disponible en 6 boticas
+              - generic [ref=f2e193]:
+                - generic [ref=f2e194]: S/ 4.20
+                - button "Agregar Gasas estériles 10 x 10 cm al carrito" [ref=f2e197] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e198]: 
+          - article [ref=f2e199]:
+            - generic [aria-hidden] [ref=f2e201]: I
+            - generic [ref=f2e202]:
+              - generic [ref=f2e203]: Analgésicos y antiinflamatorios
+              - link "Ibuprofeno 400 mg" [ref=f2e204] [cursor=pointer]:
+                - /url: /producto/ibuprofeno-400-x100
+              - generic [ref=f2e205]: Caja x 100 tabletas
+              - generic [ref=f2e206]: Disponible en 6 boticas
+              - generic [ref=f2e207]:
+                - generic [ref=f2e208]: S/ 18.90
+                - button "Agregar Ibuprofeno 400 mg al carrito" [ref=f2e211] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e212]: 
+          - article [ref=f2e213]:
+            - generic [aria-hidden] [ref=f2e215]: L
+            - generic [ref=f2e216]:
+              - generic [ref=f2e217]: Antigripales y respiratorio
+              - link "Loratadina 10 mg" [ref=f2e218] [cursor=pointer]:
+                - /url: /producto/loratadina-10-x10
+              - generic [ref=f2e219]: Blíster x 10 tabletas
+              - generic [ref=f2e220]: Disponible en 6 boticas
+              - generic [ref=f2e221]:
+                - generic [ref=f2e222]: S/ 5.50
+                - button "Agregar Loratadina 10 mg al carrito" [ref=f2e225] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e226]: 
+          - article [ref=f2e227]:
+            - generic [aria-hidden] [ref=f2e229]: M
+            - generic [ref=f2e230]:
+              - generic [ref=f2e231]: Vitaminas y suplementos
+              - link "Multivitamínico adulto" [ref=f2e232] [cursor=pointer]:
+                - /url: /producto/multivitaminico-adulto-x60
+              - generic [ref=f2e233]: Frasco x 60 cápsulas
+              - generic [ref=f2e234]: Disponible en 6 boticas
+              - generic [ref=f2e235]:
+                - generic [ref=f2e236]: S/ 45.00
+                - button "Agregar Multivitamínico adulto al carrito" [ref=f2e239] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e240]: 
+          - article [ref=f2e241]:
+            - generic [aria-hidden] [ref=f2e243]: "N"
+            - generic [ref=f2e244]:
+              - generic [ref=f2e245]: Analgésicos y antiinflamatorios
+              - link "Naproxeno sódico 550 mg" [ref=f2e246] [cursor=pointer]:
+                - /url: /producto/naproxeno-550-x10
+              - generic [ref=f2e247]: Blíster x 10 tabletas
+              - generic [ref=f2e248]: Disponible en 6 boticas
+              - generic [ref=f2e249]:
+                - generic [ref=f2e250]: S/ 7.80
+                - button "Agregar Naproxeno sódico 550 mg al carrito" [ref=f2e253] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e254]: 
+          - article [ref=f2e255]:
+            - generic [aria-hidden] [ref=f2e257]: P
+            - generic [ref=f2e258]:
+              - generic [ref=f2e259]: Bebés y mamá
+              - link "Pañales talla M" [ref=f2e260] [cursor=pointer]:
+                - /url: /producto/panales-talla-m-x40
+              - generic [ref=f2e261]: Paquete x 40 unidades
+              - generic [ref=f2e262]: Disponible en 6 boticas
+              - generic [ref=f2e263]:
+                - generic [ref=f2e264]: S/ 39.90
+                - button "Agregar Pañales talla M al carrito" [ref=f2e267] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e268]: 
+          - article [ref=f2e269]:
+            - generic [aria-hidden] [ref=f2e271]: P
+            - generic [ref=f2e272]:
+              - generic [ref=f2e273]: Analgésicos y antiinflamatorios
+              - link "Paracetamol 500 mg" [ref=f2e274] [cursor=pointer]:
+                - /url: /producto/paracetamol-500-x100
+              - generic [ref=f2e275]: Caja x 100 tabletas
+              - generic [ref=f2e276]: Disponible en 6 boticas
+              - generic [ref=f2e277]:
+                - generic [ref=f2e278]: S/ 12.50
+                - button "Agregar Paracetamol 500 mg al carrito" [ref=f2e281] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e282]: 
+          - article [ref=f2e283]:
+            - generic [aria-hidden] [ref=f2e285]: P
+            - generic [ref=f2e286]:
+              - generic [ref=f2e287]: Cuidado personal
+              - link "Protector solar FPS 50+" [ref=f2e288] [cursor=pointer]:
+                - /url: /producto/protector-solar-fps50
+              - generic [ref=f2e289]: Frasco x 120 ml
+              - generic [ref=f2e290]: Disponible en 6 boticas
+              - generic [ref=f2e291]:
+                - generic [ref=f2e293]:
+                  - generic [ref=f2e294]: S/ 42.42
+                  - generic [ref=f2e295]: S/ 49.90
+                  - generic [ref=f2e296]: "-15%"
+                - button "Agregar Protector solar FPS 50+ al carrito" [ref=f2e297] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e298]: 
+          - article [ref=f2e299]:
+            - generic [aria-hidden] [ref=f2e301]: S
+            - generic [ref=f2e302]:
+              - generic [ref=f2e303]: Bebés y mamá
+              - link "Suero de rehidratación oral" [ref=f2e304] [cursor=pointer]:
+                - /url: /producto/suero-oral-500
+              - generic [ref=f2e305]: Botella x 500 ml
+              - generic [ref=f2e306]: Disponible en 6 boticas
+              - generic [ref=f2e307]:
+                - generic [ref=f2e308]: S/ 6.50
+                - button "Agregar Suero de rehidratación oral al carrito" [ref=f2e311] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e312]: 
+          - article [ref=f2e313]:
+            - generic [aria-hidden] [ref=f2e315]: V
+            - generic [ref=f2e316]:
+              - generic [ref=f2e317]: Vitaminas y suplementos
+              - link "Vitamina C 1000 mg" [ref=f2e318] [cursor=pointer]:
+                - /url: /producto/vitamina-c-1000-x30
+              - generic [ref=f2e319]: Tubo x 30 tabletas efervescentes
+              - generic [ref=f2e320]: Disponible en 6 boticas
+              - generic [ref=f2e321]:
+                - generic [ref=f2e323]:
+                  - generic [ref=f2e324]: S/ 19.92
+                  - generic [ref=f2e325]: S/ 24.90
+                  - generic [ref=f2e326]: "-20%"
+                - button "Agregar Vitamina C 1000 mg al carrito" [ref=f2e327] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f2e328]: 
+  - generic:
+    - status
+  - contentinfo [ref=f2e329]:
+    - generic [ref=f2e330]:
+      - generic [ref=f2e331]:
+        - paragraph [ref=f2e332]:
+          - generic [aria-hidden] [ref=f2e333]: F
+          - text: Farmasalud
+        - paragraph [ref=f2e334]: Medicamentos, productos médicos y de cuidado personal con disponibilidad real en nuestras 10 boticas de Trujillo.
+      - generic [ref=f2e335]:
+        - paragraph [ref=f2e336]: Contacto
+        - list [ref=f2e337]:
+          - listitem [ref=f2e338]:
+            - generic [aria-hidden] [ref=f2e339]: 
+            - text: Av. Ricardo Palma 903, El Bosque, Trujillo
+          - listitem [ref=f2e340]:
+            - generic [aria-hidden] [ref=f2e341]: 
+            - text: Delivery en Trujillo
+      - generic [ref=f2e342]:
+        - paragraph [ref=f2e343]: Información
+        - list [ref=f2e344]:
+          - listitem [ref=f2e345]:
+            - link "Política de privacidad" [ref=f2e346] [cursor=pointer]:
+              - /url: /privacidad
+          - listitem [ref=f2e347]:
+            - link "Catálogo de productos" [ref=f2e348] [cursor=pointer]:
+              - /url: /catalogo
+          - listitem [ref=f2e349]:
+            - link "Libro de Reclamaciones" [ref=f2e350] [cursor=pointer]:
+              - /url: /libro-de-reclamaciones
+              - generic [aria-hidden] [ref=f2e351]: 
+              - text: Libro de Reclamaciones
+    - paragraph [ref=f2e352]: © 2026 Farmasalud E.I.R.L. Todos los derechos reservados.

@@ -38,6 +38,9 @@ export function describeProductAvailability(
   }
   return {
     stockStatus: 'available',
-    availabilityLabel: branchesWithStock === 1 ? 'Disponible en 1 botica' : `Disponible en ${branchesWithStock} boticas`,
+    availabilityLabel:
+      branchesWithStock === 1
+        ? 'Disponible en 1 botica'
+        : `Disponible en ${branchesWithStock} boticas`,
   };
 }

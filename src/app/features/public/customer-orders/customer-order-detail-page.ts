@@ -66,6 +66,13 @@ export class CustomerOrderDetailPage implements OnInit {
     }));
   });
 
+  /** Posición del vehículo en la ruta: el paso actual, o el último si ya se entregó. */
+  readonly vehicleStepIndex = computed(() => {
+    const steps = this.trackingSteps();
+    const currentIndex = steps.findIndex((trackingStep) => trackingStep.isCurrent);
+    return currentIndex >= 0 ? currentIndex : steps.length - 1;
+  });
+
   readonly canCancelOrder = computed(() => {
     const currentOrder = this.order();
     return currentOrder !== null && CUSTOMER_CANCELLABLE_STATUSES.includes(currentOrder.status);
@@ -124,7 +131,9 @@ export class CustomerOrderDetailPage implements OnInit {
       await this.loadExistingReview();
     } catch (error) {
       this.logger.logError('CustomerOrderDetailPage.submitReview', error);
-      this.actionErrorMessage.set(describeErrorForUser(error, 'No se pudo guardar tu calificación.'));
+      this.actionErrorMessage.set(
+        describeErrorForUser(error, 'No se pudo guardar tu calificación.'),
+      );
     } finally {
       this.isSavingReview.set(false);
     }
@@ -138,7 +147,11 @@ export class CustomerOrderDetailPage implements OnInit {
     this.isCancelling.set(true);
     this.actionErrorMessage.set('');
     try {
-      await this.orderRepository.applyOrderAction(this.orderId(), 'cancel_by_customer', 'Cancelado por el cliente');
+      await this.orderRepository.applyOrderAction(
+        this.orderId(),
+        'cancel_by_customer',
+        'Cancelado por el cliente',
+      );
       this.isConfirmingCancellation.set(false);
     } catch (error) {
       this.logger.logError('CustomerOrderDetailPage.cancelOrder', error);

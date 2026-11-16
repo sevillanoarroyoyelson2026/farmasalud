@@ -1,3 +1,4 @@
+import { CartNoticeService } from '../../../shared/ui/cart-notice/cart-notice';
 import { ProductPrice } from '../../../shared/ui/product-price/product-price';
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
 import { Title } from '@angular/platform-browser';
@@ -10,7 +11,12 @@ import { BranchSelectionService } from '../../../shared/data-access/branch-selec
 import { CategoryRepository } from '../../../shared/data-access/category.repository';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
 import { Branch } from '../../../shared/models/branch';
-import { getCustomerStockStatus, getStockInBranch, Product, StockStatus } from '../../../shared/models/product';
+import {
+  getCustomerStockStatus,
+  getStockInBranch,
+  Product,
+  StockStatus,
+} from '../../../shared/models/product';
 import { describeProductAvailability } from '../catalog/product-availability';
 
 interface BranchAvailability {
@@ -39,6 +45,7 @@ export class ProductDetailPage implements OnInit {
   private readonly pageTitle = inject(Title);
   private readonly authService = inject(AuthService);
   private readonly cartService = inject(CartService);
+  private readonly cartNotice = inject(CartNoticeService);
   readonly branchSelection = inject(BranchSelectionService);
 
   /** Parámetro de ruta `/producto/:productId`. */
@@ -54,7 +61,8 @@ export class ProductDetailPage implements OnInit {
     return loadedProduct ? this.cartService.getQuantityOf(loadedProduct.id) : 0;
   });
   readonly canAddToCart = computed(
-    () => this.selectedBranchAvailability()?.stockStatus !== 'out_of_stock' && this.product() !== null,
+    () =>
+      this.selectedBranchAvailability()?.stockStatus !== 'out_of_stock' && this.product() !== null,
   );
   readonly categoryName = signal('');
   readonly isLoading = signal(true);
@@ -65,7 +73,11 @@ export class ProductDetailPage implements OnInit {
       return null;
     }
     const activeBranchIds = this.branchSelection.availableBranches().map((branch) => branch.id);
-    return describeProductAvailability(loadedProduct, this.branchSelection.selectedBranchId(), activeBranchIds);
+    return describeProductAvailability(
+      loadedProduct,
+      this.branchSelection.selectedBranchId(),
+      activeBranchIds,
+    );
   });
 
   readonly availabilityByBranch = computed<BranchAvailability[]>(() => {
@@ -89,7 +101,9 @@ export class ProductDetailPage implements OnInit {
       this.branchSelection.setAvailableBranches(activeBranches);
       if (loadedProduct?.isActive) {
         this.product.set(loadedProduct);
-        this.categoryName.set(activeCategories.find((category) => category.id === loadedProduct.categoryId)?.name ?? '');
+        this.categoryName.set(
+          activeCategories.find((category) => category.id === loadedProduct.categoryId)?.name ?? '',
+        );
         this.pageTitle.setTitle(`${loadedProduct.name} | Farmasalud`);
       }
     } catch (error) {
@@ -113,6 +127,7 @@ export class ProductDetailPage implements OnInit {
     const loadedProduct = this.product();
     if (loadedProduct && this.canAddToCart()) {
       this.cartService.addProduct(loadedProduct.id, this.selectedQuantity());
+      this.cartNotice.announceAddedProduct(loadedProduct.name);
       this.selectedQuantity.set(1);
     }
   }

@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { AuthService } from '../../core/auth/auth.service';
 import { HOME_ROUTE_BY_ROLE, ROLE_DISPLAY_NAME } from '../../core/auth/user-role';
 import { CartService } from '../../shared/data-access/cart.service';
+import { CartNoticeComponent } from '../../shared/ui/cart-notice/cart-notice';
 
 interface PublicNavigationLink {
   label: string;
@@ -13,9 +14,10 @@ interface PublicNavigationLink {
 /** Layout de la tienda: navbar, aviso de correo sin verificar, contenido y pie de página. */
 @Component({
   selector: 'app-public-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CartNoticeComponent],
   templateUrl: './public-layout.html',
   styleUrl: './public-layout.css',
+  host: {'(window:scroll)': 'onWindowScroll()'},
 })
 export class PublicLayout {
   private readonly authService = inject(AuthService);
@@ -25,6 +27,8 @@ export class PublicLayout {
   readonly cartUnits = inject(CartService).totalUnits;
   readonly isMobileMenuOpen = signal(false);
   readonly isUserMenuOpen = signal(false);
+  /** Al hacer scroll, la cabecera gana una sombra propia (deja de "flotar"). */
+  readonly isHeaderElevated = signal(false);
   readonly currentYear = new Date().getFullYear();
 
   readonly navigationLinks: PublicNavigationLink[] = [
@@ -47,6 +51,10 @@ export class PublicLayout {
     return session?.role === 'customer' && !session.isEmailVerified;
   });
   readonly verificationNoticeMessage = signal('');
+
+  onWindowScroll(): void {
+    this.isHeaderElevated.set(window.scrollY > 12);
+  }
 
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.update((isOpen) => !isOpen);

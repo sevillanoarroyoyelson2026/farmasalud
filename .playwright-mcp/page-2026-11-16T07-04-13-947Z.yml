@@ -1,0 +1,123 @@
+- generic [ref=f20e4]:
+  - banner [ref=f20e5]:
+    - navigation "Navegación principal" [ref=f20e6]:
+      - link "Farmasalud" [ref=f20e7] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=f20e8]: F
+      - button "Abrir menú" [ref=f20e10] [cursor=pointer]:
+        - generic [ref=f20e11]: 
+      - text: 
+  - main [ref=f20e12]:
+    - generic [ref=f20e14]:
+      - generic [ref=f20e16]:
+        - heading "Catálogo" [level=1] [ref=f20e17]
+        - generic [ref=f20e18]:
+          - generic [aria-hidden]: 
+          - searchbox "Buscar productos" [ref=f20e19]: para
+          - button "Borrar búsqueda" [ref=f20e20] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e21]: 
+      - generic [ref=f20e22]:
+        - generic [ref=f20e23]:
+          - heading "Tu botica" [level=2] [ref=f20e24]
+          - paragraph [ref=f20e25]:
+            - text: Disponibilidad real en
+            - strong [ref=f20e26]: Botica el Molino
+            - text: ", Trujillo."
+        - group "Elegir botica" [ref=f20e27]:
+          - button "Todas" [ref=f20e28] [cursor=pointer]:
+            - generic [ref=f20e30]: 
+            - text: Todas
+          - button "Botica Centro Histórico" [ref=f20e31] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e32]: "1"
+            - text: Botica Centro Histórico
+          - button "Botica el Bosque" [ref=f20e33] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e34]: "2"
+            - text: Botica el Bosque
+          - button "Botica el Molino" [pressed] [ref=f20e35] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e36]: "3"
+            - text: Botica el Molino
+          - button "Botica Florencia de Mora" [ref=f20e37] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e38]: "4"
+            - text: Botica Florencia de Mora
+          - button "Botica La Esperanza" [ref=f20e39] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e40]: "5"
+            - text: Botica La Esperanza
+          - button "Botica Víctor Larco" [ref=f20e41] [cursor=pointer]:
+            - generic [aria-hidden] [ref=f20e42]: "6"
+            - text: Botica Víctor Larco
+        - generic [ref=f20e43]:
+          - navigation "Categorías" [ref=f20e44]:
+            - button "Todo" [pressed] [ref=f20e45] [cursor=pointer]
+            - button "Analgésicos y antiinflamatorios" [ref=f20e46] [cursor=pointer]
+            - button "Antibióticos" [ref=f20e47] [cursor=pointer]
+            - button "Antigripales y respiratorio" [ref=f20e48] [cursor=pointer]
+            - button "Bebés y mamá" [ref=f20e49] [cursor=pointer]
+            - button "Cuidado personal" [ref=f20e50] [cursor=pointer]
+            - button "Primeros auxilios" [ref=f20e51] [cursor=pointer]
+            - button "Vitaminas y suplementos" [ref=f20e52] [cursor=pointer]
+          - generic [ref=f20e53]:
+            - switch "Solo disponibles" [ref=f20e54] [cursor=pointer]
+            - generic [ref=f20e55]: Solo disponibles
+        - paragraph [ref=f20e56]: 2 productos
+        - generic [ref=f20e57]:
+          - article [ref=f20e58]:
+            - generic [aria-hidden] [ref=f20e60]: A
+            - generic [ref=f20e61]:
+              - link "Antigripal Noche" [ref=f20e62] [cursor=pointer]:
+                - /url: /producto/antigripal-noche-x12
+              - generic [ref=f20e63]: Caja x 12 tabletas
+              - generic [ref=f20e64]: Antigripales y respiratorio
+              - generic [ref=f20e65]: Disponible en tu botica
+              - generic [ref=f20e66]:
+                - generic [ref=f20e68]:
+                  - generic [ref=f20e69]: S/ 8.91
+                  - generic [ref=f20e70]: S/ 9.90
+                  - generic [ref=f20e71]: "-10%"
+                - button "Agregar Antigripal Noche al carrito" [ref=f20e72] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f20e73]: 
+                  - generic [ref=f20e74]: "1"
+          - article [ref=f20e75]:
+            - generic [aria-hidden] [ref=f20e77]: P
+            - generic [ref=f20e78]:
+              - link "Paracetamol 500 mg" [ref=f20e79] [cursor=pointer]:
+                - /url: /producto/paracetamol-500-x100
+              - generic [ref=f20e80]: Caja x 100 tabletas
+              - generic [ref=f20e81]: Analgésicos y antiinflamatorios
+              - generic [ref=f20e82]: Disponible en tu botica
+              - generic [ref=f20e83]:
+                - generic [ref=f20e84]: S/ 12.50
+                - button "Agregar Paracetamol 500 mg al carrito" [ref=f20e87] [cursor=pointer]:
+                  - generic [aria-hidden] [ref=f20e88]: 
+  - generic:
+    - status
+  - contentinfo [ref=f20e89]:
+    - generic [ref=f20e90]:
+      - generic [ref=f20e91]:
+        - paragraph [ref=f20e92]:
+          - generic [aria-hidden] [ref=f20e93]: F
+          - text: Farmasalud
+        - paragraph [ref=f20e94]: Medicamentos, productos médicos y de cuidado personal con disponibilidad real en nuestras 10 boticas de Trujillo.
+      - generic [ref=f20e95]:
+        - paragraph [ref=f20e96]: Contacto
+        - list [ref=f20e97]:
+          - listitem [ref=f20e98]:
+            - generic [aria-hidden] [ref=f20e99]: 
+            - text: Av. Ricardo Palma 903, El Bosque, Trujillo
+          - listitem [ref=f20e100]:
+            - generic [aria-hidden] [ref=f20e101]: 
+            - text: Delivery en Trujillo
+      - generic [ref=f20e102]:
+        - paragraph [ref=f20e103]: Información
+        - list [ref=f20e104]:
+          - listitem [ref=f20e105]:
+            - link "Política de privacidad" [ref=f20e106] [cursor=pointer]:
+              - /url: /privacidad
+          - listitem [ref=f20e107]:
+            - link "Catálogo de productos" [ref=f20e108] [cursor=pointer]:
+              - /url: /catalogo
+          - listitem [ref=f20e109]:
+            - link "Libro de Reclamaciones" [ref=f20e110] [cursor=pointer]:
+              - /url: /libro-de-reclamaciones
+              - generic [aria-hidden] [ref=f20e111]: 
+              - text: Libro de Reclamaciones
+    - paragraph [ref=f20e112]: © 2026 Farmasalud E.I.R.L. Todos los derechos reservados.

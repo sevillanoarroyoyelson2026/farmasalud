@@ -1,17 +1,30 @@
 <section class="container-xl order-detail-page">
-  <a routerLink="/mis-pedidos" class="order-detail-back"><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Mis pedidos</a>
+  <a routerLink="/mis-pedidos" class="order-detail-back"
+    ><i class="fas fa-arrow-left me-2" aria-hidden="true"></i>Mis pedidos</a
+  >
 
   @if (isLoading()) {
-    <div class="panel-empty-state"><span class="spinner-border text-primary" role="status"></span>Cargando…</div>
+    <div aria-busy="true">
+      <span class="skeleton-block order-detail-skeleton is-title" aria-hidden="true"></span>
+      <span class="skeleton-block order-detail-skeleton is-route" aria-hidden="true"></span>
+      <span class="visually-hidden" role="status">Cargando pedido…</span>
+    </div>
   } @else if (order(); as currentOrder) {
     <header class="order-detail-header">
       <div>
         <h1 class="order-detail-title">Pedido {{ currentOrder.orderNumber }}</h1>
         <p class="text-secondary mb-0">
-          {{ currentOrder.createdAt ? (currentOrder.createdAt | date: "dd/MM/yyyy 'a las' HH:mm") : '' }} · {{ currentOrder.branchName }}
+          {{
+            currentOrder.createdAt
+              ? (currentOrder.createdAt | date: "dd/MM/yyyy 'a las' HH:mm")
+              : ''
+          }}
+          · {{ currentOrder.branchName }}
         </p>
       </div>
-      <span [class]="'status-badge ' + statusTone[currentOrder.status]">{{ statusLabel[currentOrder.status] }}</span>
+      <span [class]="'status-badge ' + statusTone[currentOrder.status]">{{
+        statusLabel[currentOrder.status]
+      }}</span>
     </header>
 
     @if (currentOrder.status === 'cancelled') {
@@ -27,21 +40,42 @@
         }
       </div>
     } @else {
-      <ol class="order-tracking surface-card" aria-label="Seguimiento del pedido">
-        @for (trackingStep of trackingSteps(); track trackingStep.status) {
-          <li class="order-tracking-step" [class.is-completed]="trackingStep.isCompleted" [class.is-current]="trackingStep.isCurrent"
-            [attr.aria-current]="trackingStep.isCurrent ? 'step' : null">
-            <span class="order-tracking-dot" aria-hidden="true">
-              @if (trackingStep.isCompleted) {
-                <i class="fas fa-check"></i>
-              }
-            </span>
-            <span class="order-tracking-label">{{ trackingStep.label }}</span>
-          </li>
-        }
-      </ol>
+      <div
+        class="order-tracking-track"
+        [style.--step-count]="trackingSteps().length"
+        [style.--vehicle-index]="vehicleStepIndex()"
+        [class.is-delivered]="currentOrder.status === 'delivered'"
+      >
+        <span class="order-tracking-vehicle" aria-hidden="true">
+          <i
+            class="fas"
+            [class.fa-motorcycle]="currentOrder.fulfillmentType === 'delivery'"
+            [class.fa-store]="currentOrder.fulfillmentType !== 'delivery'"
+          ></i>
+        </span>
+        <ol class="order-tracking" aria-label="Seguimiento del pedido">
+          @for (trackingStep of trackingSteps(); track trackingStep.status) {
+            <li
+              class="order-tracking-step"
+              [class.is-completed]="trackingStep.isCompleted"
+              [class.is-current]="trackingStep.isCurrent"
+              [attr.aria-current]="trackingStep.isCurrent ? 'step' : null"
+            >
+              <span class="order-tracking-dot" aria-hidden="true">
+                @if (trackingStep.isCompleted) {
+                  <i class="fas fa-check"></i>
+                }
+              </span>
+              <span class="order-tracking-label">{{ trackingStep.label }}</span>
+            </li>
+          }
+        </ol>
+      </div>
       @if (currentOrder.status === 'out_for_delivery' && currentOrder.courierName) {
-        <p class="order-detail-courier"><i class="fas fa-motorcycle me-2" aria-hidden="true"></i>Tu pedido va con {{ currentOrder.courierName }}.</p>
+        <p class="order-detail-courier">
+          <i class="fas fa-motorcycle me-2" aria-hidden="true"></i>Tu pedido va con
+          {{ currentOrder.courierName }}.
+        </p>
       }
     }
 
@@ -60,28 +94,47 @@
           }
         </ul>
         <dl class="order-detail-totals">
-          <div><dt>Productos</dt><dd>{{ currentOrder.itemsTotal | currency: 'PEN' : 'S/ ' }}</dd></div>
-          <div><dt>Delivery</dt><dd>{{ currentOrder.deliveryFee | currency: 'PEN' : 'S/ ' }}</dd></div>
-          <div class="is-total"><dt>Total</dt><dd>{{ currentOrder.orderTotal | currency: 'PEN' : 'S/ ' }}</dd></div>
+          <div>
+            <dt>Productos</dt>
+            <dd>{{ currentOrder.itemsTotal | currency: 'PEN' : 'S/ ' }}</dd>
+          </div>
+          <div>
+            <dt>Delivery</dt>
+            <dd>{{ currentOrder.deliveryFee | currency: 'PEN' : 'S/ ' }}</dd>
+          </div>
+          <div class="is-total">
+            <dt>Total</dt>
+            <dd>{{ currentOrder.orderTotal | currency: 'PEN' : 'S/ ' }}</dd>
+          </div>
         </dl>
       </div>
 
       <div class="surface-card order-detail-card">
         <h2 class="h6">Entrega</h2>
         @if (currentOrder.fulfillmentType === 'delivery' && currentOrder.deliveryAddress) {
-          <p class="mb-2"><i class="fas fa-motorcycle me-2" aria-hidden="true"></i>{{ currentOrder.deliveryAddress.street }}, {{ currentOrder.deliveryAddress.district }}
+          <p class="mb-2">
+            <i class="fas fa-motorcycle me-2" aria-hidden="true"></i
+            >{{ currentOrder.deliveryAddress.street }}, {{ currentOrder.deliveryAddress.district }}
             @if (currentOrder.deliveryAddress.reference) {
-              <span class="panel-table-secondary">Ref.: {{ currentOrder.deliveryAddress.reference }}</span>
+              <span class="panel-table-secondary"
+                >Ref.: {{ currentOrder.deliveryAddress.reference }}</span
+              >
             }
           </p>
         } @else {
-          <p class="mb-2"><i class="fas fa-store me-2" aria-hidden="true"></i>Recojo en {{ currentOrder.branchName }}</p>
+          <p class="mb-2">
+            <i class="fas fa-store me-2" aria-hidden="true"></i>Recojo en
+            {{ currentOrder.branchName }}
+          </p>
         }
-        <p class="mb-3"><i class="fas fa-phone me-2" aria-hidden="true"></i>{{ currentOrder.contactPhone }}</p>
+        <p class="mb-3">
+          <i class="fas fa-phone me-2" aria-hidden="true"></i>{{ currentOrder.contactPhone }}
+        </p>
 
         <h2 class="h6">Pago</h2>
         <p class="mb-3">
-          {{ paymentMethodLabel[currentOrder.paymentMethod] }} · <strong>{{ paymentStatusLabel[currentOrder.paymentStatus] }}</strong>
+          {{ paymentMethodLabel[currentOrder.paymentMethod] }} ·
+          <strong>{{ paymentStatusLabel[currentOrder.paymentStatus] }}</strong>
           @if (currentOrder.paymentReference) {
             <span class="panel-table-secondary">Operación {{ currentOrder.paymentReference }}</span>
           }
@@ -91,12 +144,28 @@
           <h2 class="h6">Receta</h2>
           <p class="mb-1">
             Estado:
-            <strong>{{ currentOrder.prescriptionReviewStatus === 'approved' ? 'Aprobada' : currentOrder.prescriptionReviewStatus === 'rejected' ? 'Rechazada' : 'En revisión' }}</strong>
+            <strong>{{
+              currentOrder.prescriptionReviewStatus === 'approved'
+                ? 'Aprobada'
+                : currentOrder.prescriptionReviewStatus === 'rejected'
+                  ? 'Rechazada'
+                  : 'En revisión'
+            }}</strong>
           </p>
           @if (prescriptionUrl()) {
-            <img class="order-detail-prescription" [src]="prescriptionUrl()" alt="Receta médica adjunta" />
+            <img
+              class="order-detail-prescription"
+              [src]="prescriptionUrl()"
+              alt="Receta médica adjunta"
+            />
           } @else {
-            <button type="button" class="btn btn-sm btn-outline-primary" (click)="showPrescription()">Ver receta enviada</button>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              (click)="showPrescription()"
+            >
+              Ver receta enviada
+            </button>
           }
         }
       </div>
@@ -108,23 +177,53 @@
           <h2 class="h6 mb-1">Tu calificación</h2>
           <p class="order-review-stars mb-1" [attr.aria-label]="review.rating + ' de 5 estrellas'">
             @for (ratingOption of ratingOptions; track ratingOption) {
-              <i class="fa-star" [class.fas]="ratingOption <= review.rating" [class.far]="ratingOption > review.rating" aria-hidden="true"></i>
+              <i
+                class="fa-star"
+                [class.fas]="ratingOption <= review.rating"
+                [class.far]="ratingOption > review.rating"
+                aria-hidden="true"
+              ></i>
             }
           </p>
-          @if (review.comment) { <p class="mb-0 text-secondary">"{{ review.comment }}"</p> }
+          @if (review.comment) {
+            <p class="mb-0 text-secondary">"{{ review.comment }}"</p>
+          }
         } @else {
           <h2 class="h6">¿Cómo te atendimos?</h2>
           <div class="order-review-stars" role="radiogroup" aria-label="Calificación">
             @for (ratingOption of ratingOptions; track ratingOption) {
-              <button type="button" class="btn btn-link p-0" role="radio" [attr.aria-checked]="selectedRating() === ratingOption"
-                [attr.aria-label]="ratingOption + ' estrellas'" (click)="selectedRating.set(ratingOption)">
-                <i class="fa-star" [class.fas]="ratingOption <= selectedRating()" [class.far]="ratingOption > selectedRating()" aria-hidden="true"></i>
+              <button
+                type="button"
+                class="btn btn-link p-0"
+                role="radio"
+                [attr.aria-checked]="selectedRating() === ratingOption"
+                [attr.aria-label]="ratingOption + ' estrellas'"
+                (click)="selectedRating.set(ratingOption)"
+              >
+                <i
+                  class="fa-star"
+                  [class.fas]="ratingOption <= selectedRating()"
+                  [class.far]="ratingOption > selectedRating()"
+                  aria-hidden="true"
+                ></i>
               </button>
             }
           </div>
-          <textarea class="form-control mt-2" rows="2" maxlength="500" placeholder="Comentario (opcional)" aria-label="Comentario"
-            [value]="reviewComment()" (input)="reviewComment.set($any($event.target).value)"></textarea>
-          <button type="button" class="btn btn-primary btn-sm mt-2" [disabled]="isSavingReview() || selectedRating() < 1" (click)="submitReview()">
+          <textarea
+            class="form-control mt-2"
+            rows="2"
+            maxlength="500"
+            placeholder="Comentario (opcional)"
+            aria-label="Comentario"
+            [value]="reviewComment()"
+            (input)="reviewComment.set($any($event.target).value)"
+          ></textarea>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm mt-2"
+            [disabled]="isSavingReview() || selectedRating() < 1"
+            (click)="submitReview()"
+          >
             Enviar calificación
           </button>
         }
@@ -139,10 +238,29 @@
       <div class="order-detail-cancel">
         @if (isConfirmingCancellation()) {
           <span>¿Seguro que quieres cancelar? Se devolverá tu pago.</span>
-          <button type="button" class="btn btn-danger btn-sm" [disabled]="isCancelling()" (click)="cancelOrder()">Sí, cancelar</button>
-          <button type="button" class="btn btn-light btn-sm" (click)="isConfirmingCancellation.set(false)">No</button>
+          <button
+            type="button"
+            class="btn btn-danger btn-sm"
+            [disabled]="isCancelling()"
+            (click)="cancelOrder()"
+          >
+            Sí, cancelar
+          </button>
+          <button
+            type="button"
+            class="btn btn-light btn-sm"
+            (click)="isConfirmingCancellation.set(false)"
+          >
+            No
+          </button>
         } @else {
-          <button type="button" class="btn btn-outline-danger btn-sm" (click)="isConfirmingCancellation.set(true)">Cancelar pedido</button>
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            (click)="isConfirmingCancellation.set(true)"
+          >
+            Cancelar pedido
+          </button>
         }
       </div>
     }

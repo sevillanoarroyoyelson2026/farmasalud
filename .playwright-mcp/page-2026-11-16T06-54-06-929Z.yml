@@ -1,0 +1,215 @@
+- generic [ref=f1e4]:
+  - banner [ref=f1e5]:
+    - navigation "Navegación principal" [ref=f1e6]:
+      - link "Farmasalud" [ref=f1e7] [cursor=pointer]:
+        - /url: /
+        - generic [aria-hidden] [ref=f1e8]: F
+      - text: 
+      - generic [ref=f1e10]:
+        - list [ref=f1e11]:
+          - listitem [ref=f1e12]:
+            - link "Inicio" [ref=f1e13] [cursor=pointer]:
+              - /url: /
+          - listitem [ref=f1e14]:
+            - link "Catálogo" [ref=f1e15] [cursor=pointer]:
+              - /url: /catalogo
+        - generic [ref=f1e16]:
+          - link "Ver carrito" [ref=f1e17] [cursor=pointer]:
+            - /url: /carrito
+            - generic [aria-hidden] [ref=f1e18]: 
+            - generic [ref=f1e19]: Carrito
+          - link "Iniciar sesión" [ref=f1e20] [cursor=pointer]:
+            - /url: /login
+          - link "Crear cuenta" [ref=f1e21] [cursor=pointer]:
+            - /url: /registro
+  - main [ref=f1e22]:
+    - generic [ref=f1e23]:
+      - region "Tus medicamentos, con stock real y delivery a tu puerta" [ref=f1e24]:
+        - generic [ref=f1e25]:
+          - heading "Tus medicamentos, con stock real y delivery a tu puerta" [level=1] [ref=f1e26]
+          - paragraph [ref=f1e27]: Revisa la disponibilidad en tu botica, sube tu receta y recibe tu pedido sin hacer colas.
+          - search [ref=f1e28]:
+            - generic [ref=f1e29]: Buscar medicamento
+            - generic [aria-hidden]: 
+            - searchbox "Buscar medicamento" [ref=f1e30]
+            - button "Buscar" [ref=f1e31] [cursor=pointer]
+          - paragraph [ref=f1e32]:
+            - text: ¿Primera vez?
+            - link "Crea tu cuenta" [ref=f1e33] [cursor=pointer]:
+              - /url: /registro
+            - text: para comprar y seguir tus pedidos.
+      - region "Elige tu botica" [ref=f1e34]:
+        - generic [ref=f1e36]:
+          - heading "Elige tu botica" [level=2] [ref=f1e37]
+          - paragraph [ref=f1e38]: Toca un paradero para ver el stock real de esa botica.
+        - generic [ref=f1e40]:
+          - generic [ref=f1e42]: 
+          - list [ref=f1e43]:
+            - listitem [ref=f1e44]:
+              - button "Botica Centro Histórico Trujillo 18 productos disponibles Delivery" [ref=f1e45] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e46]: "1"
+                - generic [ref=f1e47]: Botica Centro Histórico
+                - generic [ref=f1e48]: Trujillo
+                - generic [ref=f1e49]: 18 productos disponibles
+                - generic [ref=f1e50]:
+                  - generic [aria-hidden] [ref=f1e51]: 
+                  - text: Delivery
+            - listitem [ref=f1e52]:
+              - button "Botica el Bosque Trujillo 18 productos disponibles Delivery" [ref=f1e53] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e54]: "2"
+                - generic [ref=f1e55]: Botica el Bosque
+                - generic [ref=f1e56]: Trujillo
+                - generic [ref=f1e57]: 18 productos disponibles
+                - generic [ref=f1e58]:
+                  - generic [aria-hidden] [ref=f1e59]: 
+                  - text: Delivery
+            - listitem [ref=f1e60]:
+              - button "Botica el Molino Trujillo 18 productos disponibles Delivery" [ref=f1e61] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e62]: "3"
+                - generic [ref=f1e63]: Botica el Molino
+                - generic [ref=f1e64]: Trujillo
+                - generic [ref=f1e65]: 18 productos disponibles
+                - generic [ref=f1e66]:
+                  - generic [aria-hidden] [ref=f1e67]: 
+                  - text: Delivery
+            - listitem [ref=f1e68]:
+              - button "Botica Florencia de Mora Florencia de Mora 18 productos disponibles" [ref=f1e69] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e70]: "4"
+                - generic [ref=f1e71]: Botica Florencia de Mora
+                - generic [ref=f1e72]: Florencia de Mora
+                - generic [ref=f1e73]: 18 productos disponibles
+            - listitem [ref=f1e74]:
+              - button "Botica La Esperanza La Esperanza 18 productos disponibles Delivery" [ref=f1e75] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e76]: "5"
+                - generic [ref=f1e77]: Botica La Esperanza
+                - generic [ref=f1e78]: La Esperanza
+                - generic [ref=f1e79]: 18 productos disponibles
+                - generic [ref=f1e80]:
+                  - generic [aria-hidden] [ref=f1e81]: 
+                  - text: Delivery
+            - listitem [ref=f1e82]:
+              - button "Botica Víctor Larco Víctor Larco Herrera 18 productos disponibles Delivery" [ref=f1e83] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e84]: "6"
+                - generic [ref=f1e85]: Botica Víctor Larco
+                - generic [ref=f1e86]: Víctor Larco Herrera
+                - generic [ref=f1e87]: 18 productos disponibles
+                - generic [ref=f1e88]:
+                  - generic [aria-hidden] [ref=f1e89]: 
+                  - text: Delivery
+      - region "Ofertas de la semana" [ref=f1e90]:
+        - generic [ref=f1e91]:
+          - heading "Ofertas de la semana" [level=2] [ref=f1e92]
+          - link "Ver todo el catálogo" [ref=f1e93] [cursor=pointer]:
+            - /url: /catalogo
+            - text: Ver todo el catálogo
+            - generic [aria-hidden] [ref=f1e94]: 
+        - list [ref=f1e95]:
+          - listitem [ref=f1e96]:
+            - generic [ref=f1e97]: "-20%"
+            - generic [ref=f1e98]:
+              - link "Vitamina C 1000 mg" [ref=f1e99] [cursor=pointer]:
+                - /url: /producto/vitamina-c-1000-x30
+              - generic [ref=f1e100]: Tubo x 30 tabletas efervescentes
+            - generic [ref=f1e101]: Disponible en 6 boticas
+            - generic [ref=f1e103]:
+              - generic [ref=f1e104]: S/ 19.92
+              - generic [ref=f1e105]: S/ 24.90
+              - generic [ref=f1e106]: "-20%"
+            - button "Agregar Vitamina C 1000 mg al carrito" [ref=f1e107] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f1e108]: 
+              - generic [ref=f1e109]: Agregar
+          - listitem [ref=f1e110]:
+            - generic [ref=f1e111]: "-15%"
+            - generic [ref=f1e112]:
+              - link "Protector solar FPS 50+" [ref=f1e113] [cursor=pointer]:
+                - /url: /producto/protector-solar-fps50
+              - generic [ref=f1e114]: Frasco x 120 ml
+            - generic [ref=f1e115]: Disponible en 6 boticas
+            - generic [ref=f1e117]:
+              - generic [ref=f1e118]: S/ 42.42
+              - generic [ref=f1e119]: S/ 49.90
+              - generic [ref=f1e120]: "-15%"
+            - button "Agregar Protector solar FPS 50+ al carrito" [ref=f1e121] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f1e122]: 
+              - generic [ref=f1e123]: Agregar
+          - listitem [ref=f1e124]:
+            - generic [ref=f1e125]: "-10%"
+            - generic [ref=f1e126]:
+              - link "Antigripal Noche" [ref=f1e127] [cursor=pointer]:
+                - /url: /producto/antigripal-noche-x12
+              - generic [ref=f1e128]: Caja x 12 tabletas
+            - generic [ref=f1e129]: Disponible en 6 boticas
+            - generic [ref=f1e131]:
+              - generic [ref=f1e132]: S/ 8.91
+              - generic [ref=f1e133]: S/ 9.90
+              - generic [ref=f1e134]: "-10%"
+            - button "Agregar Antigripal Noche al carrito" [ref=f1e135] [cursor=pointer]:
+              - generic [aria-hidden] [ref=f1e136]: 
+              - generic [ref=f1e137]: Agregar
+      - region "Así de simple es comprar" [ref=f1e138]:
+        - heading "Así de simple es comprar" [level=2] [ref=f1e139]
+        - list [ref=f1e140]:
+          - listitem [ref=f1e141]:
+            - generic [aria-hidden] [ref=f1e142]: "1"
+            - heading "Elige tu botica" [level=3] [ref=f1e143]:
+              - generic [aria-hidden] [ref=f1e144]: 
+              - text: Elige tu botica
+            - paragraph [ref=f1e145]: Ves el stock real de la botica más cercana antes de comprar.
+          - listitem [ref=f1e146]:
+            - generic [aria-hidden] [ref=f1e147]: "2"
+            - heading "Sube tu receta" [level=3] [ref=f1e148]:
+              - generic [aria-hidden] [ref=f1e149]: 
+              - text: Sube tu receta
+            - paragraph [ref=f1e150]: Si el medicamento la requiere, un farmacéutico la valida antes de despachar.
+          - listitem [ref=f1e151]:
+            - generic [aria-hidden] [ref=f1e152]: "3"
+            - heading "Paga seguro" [level=3] [ref=f1e153]:
+              - generic [aria-hidden] [ref=f1e154]: 
+              - text: Paga seguro
+            - paragraph [ref=f1e155]: Pago en línea con tarjeta a través de una pasarela certificada.
+          - listitem [ref=f1e156]:
+            - generic [aria-hidden] [ref=f1e157]: "4"
+            - heading "Recibe en casa" [level=3] [ref=f1e158]:
+              - generic [aria-hidden] [ref=f1e159]: 
+              - text: Recibe en casa
+            - paragraph [ref=f1e160]: Sigue el estado de tu pedido hasta la entrega.
+      - region "Tu pedido empieza en el catálogo" [ref=f1e161]:
+        - generic [ref=f1e162]:
+          - heading "Tu pedido empieza en el catálogo" [level=2] [ref=f1e163]
+          - link "Ver catálogo" [ref=f1e164] [cursor=pointer]:
+            - /url: /catalogo
+            - generic [aria-hidden] [ref=f1e165]: 
+            - text: Ver catálogo
+  - generic:
+    - status
+  - contentinfo [ref=f1e166]:
+    - generic [ref=f1e167]:
+      - generic [ref=f1e168]:
+        - paragraph [ref=f1e169]:
+          - generic [aria-hidden] [ref=f1e170]: F
+          - text: Farmasalud
+        - paragraph [ref=f1e171]: Medicamentos, productos médicos y de cuidado personal con disponibilidad real en nuestras 10 boticas de Trujillo.
+      - generic [ref=f1e172]:
+        - paragraph [ref=f1e173]: Contacto
+        - list [ref=f1e174]:
+          - listitem [ref=f1e175]:
+            - generic [aria-hidden] [ref=f1e176]: 
+            - text: Av. Ricardo Palma 903, El Bosque, Trujillo
+          - listitem [ref=f1e177]:
+            - generic [aria-hidden] [ref=f1e178]: 
+            - text: Delivery en Trujillo
+      - generic [ref=f1e179]:
+        - paragraph [ref=f1e180]: Información
+        - list [ref=f1e181]:
+          - listitem [ref=f1e182]:
+            - link "Política de privacidad" [ref=f1e183] [cursor=pointer]:
+              - /url: /privacidad
+          - listitem [ref=f1e184]:
+            - link "Catálogo de productos" [ref=f1e185] [cursor=pointer]:
+              - /url: /catalogo
+          - listitem [ref=f1e186]:
+            - link "Libro de Reclamaciones" [ref=f1e187] [cursor=pointer]:
+              - /url: /libro-de-reclamaciones
+              - generic [aria-hidden] [ref=f1e188]: 
+              - text: Libro de Reclamaciones
+    - paragraph [ref=f1e189]: © 2026 Farmasalud E.I.R.L. Todos los derechos reservados.

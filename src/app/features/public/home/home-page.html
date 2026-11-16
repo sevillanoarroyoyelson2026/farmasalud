@@ -1,71 +1,283 @@
-<section class="home-hero">
-  <div class="container-xl home-hero-grid">
-    <div>
-      <span class="home-hero-tag"><i class="fas fa-location-dot me-2" aria-hidden="true"></i>10 boticas en Trujillo</span>
-      <h1 class="home-hero-title">Tus medicamentos, con stock real y <span>delivery a tu puerta</span></h1>
-      <p class="home-hero-text">
-        Compra en Farmasalud desde cualquier dispositivo: revisa la disponibilidad en tu botica, sube tu receta y recibe
-        tu pedido sin hacer colas.
+<!-- Letrero de ruta: titular, buscador funcional y la línea de boticas -->
+<section class="route-sign" aria-labelledby="route-sign-title">
+  <div class="container-xl route-sign-inner">
+    <h1 class="route-sign-title" id="route-sign-title">
+      Tus medicamentos, con <span>stock real</span> y delivery a tu puerta
+    </h1>
+    <p class="route-sign-text">
+      Revisa la disponibilidad en tu botica, sube tu receta y recibe tu pedido sin hacer colas.
+    </p>
+
+    <form class="route-sign-search" role="search" (submit)="searchCatalog($event)">
+      <label class="visually-hidden" for="home-search">Buscar medicamento</label>
+      <i class="fas fa-magnifying-glass route-sign-search-icon" aria-hidden="true"></i>
+      <input
+        id="home-search"
+        type="search"
+        class="route-sign-search-input"
+        placeholder="Paracetamol, ibuprofeno, vitamina C…"
+        autocomplete="off"
+        [value]="searchTerm()"
+        (input)="updateSearchTerm($event)"
+      />
+      <button type="submit" class="btn btn-signal btn-lg route-sign-search-button">Buscar</button>
+    </form>
+
+    <ul class="route-sign-trust" aria-label="Garantías de la botica">
+      <li><i class="fas fa-user-doctor" aria-hidden="true"></i>Recetas validadas por farmacéutico</li>
+      <li><i class="fas fa-lock" aria-hidden="true"></i>Pago en línea seguro</li>
+      <li><i class="fas fa-motorcycle" aria-hidden="true"></i>Delivery el mismo día</li>
+    </ul>
+
+    @if (!currentSession()) {
+      <p class="route-sign-secondary">
+        ¿Primera vez? <a routerLink="/registro">Crea tu cuenta</a> para comprar y seguir tus
+        pedidos.
       </p>
-      <div class="home-hero-actions">
-        <a class="btn btn-primary btn-lg" routerLink="/catalogo"><i class="fas fa-magnifying-glass me-2" aria-hidden="true"></i>Ver catálogo</a>
-        <a class="btn btn-outline-primary btn-lg" routerLink="/registro">Crear cuenta</a>
-      </div>
-    </div>
-    <div class="home-hero-visual" aria-hidden="true">
-      <div class="home-hero-card">
-        <i class="fas fa-capsules"></i>
-        <div>
-          <p class="home-hero-card-title">Paracetamol 500 mg</p>
-          <p class="home-hero-card-stock"><span class="home-stock-dot"></span>Disponible en Botica El Bosque</p>
-        </div>
-      </div>
-      <div class="home-hero-card is-offset">
-        <i class="fas fa-file-circle-check"></i>
-        <div>
-          <p class="home-hero-card-title">Receta validada</p>
-          <p class="home-hero-card-stock">Tu pedido pasó a preparación</p>
-        </div>
-      </div>
-      <div class="home-hero-card">
-        <i class="fas fa-motorcycle"></i>
-        <div>
-          <p class="home-hero-card-title">Pedido en camino</p>
-          <p class="home-hero-card-stock">Llega en aproximadamente 35 minutos</p>
-        </div>
-      </div>
-    </div>
+    }
   </div>
 </section>
 
-@if (promotedProducts().length > 0) {
-  <section class="container-xl home-promotions">
-    <div class="home-promotions-header">
-      <h2 class="home-section-title mb-0">Ofertas de la semana</h2>
-      <a routerLink="/catalogo">Ver todo el catálogo <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i></a>
+@if (!hasRouteLoadFailed()) {
+  <section class="route-line-section" aria-labelledby="route-line-title">
+    <div class="container-xl">
+      <div class="route-line-header">
+        <h2 class="route-line-title" id="route-line-title">Elige tu botica</h2>
+        <p class="route-line-hint">
+          @if (branchSelection.selectedBranch(); as selectedBranch) {
+            Viendo stock de <strong>{{ selectedBranch.name }}</strong>.
+            <a routerLink="/catalogo"
+              >Ver su catálogo <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i
+            ></a>
+          } @else {
+            Toca un paradero para ver el stock real de esa botica.
+          }
+        </p>
+      </div>
     </div>
-    <div class="home-promotions-grid">
-      @for (product of promotedProducts(); track product.id) {
-        <a class="home-promotion-card surface-card" [routerLink]="['/producto', product.id]">
-          <span class="home-promotion-name">{{ product.name }}</span>
-          <span class="home-promotion-presentation">{{ product.presentation }}</span>
-          <app-product-price [product]="product" />
-        </a>
+
+    <div class="route-line-scroller">
+      @if (isLoadingRoute()) {
+        <ol
+          class="route-line route-line-track"
+          aria-busy="true"
+          [style.--stop-count]="skeletonStops.length"
+        >
+          @for (skeletonStop of skeletonStops; track skeletonStop) {
+            <li class="route-stop is-skeleton" aria-hidden="true">
+              <span class="route-stop-marker skeleton-block"></span>
+              <span class="skeleton-block route-stop-skeleton-line"></span>
+              <span class="skeleton-block route-stop-skeleton-line is-short"></span>
+            </li>
+          }
+        </ol>
+      } @else {
+        <div
+          class="route-line-track"
+          [style.--stop-count]="routeStops().length"
+          [style.--selected-index]="selectedStopIndex()"
+          [class.has-selection]="selectedStopIndex() >= 0"
+        >
+          <span class="route-line-vehicle" aria-hidden="true"
+            ><i class="fas fa-van-shuttle"></i
+          ></span>
+          <ol class="route-line enter-along-route">
+            @for (routeStop of routeStops(); track routeStop.branch.id; let stopIndex = $index) {
+              <li class="route-stop" [style.--enter-index]="stopIndex">
+                <button
+                  type="button"
+                  class="route-stop-button"
+                  [class.is-selected]="branchSelection.selectedBranchId() === routeStop.branch.id"
+                  [attr.aria-pressed]="branchSelection.selectedBranchId() === routeStop.branch.id"
+                  (click)="selectStop(routeStop.branch.id, $event)"
+                >
+                  <span class="route-stop-marker is-tabular" aria-hidden="true">{{
+                    stopIndex + 1
+                  }}</span>
+                  <span class="route-stop-name">{{ routeStop.branch.name }}</span>
+                  <span class="route-stop-district">{{ routeStop.branch.district }}</span>
+                  <span class="route-stop-stock is-tabular">
+                    {{ routeStop.availableProductCount }}
+                    {{
+                      routeStop.availableProductCount === 1
+                        ? 'producto disponible'
+                        : 'productos disponibles'
+                    }}
+                  </span>
+                  @if (routeStop.branch.offersDelivery) {
+                    <span class="route-stop-delivery"
+                      ><i class="fas fa-motorcycle me-1" aria-hidden="true"></i>Delivery</span
+                    >
+                  }
+                </button>
+              </li>
+            }
+          </ol>
+        </div>
       }
     </div>
   </section>
 }
 
-<section class="container-xl home-steps">
-  <h2 class="home-section-title">Así de simple es comprar</h2>
-  <ol class="home-steps-grid">
+<section class="container-xl category-board" aria-labelledby="category-board-title">
+  <h2 class="category-board-title" id="category-board-title">Compra por categoría</h2>
+  @if (categoryBoardRows().length > 0) {
+    <ul class="category-board-grid">
+      @for (
+        categoryRow of categoryBoardRows();
+        track categoryRow.category.id;
+        let categoryIndex = $index
+      ) {
+        <li revealOnScroll [revealDelay]="categoryIndex * 50">
+          <a
+            class="category-board-card"
+            [routerLink]="['/catalogo']"
+            [queryParams]="{ categoria: categoryRow.category.id }"
+          >
+            <span class="category-board-icon" aria-hidden="true">
+              <i [class]="categoryIcon(categoryRow.category.name)"></i>
+            </span>
+            <span class="category-board-name">{{ categoryRow.category.name }}</span>
+            @if (categoryRow.category.description) {
+              <span class="category-board-description">{{
+                categoryRow.category.description
+              }}</span>
+            }
+            <span class="category-board-meta">
+              <span class="category-board-count is-tabular"
+                >{{ categoryRow.productCount }}
+                {{ categoryRow.productCount === 1 ? 'producto' : 'productos' }}</span
+              >
+              <span class="category-board-arrow" aria-hidden="true"
+                ><i class="fas fa-arrow-right"></i
+              ></span>
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+@if (promotedProductRows().length > 0) {
+  <section class="container-xl offers-board" aria-labelledby="offers-board-title">
+    <div class="offers-board-header">
+      <h2 class="offers-board-title" id="offers-board-title">Ofertas de la semana</h2>
+      <a class="offers-board-link" routerLink="/catalogo">
+        Ver todo el catálogo <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
+      </a>
+    </div>
+    <ul class="offers-board-list enter-along-route">
+      @for (
+        promotedRow of promotedProductRows();
+        track promotedRow.product.id;
+        let rowIndex = $index
+      ) {
+        <li class="offers-board-row" [style.--enter-index]="rowIndex">
+          <span class="offers-board-discount is-tabular"
+            >-{{ promotedRow.product.promotion?.discountPercent }}%</span
+          >
+          <span class="offers-board-thumb" aria-hidden="true">
+            @if (promotedRow.product.imageUrl) {
+              <img
+                [src]="promotedRow.product.imageUrl"
+                alt=""
+                loading="lazy"
+                (error)="$any($event.target).style.display = 'none'"
+              />
+            } @else {
+              <i class="fas fa-pills"></i>
+            }
+          </span>
+          <span class="offers-board-product">
+            <a class="offers-board-name" [routerLink]="['/producto', promotedRow.product.id]">{{
+              promotedRow.product.name
+            }}</a>
+            <span class="offers-board-presentation">{{ promotedRow.product.presentation }}</span>
+          </span>
+          <span
+            class="status-badge offers-board-availability"
+            [class.is-success]="promotedRow.availability.stockStatus === 'available'"
+            [class.is-warning]="promotedRow.availability.stockStatus === 'low_stock'"
+            [class.is-neutral]="promotedRow.availability.stockStatus === 'out_of_stock'"
+          >
+            {{ promotedRow.availability.availabilityLabel }}
+          </span>
+          <app-product-price
+            class="offers-board-price"
+            [product]="promotedRow.product"
+            [showDiscount]="false"
+          />
+          @if (!isStaffMember()) {
+            <button
+              type="button"
+              class="btn btn-primary offers-board-add"
+              [disabled]="promotedRow.availability.stockStatus === 'out_of_stock'"
+              [attr.aria-label]="'Agregar ' + promotedRow.product.name + ' al carrito'"
+              (click)="addToCart(promotedRow.product)"
+            >
+              <i class="fas fa-cart-plus" aria-hidden="true"></i>
+              @if (cartService.getQuantityOf(promotedRow.product.id) > 0) {
+                <span class="is-tabular">{{
+                  cartService.getQuantityOf(promotedRow.product.id)
+                }}</span>
+              } @else {
+                <span class="offers-board-add-label">Agregar</span>
+              }
+            </button>
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+@if (!isLoadingRoute() && !hasRouteLoadFailed()) {
+  <section class="home-stats" aria-label="Farmasalud en cifras" revealOnScroll>
+    <div class="container-xl home-stats-inner">
+      <div class="home-stat">
+        <span class="home-stat-number is-tabular" [countUp]="routeStops().length">{{
+          routeStops().length
+        }}</span>
+        <span class="home-stat-label">boticas en Trujillo</span>
+      </div>
+      <div class="home-stat">
+        <span class="home-stat-number is-tabular">
+          <span [countUp]="productCount()">{{ productCount() }}</span>+
+        </span>
+        <span class="home-stat-label">productos disponibles</span>
+      </div>
+      <div class="home-stat">
+        <span class="home-stat-number is-tabular" [countUp]="deliveryBranchCount()">{{
+          deliveryBranchCount()
+        }}</span>
+        <span class="home-stat-label">boticas con delivery</span>
+      </div>
+    </div>
+  </section>
+}
+
+<section class="container-xl purchase-route" aria-labelledby="purchase-route-title">
+  <h2 class="purchase-route-title" id="purchase-route-title">Así de simple es comprar</h2>
+  <ol class="purchase-route-list">
     @for (purchaseStep of purchaseSteps; track purchaseStep.title; let stepIndex = $index) {
-      <li class="home-step surface-card">
-        <span class="home-step-number">{{ stepIndex + 1 }}</span>
-        <i [class]="purchaseStep.iconClass" class="home-step-icon" aria-hidden="true"></i>
-        <h3 class="home-step-title">{{ purchaseStep.title }}</h3>
-        <p class="home-step-text">{{ purchaseStep.description }}</p>
+      <li class="purchase-route-step" revealOnScroll [revealDelay]="stepIndex * 60">
+        <span class="purchase-route-marker is-tabular" aria-hidden="true">{{ stepIndex + 1 }}</span>
+        <h3 class="purchase-route-step-title">
+          <i [class]="purchaseStep.iconClass" class="me-2" aria-hidden="true"></i
+          >{{ purchaseStep.title }}
+        </h3>
+        <p class="purchase-route-step-text">{{ purchaseStep.description }}</p>
       </li>
     }
   </ol>
+</section>
+
+<section class="route-close" aria-labelledby="route-close-title">
+  <div class="container-xl route-close-inner">
+    <h2 class="route-close-title" id="route-close-title">Tu pedido empieza en el catálogo</h2>
+    <a class="btn btn-signal btn-lg" routerLink="/catalogo">
+      <i class="fas fa-magnifying-glass me-2" aria-hidden="true"></i>Ver catálogo
+    </a>
+  </div>
 </section>
