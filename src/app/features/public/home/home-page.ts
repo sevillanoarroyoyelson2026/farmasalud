@@ -1,4 +1,13 @@
-import { afterNextRender, Component, computed, ElementRef, inject, Injector, OnInit, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  Injector,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
@@ -22,12 +31,6 @@ import { describeProductAvailability, ProductAvailability } from '../catalog/pro
 const MAXIMUM_FEATURED_PROMOTIONS = 5;
 const SKELETON_STOP_COUNT = 6;
 
-interface PurchaseStep {
-  iconClass: string;
-  title: string;
-  description: string;
-}
-
 /** Paradero de la ruta: una botica activa con cuántos productos tiene en stock. */
 interface RouteStop {
   branch: Branch;
@@ -39,33 +42,86 @@ interface PromotedProductRow {
   availability: ProductAvailability;
 }
 
-/** Pasos del proceso de atención y dispensación digital (procedimiento 04.02 del informe T2). */
-const PURCHASE_STEPS: PurchaseStep[] = [
+/** Ficha de texto del diagrama "muchos → uno". */
+interface FlowStep {
+  name: string;
+  description: string;
+}
+
+/** Punto del diagrama: un círculo del motivo, con su tono por zona. */
+interface DiagramDot {
+  x: number;
+  y: string;
+  tone: 'pale' | 'deep' | 'ribbon' | 'order';
+}
+
+const FLOW_STEPS: FlowStep[] = [
   {
-    iconClass: 'fas fa-store',
-    title: 'Elige tu botica',
-    description: 'Ves el stock real de la botica más cercana antes de comprar.',
+    name: 'Eliges',
+    description: 'Busca en el catálogo y revisa el stock real de tu botica antes de comprar.',
   },
   {
-    iconClass: 'fas fa-file-prescription',
-    title: 'Sube tu receta',
-    description: 'Si el medicamento la requiere, un farmacéutico la valida antes de despachar.',
+    name: 'Ordenas',
+    description: 'Arma tu pedido; si tu medicamento exige receta, un farmacéutico la valida.',
   },
   {
-    iconClass: 'fas fa-credit-card',
-    title: 'Paga seguro',
-    description: 'Pago con tarjeta en línea (en esta demo el cobro es simulado).',
-  },
-  {
-    iconClass: 'fas fa-truck-fast',
-    title: 'Recibe en casa',
-    description: 'Sigue el estado de tu pedido hasta la entrega.',
+    name: 'Recibes',
+    description: 'Paga en línea con tarjeta y sigue tu pedido hasta la puerta de tu casa.',
   },
 ];
 
 /**
- * Inicio de la tienda. Las boticas reales se muestran como paraderos de una ruta:
- * elegir uno fija la botica con la que el catálogo calcula la disponibilidad.
+ * Puntos del diagrama "muchos → uno": dispersos a la izquierda, apretados en
+ * una cinta al centro y ordenados en hileras a la derecha. Posiciones
+ * deterministas (sin azar en cada render): ~120 círculos de 12px sobre un
+ * lienzo de 1200 × 270.
+ */
+function buildDiagramDots(): DiagramDot[] {
+  const dots: DiagramDot[] = [];
+  const jitter = (seed: number): number => Math.sin(seed * 12.9898) * 0.5;
+
+  // Zona izquierda: dispersión suelta en dos tonos pálidos.
+  for (let column = 0; column < 11; column++) {
+    for (let row = 0; row < 7; row++) {
+      const seed = column * 7 + row;
+      if (Math.abs(jitter(seed + 3)) < 0.25) continue;
+      dots.push({
+        x: 16 + column * 34 + jitter(seed) * 6,
+        y: `${22 + row * 34 + jitter(seed + 9) * 6}px`,
+        tone: seed % 2 === 0 ? 'pale' : 'deep',
+      });
+    }
+  }
+
+  // Zona central: cinta apretada de tres hileras.
+  for (let column = 0; column < 25; column++) {
+    for (let row = 0; row < 3; row++) {
+      dots.push({
+        x: 408 + column * 15,
+        y: `${112 + row * 15}px`,
+        tone: 'ribbon',
+      });
+    }
+  }
+
+  // Zona derecha: hileras parejas en el acento.
+  for (let column = 0; column < 8; column++) {
+    for (let row = 0; row < 6; row++) {
+      dots.push({
+        x: 836 + column * 44,
+        y: `${30 + row * 42}px`,
+        tone: 'order',
+      });
+    }
+  }
+
+  return dots;
+}
+
+/**
+ * Inicio de la tienda: ficha impresa + la ruta de boticas en vivo (paraderos
+ * con stock real), ofertas, el flujo de compra como diagrama, tablero de
+ * categorías, cifras y cierre.
  */
 @Component({
   selector: 'app-home-page',
@@ -87,7 +143,8 @@ export class HomePage implements OnInit {
   readonly isStaffMember = inject(AuthService).isStaffMember;
   readonly currentSession = inject(AuthService).currentSession;
 
-  readonly purchaseSteps = PURCHASE_STEPS;
+  readonly flowSteps = FLOW_STEPS;
+  readonly diagramDots = buildDiagramDots();
   readonly skeletonStops = Array.from({ length: SKELETON_STOP_COUNT }, (_, stopIndex) => stopIndex);
 
   private readonly products = signal<Product[]>([]);
@@ -128,7 +185,7 @@ export class HomePage implements OnInit {
       }));
   });
 
-  /** Categorías activas con su número de productos, para el tablero de categorías. */
+  /** Categorías activas con su número de productos, para el tablero de fichas. */
   readonly categoryBoardRows = computed(() => {
     const products = this.products();
     return this.categories().map((category) => ({
@@ -137,33 +194,13 @@ export class HomePage implements OnInit {
     }));
   });
 
-  /** Boticas con delivery, para la franja de cifras. */
+  /** Boticas con delivery, para las cifras escalonadas. */
   readonly deliveryBranchCount = computed(
     () => this.branchSelection.availableBranches().filter((branch) => branch.offersDelivery).length,
   );
 
-  /** Productos activos publicados, para la franja de cifras. */
+  /** Productos activos publicados, para las cifras escalonadas. */
   readonly productCount = computed(() => this.products().length);
-
-  /** Icono por familia de categoría; si no hay coincidencia, un rótulo genérico. */
-  categoryIcon(categoryName: string): string {
-    const normalized = categoryName.toLowerCase();
-    if (normalized.includes('analg')) return 'fas fa-tablets';
-    if (normalized.includes('antibi')) return 'fas fa-capsules';
-    if (normalized.includes('vitamin') || normalized.includes('suplement')) {
-      return 'fas fa-lemon';
-    }
-    if (normalized.includes('cuidado') || normalized.includes('higiene')) {
-      return 'fas fa-pump-soap';
-    }
-    if (normalized.includes('derm') || normalized.includes('piel')) return 'fas fa-hand-dots';
-    if (normalized.includes('materno') || normalized.includes('infant')) return 'fas fa-baby';
-    if (normalized.includes('equipo') || normalized.includes('dispositivo')) {
-      return 'fas fa-kit-medical';
-    }
-    if (normalized.includes('respirat') || normalized.includes('gripa')) return 'fas fa-lungs';
-    return 'fas fa-shapes';
-  }
 
   /** Productos y boticas en paralelo. Si falla, la ruta y las ofertas no aparecen; el buscador sigue funcionando. */
   async ngOnInit(): Promise<void> {

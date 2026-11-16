@@ -6,7 +6,7 @@
 .catalog-sign {
   padding: clamp(1.75rem, 4vw, 2.75rem) 0 clamp(2rem, 4vw, 3rem);
   background: var(--route-cobalt);
-  box-shadow: inset 0 -8px 0 var(--route-marigold);
+  
 }
 
 .catalog-sign-inner {
@@ -57,7 +57,7 @@
 }
 
 .catalog-search-input:focus-visible {
-  outline: 3px solid var(--route-marigold);
+  outline: 3px solid #fff;
   outline-offset: 2px;
   box-shadow: none;
 }
@@ -174,8 +174,8 @@
 }
 
 .catalog-stop.is-selected .catalog-stop-marker {
-  border-color: var(--route-live);
-  background: var(--route-live);
+  border-color: var(--route-live-ink);
+  background: var(--route-live-ink);
   color: #fff;
 }
 
@@ -334,7 +334,7 @@
   top: 0.6rem;
   left: 0.6rem;
   padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   background: var(--route-marigold);
   color: var(--route-ink);
   font-family: var(--font-heading);

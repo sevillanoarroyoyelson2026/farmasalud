@@ -1,0 +1,2239 @@
+{
+ "url": "http://localhost:4310",
+ "at": "2026-11-16T08:06:05.077Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 6,
+   "filled": [
+    0.86,
+    0.94,
+    0.92,
+    0.63,
+    0.93,
+    0.99
+   ],
+   "motion": {
+    "elements": 29,
+    "css": 27,
+    "transitions": 2,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 4893,
+     "screens": 5.4,
+     "words": 453,
+     "img": 4,
+     "video": 0,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 4,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "former-pharmacy-shelves-with-medicines.jpg",
+      "pills-and-medicines-02.jpg",
+      "pills-and-medicines-01.jpg",
+      "trujillo-town-hall-peru.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 0,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Tu botica, ahora en línea",
+     "words": 5,
+     "chars": 25,
+     "lines": 2,
+     "size": 72,
+     "vw": 5,
+     "font": "Jost",
+     "weight": 700,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "center",
+     "position": "left",
+     "widthRatio": 0.31,
+     "top": 319,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Tu botica, ahora en línea",
+     "words": 5,
+     "lines": 2,
+     "size": 72,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "Tu botica, ahora en línea",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 72,
+      "vw": 5,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "left",
+      "widthRatio": 0.31,
+      "top": 319,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Elige tu botica",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 44,
+      "vw": 3.1,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.19,
+      "top": 944,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Ofertas de la semana",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 44,
+      "vw": 3.1,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.28,
+      "top": 1371,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Así se arma tu pedido",
+      "words": 5,
+      "chars": 21,
+      "lines": 1,
+      "size": 57.6,
+      "vw": 4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.38,
+      "top": 1848,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Analgésicos y antiinflamatorios",
+      "words": 3,
+      "chars": 31,
+      "lines": 2,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.19,
+      "top": 2555,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Antibióticos",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.19,
+      "top": 2555,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Compra por categoría",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 37.4,
+      "vw": 2.6,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.25,
+      "top": 2587,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Antigripales y respiratorio",
+      "words": 3,
+      "chars": 27,
+      "lines": 2,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.19,
+      "top": 2771,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Bebés y mamá",
+      "words": 3,
+      "chars": 12,
+      "lines": 1,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.19,
+      "top": 2771,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Cuidado personal",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.19,
+      "top": 2771,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Primeros auxilios",
+      "words": 2,
+      "chars": 17,
+      "lines": 1,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.19,
+      "top": 2771,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Vitaminas y suplementos",
+      "words": 3,
+      "chars": 23,
+      "lines": 2,
+      "size": 27.4,
+      "vw": 1.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.19,
+      "top": 2939,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Farmasalud en cifras",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 34.6,
+      "vw": 2.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.44,
+      "top": 3147,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "6",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 77.8,
+      "vw": 5.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.41,
+      "top": 3175,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "18+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 77.8,
+      "vw": 5.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.18,
+      "top": 3279,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "5",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 77.8,
+      "vw": 5.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.18,
+      "top": 3375,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "ORDENA",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 302.4,
+      "vw": 21,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 0.82,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.9,
+      "top": 3927,
+      "tag": "span",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 17,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 2,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      26,
+      27,
+      35,
+      37,
+      44,
+      58,
+      72,
+      78,
+      302
+     ],
+     "sizeCount": 19,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 16,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 7.2
+     },
+     "measureChars": 86,
+     "max": {
+      "size": 302.4,
+      "vw": 21,
+      "font": "Jost",
+      "text": "Ordena"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.25,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e9ebf5",
+     "bodyBgHsl": {
+      "h": 230,
+      "s": 0.38,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f6f7fb",
+       "top": 88,
+       "hsl": {
+        "h": 228,
+        "s": 0.38,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#c3cbe5",
+       "top": 88,
+       "hsl": {
+        "h": 226,
+        "s": 0.4,
+        "l": 0.83
+       }
+      },
+      {
+       "color": "#efd3da",
+       "top": 1307,
+       "hsl": {
+        "h": 345,
+        "s": 0.47,
+        "l": 0.88
+       }
+      },
+      {
+       "color": "#e6dccd",
+       "top": 1732,
+       "hsl": {
+        "h": 36,
+        "s": 0.33,
+        "l": 0.85
+       }
+      },
+      {
+       "color": "#0f5257",
+       "top": 3723,
+       "hsl": {
+        "h": 184,
+        "s": 0.71,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#141414",
+       "top": 4287,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#3d4456",
+       "share": 0.33
+      },
+      {
+       "color": "#b9bdc9",
+       "share": 0.29
+      },
+      {
+       "color": "#141414",
+       "share": 0.22
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.1
+      },
+      {
+       "color": "#235f36",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#0f5257",
+      "hsl": {
+       "h": 184,
+       "s": 0.71,
+       "l": 0.2
+      },
+      "fg": "#d9e8e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 7,
+     "inHero": 4,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Inicio",
+      "Carrito",
+      "Crear cuenta",
+      "Buscar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 14,
+     "boxRadius": 16,
+     "squareMedia": 0,
+     "roundedMedia": 2,
+     "mediaRadius": 50,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.53
+     }
+    ],
+    "nav": {
+     "links": 6,
+     "fixed": true,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "jost",
+     "font awesome 6 free"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 4893,
+    "margins": {
+     "left": 76,
+     "right": 76
+    },
+    "sections": [
+     {
+      "sel": "main#contenido-principal.store-content",
+      "tag": "main",
+      "top": 76,
+      "height": 4115,
+      "words": 312,
+      "media": 4,
+      "middle": 0,
+      "heading": {
+       "text": "Tu botica,",
+       "size": 72,
+       "tag": "h1"
+      },
+      "left": 76,
+      "right": 76,
+      "textLeft": 76,
+      "textRight": 84,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.store-footer",
+      "tag": "footer",
+      "top": 4287,
+      "height": 606,
+      "words": 126,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Farmasalud",
+       "size": 26,
+       "tag": "p"
+      },
+      "left": 76,
+      "right": 148,
+      "textLeft": 76,
+      "textRight": 148,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Tu botica, ahora en línea",
+      "size": 72,
+      "top": 319,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 76,
+      "n": 2
+     },
+     {
+      "x": 108,
+      "n": 2
+     },
+     {
+      "x": 88,
+      "n": 1
+     },
+     {
+      "x": 724,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 6,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.08,
+    "voidBox": {
+     "x": 0,
+     "y": 120,
+     "w": 600,
+     "h": 180
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.95,
+    0.9,
+    0.92,
+    0.83,
+    0.89,
+    0.93,
+    1
+   ],
+   "motion": {
+    "elements": 29,
+    "css": 27,
+    "transitions": 2,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 6284,
+     "screens": 6.1,
+     "words": 446,
+     "img": 4,
+     "video": 0,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 4,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "former-pharmacy-shelves-with-medicines.jpg",
+      "pills-and-medicines-02.jpg",
+      "pills-and-medicines-01.jpg",
+      "trujillo-town-hall-peru.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 1,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Tu botica, ahora en línea",
+     "words": 5,
+     "chars": 25,
+     "lines": 2,
+     "size": 44,
+     "vw": 5.7,
+     "font": "Jost",
+     "weight": 700,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "center",
+     "position": "center",
+     "widthRatio": 0.36,
+     "top": 184,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Tu botica, ahora en línea",
+     "words": 5,
+     "lines": 2,
+     "size": 44,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "Tu botica, ahora en línea",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 44,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.36,
+      "top": 184,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Elige tu botica",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.25,
+      "top": 993,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Ofertas de la semana",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.37,
+      "top": 1405,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Así se arma tu pedido",
+      "words": 5,
+      "chars": 21,
+      "lines": 1,
+      "size": 36,
+      "vw": 4.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.45,
+      "top": 2064,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Compra por categoría",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 28,
+      "vw": 3.6,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.4,
+      "top": 2821,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "6",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 56,
+      "vw": 7.3,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.89,
+      "top": 3716,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Farmasalud en cifras",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 28,
+      "vw": 3.6,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.96,
+      "top": 4126,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "18+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 56,
+      "vw": 7.3,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.4,
+      "top": 4204,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "5",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 56,
+      "vw": 7.3,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "right",
+      "widthRatio": 0.4,
+      "top": 4236,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "ORDENA",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 161.3,
+      "vw": 21,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 0.82,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.97,
+      "top": 5038,
+      "tag": "span",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 10,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 2,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      26,
+      28,
+      30,
+      36,
+      44,
+      56,
+      161
+     ],
+     "sizeCount": 17,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 16,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 7.2
+     },
+     "measureChars": 86,
+     "max": {
+      "size": 161.3,
+      "vw": 21,
+      "font": "Jost",
+      "text": "Ordena"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.24,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e9ebf5",
+     "bodyBgHsl": {
+      "h": 230,
+      "s": 0.38,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f6f7fb",
+       "top": 88,
+       "hsl": {
+        "h": 228,
+        "s": 0.38,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#c3cbe5",
+       "top": 557,
+       "hsl": {
+        "h": 226,
+        "s": 0.4,
+        "l": 0.83
+       }
+      },
+      {
+       "color": "#efd3da",
+       "top": 1365,
+       "hsl": {
+        "h": 345,
+        "s": 0.47,
+        "l": 0.88
+       }
+      },
+      {
+       "color": "#e6dccd",
+       "top": 1961,
+       "hsl": {
+        "h": 36,
+        "s": 0.33,
+        "l": 0.85
+       }
+      },
+      {
+       "color": "#0f5257",
+       "top": 3688,
+       "hsl": {
+        "h": 184,
+        "s": 0.71,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#141414",
+       "top": 5282,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#3d4456",
+       "share": 0.34
+      },
+      {
+       "color": "#b9bdc9",
+       "share": 0.3
+      },
+      {
+       "color": "#141414",
+       "share": 0.22
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.1
+      },
+      {
+       "color": "#235f36",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#0f5257",
+      "hsl": {
+       "h": 184,
+       "s": 0.71,
+       "l": 0.2
+      },
+      "fg": "#d9e8e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Buscar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 14,
+     "boxRadius": 16,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 50,
+     "textShadow": 0,
+     "cardRows": [
+      {
+       "count": 7,
+       "iconTopped": false,
+       "rounded": true,
+       "top": 2976
+      }
+     ]
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.79
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "jost",
+     "font awesome 6 free"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 6284,
+    "margins": {
+     "left": 16,
+     "right": 16
+    },
+    "sections": [
+     {
+      "sel": "main#contenido-principal.store-content",
+      "tag": "main",
+      "top": 76,
+      "height": 5110,
+      "words": 302,
+      "media": 5,
+      "middle": 40,
+      "heading": {
+       "text": "Tu botica,",
+       "size": 44,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 0,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.store-footer",
+      "tag": "footer",
+      "top": 5282,
+      "height": 1002,
+      "words": 126,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Farmasalud",
+       "size": 26,
+       "tag": "p"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Tu botica, ahora en línea",
+      "size": 44,
+      "top": 184,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 3
+     },
+     {
+      "x": 48,
+      "n": 2
+     },
+     {
+      "x": 28,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 6,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 9,
+   "filled": [
+    0.86,
+    0.87,
+    0.93,
+    0.92,
+    0.85,
+    0.84,
+    0.89,
+    0.87,
+    1
+   ],
+   "motion": {
+    "elements": 29,
+    "css": 27,
+    "transitions": 2,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 7226,
+     "screens": 8.6,
+     "words": 446,
+     "img": 4,
+     "video": 0,
+     "canvas": 0,
+     "svg": 2,
+     "sections": 6,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 3,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [
+      "former-pharmacy-shelves-with-medicines.jpg",
+      "pills-and-medicines-02.jpg",
+      "trujillo-town-hall-peru.jpg"
+     ],
+     "blendText": 0,
+     "sideScrollers": 2,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Tu botica, ahora en línea",
+     "words": 5,
+     "chars": 25,
+     "lines": 2,
+     "size": 44,
+     "vw": 11.3,
+     "font": "Jost",
+     "weight": 700,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "center",
+     "position": "center",
+     "widthRatio": 0.7,
+     "top": 176,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Tu botica, ahora en línea",
+     "words": 5,
+     "lines": 2,
+     "size": 44,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "F Farmasalud",
+      "words": 2,
+      "chars": 12,
+      "lines": 1,
+      "size": 23.2,
+      "vw": 5.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.42,
+      "top": 18,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Tu botica, ahora en línea",
+      "words": 5,
+      "chars": 25,
+      "lines": 2,
+      "size": 44,
+      "vw": 11.3,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.7,
+      "top": 176,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "Elige tu botica",
+      "words": 3,
+      "chars": 15,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.48,
+      "top": 984,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Ofertas de la semana",
+      "words": 4,
+      "chars": 20,
+      "lines": 1,
+      "size": 30.4,
+      "vw": 7.8,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.72,
+      "top": 1451,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Así se arma tu pedido",
+      "words": 5,
+      "chars": 21,
+      "lines": 1,
+      "size": 36,
+      "vw": 9.2,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.88,
+      "top": 2443,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Compra por categoría",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 24,
+      "vw": 6.2,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3276,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "Analgésicos y antiinflamatorios",
+      "words": 3,
+      "chars": 31,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3543,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Antibióticos",
+      "words": 1,
+      "chars": 12,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3711,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Antigripales y respiratorio",
+      "words": 3,
+      "chars": 27,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 3879,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Bebés y mamá",
+      "words": 3,
+      "chars": 12,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 4047,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Cuidado personal",
+      "words": 2,
+      "chars": 16,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 4215,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Primeros auxilios",
+      "words": 2,
+      "chars": 17,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 4383,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Vitaminas y suplementos",
+      "words": 3,
+      "chars": 23,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.02,
+      "leading": 1.1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.79,
+      "top": 4551,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "6",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 56,
+      "vw": 14.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 4763,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Farmasalud en cifras",
+      "words": 3,
+      "chars": 20,
+      "lines": 1,
+      "size": 28,
+      "vw": 7.2,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.05,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 5037,
+      "tag": "h2",
+      "kind": "heading"
+     },
+     {
+      "text": "18+",
+      "words": 1,
+      "chars": 3,
+      "lines": 1,
+      "size": 56,
+      "vw": 14.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 5114,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "5",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 56,
+      "vw": 14.4,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.77,
+      "top": 5395,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "ORDENA",
+      "words": 1,
+      "chars": 6,
+      "lines": 1,
+      "size": 81.9,
+      "vw": 21,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 0.82,
+      "upper": true,
+      "italic": false,
+      "mono": false,
+      "align": "center",
+      "position": "center",
+      "widthRatio": 0.94,
+      "top": 5989,
+      "tag": "span",
+      "kind": "heading"
+     },
+     {
+      "text": "Farmasalud",
+      "words": 1,
+      "chars": 10,
+      "lines": 1,
+      "size": 25.6,
+      "vw": 6.6,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 6317,
+      "tag": "p",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 19,
+     "maxLines": 2,
+     "over2Lines": 0,
+     "statements": 1,
+     "centered": 2,
+     "medianWords": 3,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      26,
+      28,
+      30,
+      36,
+      44,
+      56,
+      82
+     ],
+     "sizeCount": 18,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 16,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 7.2
+     },
+     "measureChars": 56,
+     "max": {
+      "size": 81.9,
+      "vw": 21,
+      "font": "Jost",
+      "text": "Ordena"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.24,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e9ebf5",
+     "bodyBgHsl": {
+      "h": 230,
+      "s": 0.38,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#f6f7fb",
+       "top": 88,
+       "hsl": {
+        "h": 228,
+        "s": 0.38,
+        "l": 0.97
+       }
+      },
+      {
+       "color": "#c3cbe5",
+       "top": 628,
+       "hsl": {
+        "h": 226,
+        "s": 0.4,
+        "l": 0.83
+       }
+      },
+      {
+       "color": "#efd3da",
+       "top": 1411,
+       "hsl": {
+        "h": 345,
+        "s": 0.47,
+        "l": 0.88
+       }
+      },
+      {
+       "color": "#e6dccd",
+       "top": 2403,
+       "hsl": {
+        "h": 36,
+        "s": 0.33,
+        "l": 0.85
+       }
+      },
+      {
+       "color": "#0f5257",
+       "top": 4735,
+       "hsl": {
+        "h": 184,
+        "s": 0.71,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#141414",
+       "top": 6168,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#3d4456",
+       "share": 0.34
+      },
+      {
+       "color": "#b9bdc9",
+       "share": 0.3
+      },
+      {
+       "color": "#141414",
+       "share": 0.22
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.1
+      },
+      {
+       "color": "#235f36",
+       "share": 0.03
+      }
+     ],
+     "button": {
+      "bg": "#0f5257",
+      "hsl": {
+       "h": 184,
+       "s": 0.71,
+       "l": 0.2
+      },
+      "fg": "#d9e8e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 4,
+     "inHero": 1,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Buscar"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 14,
+     "boxRadius": 16,
+     "squareMedia": 0,
+     "roundedMedia": 1,
+     "mediaRadius": 50,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [
+     {
+      "type": "img",
+      "ratio": 0.38
+     }
+    ],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "jost",
+     "font awesome 6 free"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 7226,
+    "margins": {
+     "left": 16,
+     "right": 18
+    },
+    "sections": [
+     {
+      "sel": "main#contenido-principal.store-content",
+      "tag": "main",
+      "top": 76,
+      "height": 5996,
+      "words": 278,
+      "media": 4,
+      "middle": 418,
+      "heading": {
+       "text": "Tu botica,",
+       "size": 44,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 0,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": true,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.store-footer",
+      "tag": "footer",
+      "top": 6168,
+      "height": 1058,
+      "words": 126,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Farmasalud",
+       "size": 26,
+       "tag": "p"
+      },
+      "left": 16,
+      "right": 19,
+      "textLeft": 16,
+      "textRight": 19,
+      "fullBleed": true,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Tu botica, ahora en línea",
+      "size": 44,
+      "top": 176,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 3
+     },
+     {
+      "x": 40,
+      "n": 2
+     },
+     {
+      "x": 28,
+      "n": 1
+     }
+    ],
+    "leftBlocks": 6,
+    "bodySize": 16,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "19 different font sizes (13, 14, 16, 17, 18, 19, 20, 21, 22, 23, 26, 27, 35, 37, 44, 58, 72, 78, 302).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "side-scroll",
+   "width": 768,
+   "message": "1 row(s) scroll sideways with content past their edge.",
+   "fix": "Jurors and most visitors read a row cut at the edge as clipped, not as scrollable. Wrap it onto more lines, or end it inside the grid.",
+   "alsoAt": [
+    390
+   ]
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\desktop-fold.jpg",
+   "pages": [
+    "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\desktop-page-01.jpg",
+    "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\desktop-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\tablet-fold.jpg",
+   "pages": [
+    "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\tablet-page-01.jpg",
+    "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\tablet-page-02.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\mobile-fold.jpg",
+   "pages": [
+    "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\mobile-page-01.jpg",
+    "D:\\Yelson\\farmasalud\\.taste-skill\\prod2\\mobile-page-02.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

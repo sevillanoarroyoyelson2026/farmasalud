@@ -1,59 +1,68 @@
-<!-- Letrero de ruta: titular, buscador funcional y la línea de boticas -->
-<section class="route-sign" aria-labelledby="route-sign-title">
-  <div class="container-xl route-sign-inner">
-    <h1 class="route-sign-title" id="route-sign-title">
-      Tus medicamentos, con <span>stock real</span> y delivery a tu puerta
-    </h1>
-    <p class="route-sign-text">
-      Revisa la disponibilidad en tu botica, sube tu receta y recibe tu pedido sin hacer colas.
-    </p>
+<!-- La ficha impresa y, a su lado, la ruta en vivo: el paradero es el motivo -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-card">
+    <div class="hero-stripe" aria-hidden="true">
+      @for (bar of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]; track bar) {
+        <span [class.is-ink]="bar % 2 === 0"></span>
+      }
+    </div>
 
-    <form class="route-sign-search" role="search" (submit)="searchCatalog($event)">
-      <label class="visually-hidden" for="home-search">Buscar medicamento</label>
-      <i class="fas fa-magnifying-glass route-sign-search-icon" aria-hidden="true"></i>
-      <input
-        id="home-search"
-        type="search"
-        class="route-sign-search-input"
-        placeholder="Paracetamol, ibuprofeno, vitamina C…"
-        autocomplete="off"
-        [value]="searchTerm()"
-        (input)="updateSearchTerm($event)"
-      />
-      <button type="submit" class="btn btn-signal btn-lg route-sign-search-button">Buscar</button>
-    </form>
-
-    <ul class="route-sign-trust" aria-label="Garantías de la botica">
-      <li><i class="fas fa-user-doctor" aria-hidden="true"></i>Recetas validadas por farmacéutico</li>
-      <li><i class="fas fa-lock" aria-hidden="true"></i>Pago en línea seguro</li>
-      <li><i class="fas fa-motorcycle" aria-hidden="true"></i>Delivery el mismo día</li>
-    </ul>
-
-    @if (!currentSession()) {
-      <p class="route-sign-secondary">
-        ¿Primera vez? <a routerLink="/registro">Crea tu cuenta</a> para comprar y seguir tus
-        pedidos.
+    <div class="hero-card-body">
+      <h1 class="hero-title" id="hero-title">Tu botica,<br />ahora en línea</h1>
+      <p class="hero-text">
+        La botica de barrio de Trujillo, en tu celular: stock real antes de comprar, receta validada
+        por un farmacéutico y delivery el mismo día.
       </p>
-    }
+
+      <form class="hero-search" role="search" (submit)="searchCatalog($event)">
+        <label class="visually-hidden" for="home-search">Buscar medicamento</label>
+        <input
+          id="home-search"
+          type="search"
+          class="hero-search-input"
+          placeholder="Paracetamol, ibuprofeno, vitamina C…"
+          autocomplete="off"
+          [value]="searchTerm()"
+          (input)="updateSearchTerm($event)"
+        />
+        <button type="submit" class="hero-search-button">
+          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+          Buscar
+        </button>
+      </form>
+    </div>
+
+    <ul class="hero-assurances">
+      <li>Farmacéutico valida tu receta</li>
+      <li>Pago en línea seguro</li>
+      <li>Delivery el mismo día</li>
+    </ul>
+  </div>
+
+  <!-- La botica, dentro del motivo en grande: un círculo recortado por el marco -->
+  <div class="hero-stage">
+    <img
+      class="hero-photo"
+      src="images/former-pharmacy-shelves-with-medicines.jpg"
+      alt="Estantes de madera con frascos de cerámica de una botica tradicional"
+    />
+    <p class="hero-photo-caption">La tradición de la botica de barrio, de siempre.</p>
   </div>
 </section>
 
-@if (!hasRouteLoadFailed()) {
-  <section class="route-line-section" aria-labelledby="route-line-title">
-    <div class="container-xl">
-      <div class="route-line-header">
-        <h2 class="route-line-title" id="route-line-title">Elige tu botica</h2>
-        <p class="route-line-hint">
-          @if (branchSelection.selectedBranch(); as selectedBranch) {
-            Viendo stock de <strong>{{ selectedBranch.name }}</strong>.
-            <a routerLink="/catalogo"
-              >Ver su catálogo <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i
-            ></a>
-          } @else {
-            Toca un paradero para ver el stock real de esa botica.
-          }
-        </p>
-      </div>
+<!-- Campo periwinkle: la ruta de boticas en vivo -->
+<section class="route-field" aria-labelledby="route-title">
+  <div class="container-xl route-field-inner">
+    <div class="route-field-head">
+      <h2 class="route-field-title" id="route-title">Elige tu botica</h2>
+      <p class="route-field-hint">
+        @if (branchSelection.selectedBranch(); as selectedBranch) {
+          Viendo stock de <strong>{{ selectedBranch.name }}</strong>.
+          <a routerLink="/catalogo">Ver su catálogo</a>
+        } @else {
+          Toca un paradero para ver el stock real de esa botica.
+        }
+      </p>
     </div>
 
     <div class="route-line-scroller">
@@ -71,6 +80,9 @@
             </li>
           }
         </ol>
+      } @else if (hasRouteLoadFailed()) {
+        <p class="hero-stage-error">No pudimos cargar las boticas. Revisa tu conexión e intenta de
+          nuevo.</p>
       } @else {
         <div
           class="route-line-track"
@@ -116,168 +128,200 @@
         </div>
       }
     </div>
-  </section>
-}
-
-<section class="container-xl category-board" aria-labelledby="category-board-title">
-  <h2 class="category-board-title" id="category-board-title">Compra por categoría</h2>
-  @if (categoryBoardRows().length > 0) {
-    <ul class="category-board-grid">
-      @for (
-        categoryRow of categoryBoardRows();
-        track categoryRow.category.id;
-        let categoryIndex = $index
-      ) {
-        <li revealOnScroll [revealDelay]="categoryIndex * 50">
-          <a
-            class="category-board-card"
-            [routerLink]="['/catalogo']"
-            [queryParams]="{ categoria: categoryRow.category.id }"
-          >
-            <span class="category-board-icon" aria-hidden="true">
-              <i [class]="categoryIcon(categoryRow.category.name)"></i>
-            </span>
-            <span class="category-board-name">{{ categoryRow.category.name }}</span>
-            @if (categoryRow.category.description) {
-              <span class="category-board-description">{{
-                categoryRow.category.description
-              }}</span>
-            }
-            <span class="category-board-meta">
-              <span class="category-board-count is-tabular"
-                >{{ categoryRow.productCount }}
-                {{ categoryRow.productCount === 1 ? 'producto' : 'productos' }}</span
-              >
-              <span class="category-board-arrow" aria-hidden="true"
-                ><i class="fas fa-arrow-right"></i
-              ></span>
-            </span>
-          </a>
-        </li>
-      }
-    </ul>
-  }
+  </div>
 </section>
 
 @if (promotedProductRows().length > 0) {
-  <section class="container-xl offers-board" aria-labelledby="offers-board-title">
-    <div class="offers-board-header">
-      <h2 class="offers-board-title" id="offers-board-title">Ofertas de la semana</h2>
-      <a class="offers-board-link" routerLink="/catalogo">
-        Ver todo el catálogo <i class="fas fa-arrow-right ms-1" aria-hidden="true"></i>
-      </a>
-    </div>
-    <ul class="offers-board-list enter-along-route">
-      @for (
-        promotedRow of promotedProductRows();
-        track promotedRow.product.id;
-        let rowIndex = $index
-      ) {
-        <li class="offers-board-row" [style.--enter-index]="rowIndex">
-          <span class="offers-board-discount is-tabular"
-            >-{{ promotedRow.product.promotion?.discountPercent }}%</span
-          >
-          <span class="offers-board-thumb" aria-hidden="true">
-            @if (promotedRow.product.imageUrl) {
-              <img
-                [src]="promotedRow.product.imageUrl"
-                alt=""
-                loading="lazy"
-                (error)="$any($event.target).style.display = 'none'"
-              />
-            } @else {
-              <i class="fas fa-pills"></i>
-            }
-          </span>
-          <span class="offers-board-product">
-            <a class="offers-board-name" [routerLink]="['/producto', promotedRow.product.id]">{{
-              promotedRow.product.name
-            }}</a>
-            <span class="offers-board-presentation">{{ promotedRow.product.presentation }}</span>
-          </span>
-          <span
-            class="status-badge offers-board-availability"
-            [class.is-success]="promotedRow.availability.stockStatus === 'available'"
-            [class.is-warning]="promotedRow.availability.stockStatus === 'low_stock'"
-            [class.is-neutral]="promotedRow.availability.stockStatus === 'out_of_stock'"
-          >
-            {{ promotedRow.availability.availabilityLabel }}
-          </span>
-          <app-product-price
-            class="offers-board-price"
-            [product]="promotedRow.product"
-            [showDiscount]="false"
-          />
-          @if (!isStaffMember()) {
-            <button
-              type="button"
-              class="btn btn-primary offers-board-add"
-              [disabled]="promotedRow.availability.stockStatus === 'out_of_stock'"
-              [attr.aria-label]="'Agregar ' + promotedRow.product.name + ' al carrito'"
-              (click)="addToCart(promotedRow.product)"
+  <!-- Campo rosa: las ofertas de la semana -->
+  <section class="offers-field" aria-labelledby="offers-title">
+    <div class="container-xl">
+      <div class="offers-head">
+        <h2 class="offers-title" id="offers-title">Ofertas de la semana</h2>
+        <a class="offers-link" routerLink="/catalogo">Ver todo el catálogo</a>
+      </div>
+      <ul class="offers-board-list enter-along-route">
+        @for (
+          promotedRow of promotedProductRows();
+          track promotedRow.product.id;
+          let rowIndex = $index
+        ) {
+          <li class="offers-row" [style.--enter-index]="rowIndex">
+            <span class="offers-discount is-tabular"
+              >-{{ promotedRow.product.promotion?.discountPercent }}%</span
             >
-              <i class="fas fa-cart-plus" aria-hidden="true"></i>
-              @if (cartService.getQuantityOf(promotedRow.product.id) > 0) {
-                <span class="is-tabular">{{
-                  cartService.getQuantityOf(promotedRow.product.id)
-                }}</span>
+            <span class="offers-thumb" aria-hidden="true">
+              @if (promotedRow.product.imageUrl) {
+                <img
+                  [src]="promotedRow.product.imageUrl"
+                  alt=""
+                  loading="lazy"
+                  (error)="$any($event.target).style.display = 'none'"
+                />
               } @else {
-                <span class="offers-board-add-label">Agregar</span>
+                <i class="fas fa-pills"></i>
               }
-            </button>
-          }
+            </span>
+            <span class="offers-product">
+              <a class="offers-name" [routerLink]="['/producto', promotedRow.product.id]">{{
+                promotedRow.product.name
+              }}</a>
+              <span class="offers-presentation">{{ promotedRow.product.presentation }}</span>
+            </span>
+            <span
+              class="status-badge offers-availability"
+              [class.is-success]="promotedRow.availability.stockStatus === 'available'"
+              [class.is-warning]="promotedRow.availability.stockStatus === 'low_stock'"
+              [class.is-neutral]="promotedRow.availability.stockStatus === 'out_of_stock'"
+            >
+              {{ promotedRow.availability.availabilityLabel }}
+            </span>
+            <app-product-price
+              class="offers-price"
+              [product]="promotedRow.product"
+              [showDiscount]="false"
+            />
+            @if (!isStaffMember()) {
+              <button
+                type="button"
+                class="btn btn-primary offers-add"
+                [disabled]="promotedRow.availability.stockStatus === 'out_of_stock'"
+                [attr.aria-label]="'Agregar ' + promotedRow.product.name + ' al carrito'"
+                (click)="addToCart(promotedRow.product)"
+              >
+                <i class="fas fa-cart-plus" aria-hidden="true"></i>
+                @if (cartService.getQuantityOf(promotedRow.product.id) > 0) {
+                  <span class="is-tabular">{{
+                    cartService.getQuantityOf(promotedRow.product.id)
+                  }}</span>
+                } @else {
+                  <span>Agregar</span>
+                }
+              </button>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+}
+
+<!-- Campo arena: el pedido como diagrama "muchos → uno" -->
+<section class="flow-field" aria-labelledby="flow-title" revealOnScroll>
+  <div class="container-xl">
+    <div class="flow-head">
+      <h2 class="flow-title" id="flow-title">Así se arma tu pedido</h2>
+      <img
+        class="flow-photo"
+        src="images/pills-and-medicines-02.jpg"
+        alt="Frascos de medicinas y pastillas sobre una superficie clara"
+        loading="lazy"
+      />
+    </div>
+    <svg class="flow-diagram" viewBox="0 0 1200 270" aria-hidden="true" focusable="false">
+      @for (dot of diagramDots; track $index) {
+        <circle
+          class="is-dot"
+          [class.is-ribbon]="dot.tone === 'ribbon'"
+          [class.is-order]="dot.tone === 'order'"
+          [attr.cx]="dot.x"
+          [attr.cy]="dot.y"
+          r="6"
+        />
+      }
+    </svg>
+    <ol class="flow-steps">
+      @for (flowStep of flowSteps; track flowStep.name; let stepIndex = $index) {
+        <li class="flow-step" [style.--enter-index]="stepIndex">
+          <h3 class="flow-step-name">{{ flowStep.name }}</h3>
+          <p class="flow-step-text">{{ flowStep.description }}</p>
         </li>
       }
-    </ul>
-  </section>
-}
-
-@if (!isLoadingRoute() && !hasRouteLoadFailed()) {
-  <section class="home-stats" aria-label="Farmasalud en cifras" revealOnScroll>
-    <div class="container-xl home-stats-inner">
-      <div class="home-stat">
-        <span class="home-stat-number is-tabular" [countUp]="routeStops().length">{{
-          routeStops().length
-        }}</span>
-        <span class="home-stat-label">boticas en Trujillo</span>
-      </div>
-      <div class="home-stat">
-        <span class="home-stat-number is-tabular">
-          <span [countUp]="productCount()">{{ productCount() }}</span>+
-        </span>
-        <span class="home-stat-label">productos disponibles</span>
-      </div>
-      <div class="home-stat">
-        <span class="home-stat-number is-tabular" [countUp]="deliveryBranchCount()">{{
-          deliveryBranchCount()
-        }}</span>
-        <span class="home-stat-label">boticas con delivery</span>
-      </div>
-    </div>
-  </section>
-}
-
-<section class="container-xl purchase-route" aria-labelledby="purchase-route-title">
-  <h2 class="purchase-route-title" id="purchase-route-title">Así de simple es comprar</h2>
-  <ol class="purchase-route-list">
-    @for (purchaseStep of purchaseSteps; track purchaseStep.title; let stepIndex = $index) {
-      <li class="purchase-route-step" revealOnScroll [revealDelay]="stepIndex * 60">
-        <span class="purchase-route-marker is-tabular" aria-hidden="true">{{ stepIndex + 1 }}</span>
-        <h3 class="purchase-route-step-title">
-          <i [class]="purchaseStep.iconClass" class="me-2" aria-hidden="true"></i
-          >{{ purchaseStep.title }}
-        </h3>
-        <p class="purchase-route-step-text">{{ purchaseStep.description }}</p>
-      </li>
-    }
-  </ol>
-</section>
-
-<section class="route-close" aria-labelledby="route-close-title">
-  <div class="container-xl route-close-inner">
-    <h2 class="route-close-title" id="route-close-title">Tu pedido empieza en el catálogo</h2>
-    <a class="btn btn-signal btn-lg" routerLink="/catalogo">
-      <i class="fas fa-magnifying-glass me-2" aria-hidden="true"></i>Ver catálogo
-    </a>
+    </ol>
   </div>
 </section>
+
+<!-- Tablero de fichas: cada categoría, un paradero -->
+<section class="category-board" aria-labelledby="category-board-title">
+  <div class="category-board-grid">
+    <div class="category-board-intro">
+      <div class="category-board-intro-text">
+        <h2 class="category-board-title" id="category-board-title">Compra por categoría</h2>
+        <p class="category-board-text">
+          De analgésicos a cuidado personal: entra directo a lo que buscas.
+        </p>
+      </div>
+      <img
+        class="category-board-photo"
+        src="images/pills-and-medicines-01.jpg"
+        alt="Frascos de medicinas de colores sobre fondo claro"
+        loading="lazy"
+      />
+    </div>
+    @for (
+      categoryRow of categoryBoardRows();
+      track categoryRow.category.id;
+      let categoryIndex = $index
+    ) {
+      <a
+        class="category-tile"
+        [class.is-warm]="categoryIndex % 2 === 1"
+        [routerLink]="['/catalogo']"
+        [queryParams]="{ categoria: categoryRow.category.id }"
+        revealOnScroll
+        [revealDelay]="categoryIndex * 40"
+      >
+        <span class="category-tile-name">{{ categoryRow.category.name }}</span>
+        <span class="category-tile-count is-tabular"
+          >{{ categoryRow.productCount }}
+          {{ categoryRow.productCount === 1 ? 'producto' : 'productos' }}</span
+        >
+      </a>
+    }
+  </div>
+</section>
+
+<!-- Cifras escalonadas: fichas que no se alinean, como boticas en la ciudad -->
+<section class="stats-board" aria-labelledby="stats-title">
+  <div class="stats-grid">
+    <div class="stats-tile stats-tile--tall">
+      <span class="stats-figure is-tabular" [countUp]="routeStops().length">{{
+        routeStops().length
+      }}</span>
+      <span class="stats-caption">boticas reales en Trujillo, cada una con su stock en vivo</span>
+      <img
+        class="stats-photo"
+        src="images/trujillo-town-hall-peru.jpg"
+        alt="Fachada celeste del municipio de Trujillo, en la Plaza de Armas"
+        loading="lazy"
+        width="1920"
+        height="1309"
+      />
+    </div>
+    <div class="stats-side">
+      <h2 class="stats-title" id="stats-title">Farmasalud en cifras</h2>
+      <div class="stats-tile stats-tile--ink">
+        <span class="stats-figure is-tabular">
+          <span [countUp]="productCount()">{{ productCount() }}</span>+
+        </span>
+        <span class="stats-caption">productos publicados en el catálogo</span>
+      </div>
+      <div class="stats-tile stats-tile--sand">
+        <span class="stats-figure is-tabular" [countUp]="deliveryBranchCount()">{{
+          deliveryBranchCount()
+        }}</span>
+        <span class="stats-caption">boticas con delivery a domicilio</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- El cierre: una sola palabra es el botón -->
+<a class="cta-band" routerLink="/catalogo">
+  <div class="container-xl cta-band-inner">
+    <p class="cta-note">
+      Elige tu botica y recibe tu pedido hoy mismo.
+      <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
+    </p>
+    <span class="cta-word">Ordena</span>
+  </div>
+</a>

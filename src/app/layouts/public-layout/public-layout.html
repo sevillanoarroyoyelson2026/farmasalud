@@ -1,19 +1,4 @@
 <div class="public-layout">
-  <div class="store-topbar">
-    <div class="container-xl store-topbar-content">
-      <p class="store-topbar-item">
-        <i class="fas fa-clock" aria-hidden="true"></i>Lunes a sábado: 8:00 a. m. – 10:00 p. m.
-      </p>
-      <p class="store-topbar-item store-topbar-item--delivery">
-        <i class="fas fa-truck-fast" aria-hidden="true"></i>Delivery el mismo día en Trujillo
-      </p>
-      <p class="store-topbar-item store-topbar-item--sanitary">
-        <i class="fas fa-shield-heart" aria-hidden="true"></i>Establecimiento farmacéutico
-        autorizado
-      </p>
-    </div>
-  </div>
-
   <header class="store-header" [class.is-scrolled]="isHeaderElevated()">
     <nav class="store-navbar container-xl" aria-label="Navegación principal">
       <a class="store-brand" routerLink="/" (click)="closeMobileMenu()">
@@ -170,14 +155,43 @@
   <app-cart-notice />
 
   <footer class="store-footer">
+    <!-- El motivo en grande: los paraderos de la ruta cierran la página -->
+    <div class="store-footer-mark" aria-hidden="true">
+      <svg viewBox="0 0 1120 120" role="presentation" focusable="false">
+        <rect x="0" y="57" width="1120" height="6" rx="3" />
+        <g class="is-stop is-stop--filled">
+          <circle cx="80" cy="60" r="34" />
+          <text x="80" y="69" text-anchor="middle">1</text>
+        </g>
+        <g class="is-stop">
+          <circle cx="260" cy="60" r="34" />
+          <text x="260" y="69" text-anchor="middle">2</text>
+        </g>
+        <g class="is-stop">
+          <circle cx="440" cy="60" r="34" />
+          <text x="440" y="69" text-anchor="middle">3</text>
+        </g>
+        <g class="is-stop">
+          <circle cx="620" cy="60" r="34" />
+          <text x="620" y="69" text-anchor="middle">4</text>
+        </g>
+        <g class="is-stop">
+          <circle cx="800" cy="60" r="34" />
+          <text x="800" y="69" text-anchor="middle">5</text>
+        </g>
+        <g class="is-stop is-stop--delivery">
+          <circle cx="980" cy="60" r="42" />
+          <text x="980" y="69" text-anchor="middle">→</text>
+        </g>
+      </svg>
+    </div>
+
     <div class="container-xl store-footer-grid">
       <div>
-        <p class="store-footer-brand">
-          <span class="store-brand-plate" aria-hidden="true">F</span>Farmasalud
-        </p>
+        <p class="store-footer-brand">Farmasalud</p>
         <p class="store-footer-text">
           Medicamentos, productos médicos y de cuidado personal con disponibilidad real en nuestras
-          10 boticas de Trujillo.
+          boticas de Trujillo.
         </p>
       </div>
       <div>
@@ -195,7 +209,6 @@
         <ul class="store-footer-list">
           <li><i class="fas fa-clock" aria-hidden="true"></i>Lun – Sáb: 8:00 a. m. – 10:00 p. m.</li>
           <li><i class="fas fa-clock" aria-hidden="true"></i>Dom: 9:00 a. m. – 2:00 p. m.</li>
-          <li><i class="fas fa-motorcycle" aria-hidden="true"></i>Delivery en horario de botica</li>
         </ul>
       </div>
       <div>
@@ -204,18 +217,20 @@
           <li><a routerLink="/privacidad">Política de privacidad</a></li>
           <li><a routerLink="/catalogo">Catálogo de productos</a></li>
           <li>
-            <a routerLink="/libro-de-reclamaciones"
-              ><i class="fas fa-book-open me-2" aria-hidden="true"></i>Libro de Reclamaciones</a
-            >
+            <a routerLink="/libro-de-reclamaciones">Libro de Reclamaciones</a>
           </li>
         </ul>
       </div>
     </div>
     <div class="container-xl store-footer-sanitary">
       <p>
-        <i class="fas fa-shield-heart me-2" aria-hidden="true"></i>Establecimiento farmacéutico
-        autorizado. Los medicamentos de venta bajo receta se despachan únicamente con receta
-        médica validada por nuestro farmacéutico.
+        Establecimiento farmacéutico autorizado. Los medicamentos de venta bajo receta se despachan
+        únicamente con receta médica validada por nuestro farmacéutico.
+      </p>
+      <p class="store-footer-credits">
+        Fotografías: «Former pharmacy, shelves with medicines» de Zalasem1 (CC BY 4.0),
+        «Pills and medicines 01/02» de BuhaM (CC BY-SA 4.0) y «Trujillo Town Hall (Peru)» de Bernard
+        Gagnon (CC BY-SA 3.0), vía Wikimedia Commons.
       </p>
     </div>
     <p class="store-footer-bottom">

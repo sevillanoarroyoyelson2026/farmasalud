@@ -1,27 +1,35 @@
 /* ==========================================================
    FARMASALUD — Estilos globales y tokens de diseño
-   Mundo "Letrero de ruta": las boticas son paraderos de una ruta.
-   Esmalte claro de fondo, tinta azul noche, franja cobalto y marigold
-   como bandas estructurales. El verde se reserva SOLO para lo que está
-   en vivo (stock disponible, pedido en marcha); el rojo, para alertas.
+   Mundo "Paradero": las boticas son paraderos de una ruta y el
+   círculo del paradero es el motivo de toda la interfaz.
+   Suelo periwinkle pastel, tinta casi negra, acento teal profundo.
+   El verde se reserva SOLO para lo que está en vivo (stock,
+   pedido en marcha); el rojo, para alertas.
    ========================================================== */
 :root {
-  /* Paleta de ruta */
-  --route-enamel: #f2f4f1;
-  --route-enamel-deep: #e6eae3;
-  --route-ink: #0f1a2e;
-  --route-ink-soft: #3d4a60;
-  --route-cobalt: #1440a8;
-  --route-cobalt-deep: #0c2c7a;
-  --route-cobalt-wash: #e4eafa;
-  --route-marigold: #ffbe1a;
-  --route-marigold-deep: #e9a400;
-  --route-marigold-wash: #fff3cc;
-  --route-live: #0e9a57;
-  --route-live-ink: #0a7444;
-  --route-live-wash: #dcf2e5;
-  --route-alert: #c42b26;
-  --route-alert-wash: #fde4e2;
+  /* Paleta pastel (ground / ink / accent + campos de color por sección) */
+  --route-enamel: #e9ebf5;
+  --route-enamel-deep: #dde0ef;
+  --route-ink: #141414;
+  --route-ink-soft: #3d4456;
+  --route-cobalt: #0f5257;
+  --route-cobalt-deep: #0a3b3e;
+  --route-cobalt-wash: #d9e8e9;
+  --route-marigold: #f9cdbd;
+  --route-marigold-deep: #f2b39f;
+  --route-marigold-wash: #fce8e0;
+  --route-live: #2e7d46;
+  --route-live-ink: #235f36;
+  --route-live-wash: #ddeee0;
+  --route-alert: #b3352c;
+  --route-alert-wash: #f7ddd9;
+
+  /* Campos pastel de las secciones (capítulos de color) */
+  --field-pink: #efd3da;
+  --field-sand: #e6dccd;
+  --field-sage: #cfd3cb;
+  --field-peach: #f9cdbd;
+  --field-periwinkle: #c3cbe5;
 
   /* Roles semánticos (los usan todas las superficies, incluidos los paneles) */
   --color-primary: var(--route-cobalt);
@@ -38,27 +46,29 @@
 
   --color-text: var(--route-ink);
   --color-text-secondary: var(--route-ink-soft);
-  --color-text-muted: #5d6880;
-  --color-border: #d5dbd2;
-  --color-border-strong: #b9c1b5;
-  --color-surface: #ffffff;
+  --color-text-muted: #4d5468;
+  --color-border: #c9cee0;
+  --color-border-strong: #b0b7d0;
+  --color-surface: #f6f7fb;
   --color-background: var(--route-enamel);
 
   --color-sidebar: var(--route-ink);
-  --color-sidebar-text: #b3bfd6;
+  --color-sidebar-text: #b9bdc9;
   --color-sidebar-active: var(--route-marigold);
 
-  /* Tipografía: letra de rótulo condensada + cuerpo hiperlegible */
-  --font-body: 'Atkinson Hyperlegible Next', 'Segoe UI', system-ui, sans-serif;
-  --font-heading: 'Archivo', 'Arial Narrow', sans-serif;
-  --font-stretch-sign: 72%;
-  --font-stretch-label: 85%;
+  /* Tipografía: Jost — geometría de 1920s que eco del paradero circular */
+  --font-body: 'Jost', 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Jost', system-ui, sans-serif;
+  --font-stretch-sign: 100%;
+  --font-stretch-label: 100%;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
-  --shadow-card: 0 1px 0 rgba(15, 26, 46, 0.05), 0 8px 20px -14px rgba(15, 26, 46, 0.35);
-  --shadow-raised: 0 2px 4px rgba(15, 26, 46, 0.06), 0 22px 44px -18px rgba(15, 26, 46, 0.4);
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+  /* El motivo manda: botones, chips y etiquetas son círculos (píldora) */
+  --radius-pill: 999px;
+  --shadow-card: 0 0 0 0 rgba(20, 20, 20, 0);
+  --shadow-raised: 0 24px 48px -20px rgba(20, 20, 20, 0.35);
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-base: 0.22s var(--ease-out-expo);
 
@@ -66,16 +76,19 @@
   --route-line-weight: 6px;
   --route-stop-size: 2.75rem;
 
+  /* Margen de página: los campos a sangre y el contenido comparten un solo eje */
+  --page-gutter: max(1rem, calc((100% - 1320px) / 2 + 1rem));
+
   /* Bootstrap hereda la paleta */
   --bs-primary: var(--color-primary);
-  --bs-primary-rgb: 20, 64, 168;
+  --bs-primary-rgb: 15, 82, 87;
   --bs-success: var(--color-accent);
-  --bs-success-rgb: 10, 116, 68;
+  --bs-success-rgb: 46, 125, 70;
   --bs-body-font-family: var(--font-body);
   --bs-body-color: var(--color-text);
   --bs-body-bg: var(--color-background);
   --bs-link-color: var(--color-primary);
-  --bs-link-color-rgb: 20, 64, 168;
+  --bs-link-color-rgb: 15, 82, 87;
   --bs-link-hover-color: var(--color-primary-hover);
   --bs-border-radius: var(--radius-sm);
   --bs-border-color: var(--color-border);
@@ -111,10 +124,9 @@ h6,
 .h5,
 .h6 {
   font-family: var(--font-heading);
-  font-stretch: var(--font-stretch-sign);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.05;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
   color: var(--color-text);
   text-wrap: balance;
 }
@@ -125,14 +137,14 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--route-marigold);
+  outline: 3px solid var(--route-cobalt);
   outline-offset: 2px;
-  box-shadow: 0 0 0 5px var(--route-ink);
+  box-shadow: 0 0 0 5px var(--route-enamel);
   border-radius: var(--radius-sm);
 }
 
 ::selection {
-  background: var(--route-marigold);
+  background: var(--field-periwinkle);
   color: var(--route-ink);
 }
 
@@ -154,22 +166,22 @@ table {
   text-transform: uppercase;
 }
 
-/* -- Botones -- */
+/* -- Botones: píldora, plano, un solo relleno (el motivo es el círculo) -- */
 .btn {
+  border-radius: var(--radius-pill);
   font-family: var(--font-heading);
-  font-stretch: var(--font-stretch-label);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.01em;
-  border-radius: var(--radius-sm);
+  border: 0;
   transition:
     background-color var(--transition-base),
     border-color var(--transition-base),
     color var(--transition-base),
-    transform 0.12s var(--ease-out-expo);
+    transform 0.16s var(--ease-out-expo);
 }
 
 .btn:active:not(:disabled) {
-  transform: translateY(1px) scale(0.985);
+  transform: translateY(1px) scale(0.97);
 }
 
 .btn-lg {
@@ -180,36 +192,40 @@ table {
 .btn-primary {
   --bs-btn-bg: var(--color-primary);
   --bs-btn-border-color: var(--color-primary);
+  --bs-btn-color: var(--color-primary-soft);
   --bs-btn-hover-bg: var(--color-primary-hover);
   --bs-btn-hover-border-color: var(--color-primary-hover);
+  --bs-btn-hover-color: var(--color-primary-soft);
   --bs-btn-active-bg: var(--color-primary-hover);
   --bs-btn-active-border-color: var(--color-primary-hover);
-  --bs-btn-disabled-bg: #7d8ba6;
-  --bs-btn-disabled-border-color: #7d8ba6;
+  --bs-btn-disabled-bg: #8d9aa8;
+  --bs-btn-disabled-border-color: #8d9aa8;
 }
 
 .btn-outline-primary {
   --bs-btn-color: var(--color-primary);
   --bs-btn-border-color: var(--color-primary);
   --bs-btn-hover-bg: var(--color-primary);
+  --bs-btn-hover-color: var(--color-primary-soft);
   --bs-btn-hover-border-color: var(--color-primary);
   --bs-btn-active-bg: var(--color-primary-hover);
+  --bs-btn-active-color: var(--color-primary-soft);
   border-width: 2px;
 }
 
-/* Acción de letrero: marigold sobre cobalto o tinta */
+/* Acción de paradero: el acento teal, la única otra pieza con color fuerte */
 .btn-signal {
-  --bs-btn-color: var(--route-ink);
-  --bs-btn-bg: var(--route-marigold);
-  --bs-btn-border-color: var(--route-marigold);
-  --bs-btn-hover-color: var(--route-ink);
-  --bs-btn-hover-bg: #ffcd4d;
-  --bs-btn-hover-border-color: #ffcd4d;
-  --bs-btn-active-color: var(--route-ink);
-  --bs-btn-active-bg: var(--route-marigold-deep);
-  --bs-btn-active-border-color: var(--route-marigold-deep);
-  --bs-btn-disabled-color: var(--route-ink);
-  --bs-btn-disabled-bg: var(--route-marigold);
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--route-cobalt);
+  --bs-btn-border-color: var(--route-cobalt);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--route-cobalt-deep);
+  --bs-btn-hover-border-color: var(--route-cobalt-deep);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--route-cobalt-deep);
+  --bs-btn-active-border-color: var(--route-cobalt-deep);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: var(--route-cobalt);
 }
 
 .form-control,
@@ -443,13 +459,11 @@ table {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-pill);
   font-family: var(--font-heading);
-  font-stretch: var(--font-stretch-label);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-size: 0.8125rem;
+  font-weight: 600;
   white-space: nowrap;
 }
 

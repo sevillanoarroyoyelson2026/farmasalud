@@ -65,6 +65,21 @@
         ],
         "createdAt": "2026-11-15T22:07:58.844Z",
         "reason": "model: img src is an Angular binding rendered only inside @if (url), never empty"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/features/public/home/home-page.html"
+        ],
+        "createdAt": "2026-11-16T07:30:16.518Z",
+        "reason": "model: img src is an Angular binding rendered only inside @if (imageUrl), never empty"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "jost",
+        "createdAt": "2026-11-16T07:30:44.329Z",
+        "reason": "user confirmed: la fuente Jost del rediseño se mantiene"
       }
     ]
   }
