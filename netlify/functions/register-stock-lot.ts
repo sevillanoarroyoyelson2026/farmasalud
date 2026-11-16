@@ -8,6 +8,7 @@ import {
   HttpError,
   rejectUnsupportedMethod,
 } from '../lib/http-response';
+import { refreshLowStockNotifications } from '../lib/low-stock-notifications';
 import { enforceRateLimit } from '../lib/rate-limiter';
 import { authenticateCallerWithRole, parseRequestBody } from '../lib/request-guard';
 import {
@@ -88,6 +89,7 @@ export const handler: Handler = async (requestEvent) => {
         reason: lotRequest.entryReason,
       },
     });
+    await refreshLowStockNotifications([lotRequest.productId], [lotRequest.branchId]);
     return createJsonResponse(requestEvent, 201, { lotId: registeredLotId });
   } catch (error) {
     return createErrorResponse(requestEvent, FUNCTION_NAME, error);

@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { afterNextRender, Component, computed, effect, inject, Injector, input, OnInit, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../../core/auth/auth.service';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import {
   ALL_BRANCHES_OPTION,
@@ -44,13 +45,29 @@ function formatDateForInput(date: Date): string {
   selector: 'app-admin-stock-page',
   imports: [ReactiveFormsModule, DialogPanel, DatePipe],
   templateUrl: './admin-stock-page.html',
+  styles: `
+    /* Fila a la que llevó una notificación: se resalta y late dos veces */
+    tr.is-highlighted td { background: var(--color-warning-soft); }
+    tr.is-highlighted td:first-child { box-shadow: inset 4px 0 0 var(--color-warning); }
+    tr.is-highlighted { animation: stock-row-highlight 1.1s ease-in-out 2; }
+    @keyframes stock-row-highlight { 50% { opacity: 0.55; } }
+    @media (prefers-reduced-motion: reduce) { tr.is-highlighted { animation: none; } }
+  `,
 })
 export class AdminStockPage implements OnInit {
   private readonly productRepository = inject(ProductRepository);
   private readonly stockLotRepository = inject(StockLotRepository);
   private readonly logger = inject(AppLoggerService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly injector = inject(Injector);
   readonly branchSelection = inject(BranchSelectionService);
+
+  /** Query params que pone la campana de notificaciones: `?producto=…&sucursal=…`. */
+  readonly producto = input<string>();
+  readonly sucursal = input<string>();
+  /** Producto al que llevó una notificación (se resalta y se desplaza hasta él). */
+  readonly highlightedProductId = signal<string | null>(null);
 
   readonly stockStatusLabel = STOCK_STATUS_LABEL;
   readonly products = signal<Product[]>([]);
@@ -101,6 +118,15 @@ export class AdminStockPage implements OnInit {
 
   /** `data.startWithAlertsOnly` en la ruta (pantalla "Alertas de stock" del trabajador). */
   readonly startWithAlertsOnly = input(false);
+
+  constructor() {
+    // Se reacciona también si ya estabas en esta pantalla y abres otra notificación.
+    effect(() => {
+      const productIdFromNotification = this.producto();
+      const branchIdFromNotification = this.sucursal();
+      untracked(() => this.focusNotifiedProduct(productIdFromNotification ?? null, branchIdFromNotification ?? null));
+    });
+  }
 
   async ngOnInit(): Promise<void> {
     this.isShowingOnlyAlerts.set(this.startWithAlertsOnly());
@@ -184,6 +210,38 @@ export class AdminStockPage implements OnInit {
   hasLotFieldError(fieldName: keyof typeof this.lotForm.controls): boolean {
     const formControl = this.lotForm.controls[fieldName];
     return formControl.invalid && formControl.touched;
+  }
+
+  /**
+   * Viene de una notificación: el admin pasa a la botica de la alerta (el trabajador ya
+   * está fijo en la suya), se limpia la búsqueda y se resalta la fila del producto.
+   */
+  private focusNotifiedProduct(productId: string | null, branchId: string | null): void {
+    if (!productId) {
+      return;
+    }
+    if (branchId && this.authService.currentSession()?.role === 'admin') {
+      this.branchSelection.selectBranch(branchId);
+    }
+    this.searchText.set('');
+    this.isShowingOnlyAlerts.set(false);
+    this.highlightedProductId.set(productId);
+    this.scrollToHighlightedRowWhenVisible();
+  }
+
+  private scrollToHighlightedRowWhenVisible(attemptsLeft = 20): void {
+    afterNextRender(
+      () => {
+        const highlightedRow = document.getElementById(`stock-row-${this.highlightedProductId()}`);
+        if (highlightedRow) {
+          highlightedRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (attemptsLeft > 0) {
+          // La tabla aún está cargando: se reintenta en breve.
+          setTimeout(() => this.scrollToHighlightedRowWhenVisible(attemptsLeft - 1), 150);
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
   private async loadProducts(): Promise<void> {

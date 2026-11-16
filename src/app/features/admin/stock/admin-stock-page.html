@@ -39,7 +39,7 @@
           </thead>
           <tbody>
             @for (stockRow of productStockRows(); track stockRow.product.id) {
-              <tr>
+              <tr [id]="'stock-row-' + stockRow.product.id" [class.is-highlighted]="stockRow.product.id === highlightedProductId()">
                 <td>
                   <strong>{{ stockRow.product.name }}</strong>
                   <span class="panel-table-secondary">{{ stockRow.product.presentation }}</span>

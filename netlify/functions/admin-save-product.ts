@@ -10,6 +10,7 @@ import {
   HttpError,
   rejectUnsupportedMethod,
 } from '../lib/http-response';
+import { refreshLowStockNotifications } from '../lib/low-stock-notifications';
 import { enforceRateLimit } from '../lib/rate-limiter';
 import { authenticateCallerWithRole, parseRequestBody } from '../lib/request-guard';
 import { firestoreDocumentIdSchema } from '../lib/validation-schemas';
@@ -106,6 +107,7 @@ export const handler: Handler = async (requestEvent) => {
         details: { previousPrice, newPrice: normalizedProductFields.price },
       });
     }
+    await refreshLowStockNotifications([productId], 'all');
     return createJsonResponse(requestEvent, 200, { productId });
   } catch (error) {
     return createErrorResponse(requestEvent, FUNCTION_NAME, error);

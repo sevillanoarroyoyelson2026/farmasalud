@@ -18,6 +18,7 @@ import {
   type OrderStatus,
 } from '../lib/order-workflow';
 import { writeStockReleaseForOrder } from '../lib/order-stock-release';
+import { refreshLowStockNotifications } from '../lib/low-stock-notifications';
 import { enforceRateLimit } from '../lib/rate-limiter';
 import { authenticateCallerWithRole, parseRequestBody } from '../lib/request-guard';
 
@@ -130,6 +131,8 @@ export const handler: Handler = async (requestEvent) => {
             ? ((orderSnapshot.get('payment.culqiChargeId') as string | null) ?? null)
             : null,
         orderTotal: orderSnapshot.get('orderTotal') as number,
+        branchId: orderBranchId,
+        productIds: (orderSnapshot.get('items') as { productId: string }[]).map((orderItem) => orderItem.productId),
       };
     });
 
@@ -139,6 +142,9 @@ export const handler: Handler = async (requestEvent) => {
       if (!isRefunded) {
         await orderReference.update({ 'payment.status': 'refund_failed', updatedAt: FieldValue.serverTimestamp() });
       }
+    }
+    if (updatedOrder.nextStatus === 'cancelled') {
+      await refreshLowStockNotifications(updatedOrder.productIds, [updatedOrder.branchId]);
     }
     await notifyOrderStatusChanged(
       updatedOrder.customerEmail,

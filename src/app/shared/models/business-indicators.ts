@@ -113,3 +113,61 @@ export function calculateAverageRating(ratings: number[]): number | null {
   }
   return Math.round((ratings.reduce((total, rating) => total + rating, 0) / ratings.length) * 10) / 10;
 }
+
+/** Pedidos creados dentro de [desde, hasta). */
+export function filterOrdersCreatedBetween(orders: Order[], fromDate: Date, untilDate: Date): Order[] {
+  return orders.filter(
+    (order) =>
+      order.createdAt !== null &&
+      order.createdAt.getTime() >= fromDate.getTime() &&
+      order.createdAt.getTime() < untilDate.getTime(),
+  );
+}
+
+/**
+ * Variación porcentual frente al período anterior (redondeada a 1 decimal).
+ * null cuando no hay base de comparación (período anterior en cero).
+ */
+export function calculatePercentageChange(currentValue: number, previousValue: number): number | null {
+  if (previousValue === 0) {
+    return null;
+  }
+  return Math.round(((currentValue - previousValue) / previousValue) * 1000) / 10;
+}
+
+export interface LabeledAmount {
+  label: string;
+  amount: number;
+}
+
+/** Ventas por botica (sin cancelados), de mayor a menor. */
+export function groupSalesByBranch(orders: Order[]): LabeledAmount[] {
+  const salesByBranch = new Map<string, number>();
+  for (const order of orders.filter((candidate) => candidate.status !== 'cancelled')) {
+    salesByBranch.set(order.branchName, (salesByBranch.get(order.branchName) ?? 0) + order.orderTotal);
+  }
+  return [...salesByBranch.entries()]
+    .map(([label, amount]) => ({ label, amount: Math.round(amount * 100) / 100 }))
+    .sort((firstBranch, secondBranch) => secondBranch.amount - firstBranch.amount);
+}
+
+/** Cantidad de pedidos según la hora del día en que se hicieron (0 a 23). */
+export function countOrdersByHourOfDay(orders: Order[]): number[] {
+  const ordersByHour = Array.from({ length: 24 }, () => 0);
+  for (const order of orders) {
+    if (order.createdAt) {
+      ordersByHour[order.createdAt.getHours()]++;
+    }
+  }
+  return ordersByHour;
+}
+
+/** Cuántos pedidos hay en cada valor de una característica (estado, entrega, pago…). */
+export function countOrdersBy<GroupKey extends string>(orders: Order[], readGroupKey: (order: Order) => GroupKey): Map<GroupKey, number> {
+  const ordersByGroup = new Map<GroupKey, number>();
+  for (const order of orders) {
+    const groupKey = readGroupKey(order);
+    ordersByGroup.set(groupKey, (ordersByGroup.get(groupKey) ?? 0) + 1);
+  }
+  return ordersByGroup;
+}

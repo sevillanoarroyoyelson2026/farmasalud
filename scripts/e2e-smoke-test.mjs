@@ -18,6 +18,7 @@ import { deleteApp, initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import {
   addDoc,
+  arrayUnion,
   collection,
   doc,
   getDoc,
@@ -149,6 +150,7 @@ async function deleteEverythingCreated() {
     ['receptions', 'branchId', TEST_BRANCH_ID],
     ['quotations', 'branchId', TEST_BRANCH_ID],
     ['reviews', 'branchId', TEST_BRANCH_ID],
+    ['notifications', 'branchId', TEST_BRANCH_ID],
   ]) {
     const matchingDocuments = await adminFirestore.collection(collectionName).where(fieldName, '==', fieldValue).get();
     await Promise.all(matchingDocuments.docs.map((matchingDocument) => matchingDocument.ref.delete()));
@@ -354,6 +356,44 @@ async function runEndToEndFlow() {
     await customer.callFunction('update-order-status', { orderId: cancelledOrderId, action: 'cancel_by_customer', note: 'Cancelado por el cliente', courierName: null });
     check((await readProductStock(productId, TEST_BRANCH_ID)) === 8, 'al cancelar, el stock vuelve a 8');
     check((await adminFirestore.doc(`orders/${cancelledOrderId}`).get()).get('payment.status') === 'refunded', 'el pago queda como devuelto');
+
+    console.log('\n9. Notificación de stock bajo: nace, se lee, se resuelve');
+    const notificationPath = `notifications/low-stock__${TEST_BRANCH_ID}__${productId}`;
+    // Stock actual 8. Subir el mínimo a 10 deja el producto bajo el mínimo → nace la alerta.
+    await administrator.callFunction('admin-save-product', {
+      productId, name: 'E2E Paracetamol 500 mg', genericName: 'Paracetamol', presentation: 'Caja x 10',
+      laboratory: 'E2E Lab', description: '', categoryId: TEST_CATEGORY_ID, price: 10, requiresPrescription: false,
+      imageUrl: '', isActive: true, minimumStock: 10,
+    });
+    const bornNotification = await adminFirestore.doc(notificationPath).get();
+    check(bornNotification.get('status') === 'active' && bornNotification.get('availableUnits') === 8, 'nace la alerta (8 unidades, mínimo 10)');
+    check(!(await adminFirestore.doc(`notifications/low-stock__${OTHER_BRANCH_ID}__${productId}`).get()).exists,
+      'no se alerta en la botica que nunca tuvo el producto');
+    const workerNotifications = await getDocs(query(collection(worker.firestoreDatabase, 'notifications'),
+      where('status', '==', 'active'), where('branchId', '==', TEST_BRANCH_ID)));
+    check(workerNotifications.docs.some((notification) => notification.id === notificationPath.split('/')[1]), 'el trabajador de la botica la ve');
+    await expectRejection(
+      () => getDocs(query(collection(otherBranchWorker.firestoreDatabase, 'notifications'), where('branchId', '==', TEST_BRANCH_ID))),
+      'un trabajador de otra botica no la ve',
+    );
+    await updateDoc(doc(worker.firestoreDatabase, notificationPath), { readByUids: arrayUnion(workerUser.uid) });
+    check((await adminFirestore.doc(notificationPath).get()).get('readByUids').includes(workerUser.uid), 'el trabajador la marca como leída');
+    await expectRejection(
+      () => updateDoc(doc(worker.firestoreDatabase, notificationPath), { status: 'resolved' }),
+      'nadie la resuelve a mano desde el navegador',
+    );
+    // Una venta lo deja agotado → la alerta empeora y vuelve a ser "nueva" para todos.
+    await customer.callFunction('create-order', { ...orderRequest, idempotencyKey: randomUUID(), items: [{ productId, quantity: 8 }] });
+    const worsenedNotification = await adminFirestore.doc(notificationPath).get();
+    check(worsenedNotification.get('severity') === 'out_of_stock' && worsenedNotification.get('readByUids').length === 0,
+      'al agotarse, pasa a "agotado" y vuelve a ser nueva');
+    // Ingreso de stock por encima del mínimo → se resuelve sola.
+    await worker.callFunction('register-stock-lot', {
+      productId, branchId: TEST_BRANCH_ID, lotNumber: 'E2E-L3', expirationDate: futureDate(300), quantity: 30, entryReason: 'manual_entry',
+    });
+    const resolvedNotification = await adminFirestore.doc(notificationPath).get();
+    check(resolvedNotification.get('status') === 'resolved' && resolvedNotification.get('availableUnits') === 30,
+      'al reponer 30 unidades se resuelve y sale de la campana');
   } finally {
     for (const session of [administrator, worker, otherBranchWorker, customer, otherCustomer]) {
       await session.closeSession();

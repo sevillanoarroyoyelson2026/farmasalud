@@ -125,15 +125,15 @@
     </div>
 
     @if (isLoading()) {
-      <div class="catalog-list" aria-busy="true">
+      <div class="catalog-grid" aria-busy="true">
         @for (placeholderNumber of [1, 2, 3, 4, 5, 6, 7, 8]; track placeholderNumber) {
-          <div class="catalog-row is-placeholder" aria-hidden="true">
-            <span class="catalog-row-thumb skeleton-block"></span>
-            <span class="catalog-row-product">
+          <div class="catalog-card is-placeholder" aria-hidden="true">
+            <span class="catalog-card-media skeleton-block"></span>
+            <span class="catalog-card-body">
               <span class="skeleton-block catalog-skeleton-line is-short"></span>
               <span class="skeleton-block catalog-skeleton-line is-medium"></span>
+              <span class="skeleton-block catalog-skeleton-line is-short"></span>
             </span>
-            <span class="skeleton-block catalog-skeleton-line is-short"></span>
           </div>
         }
       </div>
@@ -156,70 +156,76 @@
         }
       </div>
     } @else {
-      <ul class="catalog-list enter-along-route">
+      <ul class="catalog-grid enter-along-route">
         @for (
           productCard of visibleProductCards();
           track productCard.product.id;
           let cardIndex = $index
         ) {
           <li
-            class="catalog-row"
+            class="catalog-card"
             [class.is-out-of-stock]="productCard.availability.stockStatus === 'out_of_stock'"
-            [class.is-tone-1]="cardIndex % 4 === 1"
-            [class.is-tone-2]="cardIndex % 4 === 2"
-            [class.is-tone-3]="cardIndex % 4 === 3"
             [style.--enter-index]="cardIndex"
           >
-            <span class="catalog-row-thumb">
+            <a
+              class="catalog-card-media"
+              [class.is-tone-1]="!productCard.product.imageUrl && cardIndex % 4 === 1"
+              [class.is-tone-2]="!productCard.product.imageUrl && cardIndex % 4 === 2"
+              [class.is-tone-3]="!productCard.product.imageUrl && cardIndex % 4 === 3"
+              [routerLink]="['/producto', productCard.product.id]"
+              tabindex="-1"
+              aria-hidden="true"
+            >
               @if (productCard.product.imageUrl) {
-                <img
-                  [src]="productCard.product.imageUrl"
-                  [alt]="'Foto de ' + productCard.product.name"
-                  loading="lazy"
-                />
+                <img [src]="productCard.product.imageUrl" alt="" loading="lazy" />
               } @else {
-                <span class="catalog-row-initial" aria-hidden="true">{{
-                  productCard.product.name.charAt(0)
-                }}</span>
+                <span class="catalog-card-initial">{{ productCard.product.name.charAt(0) }}</span>
               }
-            </span>
-            <span class="catalog-row-product">
-              <a class="catalog-row-name" [routerLink]="['/producto', productCard.product.id]">{{
-                productCard.product.name
-              }}</a>
-              <span class="catalog-row-presentation">{{ productCard.product.presentation }}</span>
+              @if (discountPercentOf(productCard.product); as discountPercent) {
+                <span class="catalog-card-discount">-{{ discountPercent }}%</span>
+              }
               @if (productCard.product.requiresPrescription) {
-                <span class="catalog-row-prescription"
-                  ><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere receta</span
+                <span class="catalog-card-prescription"
+                  ><i class="fas fa-file-prescription" aria-hidden="true"></i>Con receta</span
                 >
               }
-            </span>
-            <span
-              class="status-badge catalog-row-availability"
-              [class.is-success]="productCard.availability.stockStatus === 'available'"
-              [class.is-warning]="productCard.availability.stockStatus === 'low_stock'"
-              [class.is-neutral]="productCard.availability.stockStatus === 'out_of_stock'"
-            >
-              {{ productCard.availability.availabilityLabel }}
-            </span>
-            <app-product-price class="catalog-row-price" [product]="productCard.product" />
-            @if (!isStaffMember()) {
-              <button
-                type="button"
-                class="btn btn-primary catalog-row-add"
-                [class.is-in-cart]="cartService.getQuantityOf(productCard.product.id) > 0"
-                [disabled]="productCard.availability.stockStatus === 'out_of_stock'"
-                [attr.aria-label]="'Agregar ' + productCard.product.name + ' al carrito'"
-                (click)="addToCart(productCard.product)"
+            </a>
+
+            <div class="catalog-card-body">
+              <span class="catalog-card-presentation">{{ productCard.product.presentation }}</span>
+              <a class="catalog-card-name" [routerLink]="['/producto', productCard.product.id]">{{
+                productCard.product.name
+              }}</a>
+              <span
+                class="status-badge catalog-card-availability"
+                [class.is-success]="productCard.availability.stockStatus === 'available'"
+                [class.is-warning]="productCard.availability.stockStatus === 'low_stock'"
+                [class.is-neutral]="productCard.availability.stockStatus === 'out_of_stock'"
               >
-                <i class="fas fa-cart-plus" aria-hidden="true"></i>
-                @if (cartService.getQuantityOf(productCard.product.id) > 0) {
-                  <span class="is-tabular">{{
-                    cartService.getQuantityOf(productCard.product.id)
-                  }}</span>
-                }
-              </button>
-            }
+                {{ productCard.availability.availabilityLabel }}
+              </span>
+              <app-product-price class="catalog-card-price" [product]="productCard.product" [showDiscount]="false" />
+
+              @if (!isStaffMember()) {
+                <button
+                  type="button"
+                  class="btn btn-primary catalog-card-add"
+                  [class.is-in-cart]="cartService.getQuantityOf(productCard.product.id) > 0"
+                  [disabled]="productCard.availability.stockStatus === 'out_of_stock'"
+                  [attr.aria-label]="'Agregar ' + productCard.product.name + ' al carrito'"
+                  (click)="addToCart(productCard.product)"
+                >
+                  @if (productCard.availability.stockStatus === 'out_of_stock') {
+                    Agotado
+                  } @else if (cartService.getQuantityOf(productCard.product.id) > 0) {
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                    En tu carrito ({{ cartService.getQuantityOf(productCard.product.id) }}) · Agregar otro
+                  } @else {
+                    <i class="fas fa-cart-plus" aria-hidden="true"></i> Agregar al carrito
+                  }
+                </button>
+              }
+            </div>
           </li>
         }
       </ul>

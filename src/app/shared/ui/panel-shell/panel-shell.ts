@@ -2,6 +2,7 @@ import { Component, inject, input, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { ROLE_DISPLAY_NAME } from '../../../core/auth/user-role';
+import { NotificationBell } from '../notification-bell/notification-bell';
 
 export interface PanelNavigationItem {
   iconClass: string;
@@ -24,7 +25,7 @@ const SIDEBAR_COLLAPSED_STORAGE_KEY = 'farmasalud.panelSidebarCollapsed';
  */
 @Component({
   selector: 'app-panel-shell',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NotificationBell],
   templateUrl: './panel-shell.html',
   styleUrl: './panel-shell.css',
 })

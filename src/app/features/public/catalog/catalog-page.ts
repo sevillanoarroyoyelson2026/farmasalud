@@ -20,7 +20,7 @@ import { BranchSelectionService } from '../../../shared/data-access/branch-selec
 import { CategoryRepository } from '../../../shared/data-access/category.repository';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
 import { Category } from '../../../shared/models/category';
-import { Product } from '../../../shared/models/product';
+import { hasActivePromotion, Product } from '../../../shared/models/product';
 import { CartNoticeService } from '../../../shared/ui/cart-notice/cart-notice';
 import { normalizeTextForSearch } from '../../../shared/utils/text-normalization';
 import { describeProductAvailability, ProductAvailability } from './product-availability';
@@ -177,6 +177,11 @@ export class CatalogPage implements OnInit {
 
   clearSearch(): void {
     this.searchText.set('');
+  }
+
+  /** % de descuento vigente para la placa sobre la foto (null si no hay promoción). */
+  discountPercentOf(product: Product): number | null {
+    return hasActivePromotion(product) ? (product.promotion?.discountPercent ?? null) : null;
   }
 
   addToCart(product: Product): void {

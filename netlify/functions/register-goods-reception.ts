@@ -9,6 +9,7 @@ import {
   HttpError,
   rejectUnsupportedMethod,
 } from '../lib/http-response';
+import { refreshLowStockNotifications } from '../lib/low-stock-notifications';
 import { enforceRateLimit } from '../lib/rate-limiter';
 import { authenticateCallerWithRole, parseRequestBody } from '../lib/request-guard';
 import {
@@ -178,6 +179,9 @@ export const handler: Handler = async (requestEvent) => {
       targetId: receptionRequest.purchaseOrderId,
       details: receptionSummary,
     });
+    const receivedProductIds = receptionRequest.lines.map((receptionLine) => receptionLine.productId);
+    const receptionBranchId = (await purchaseOrderReference.get()).get('branchId') as string;
+    await refreshLowStockNotifications(receivedProductIds, [receptionBranchId]);
     return createJsonResponse(requestEvent, 201, { receptionId: receptionReference.id, ...receptionSummary });
   } catch (error) {
     return createErrorResponse(requestEvent, FUNCTION_NAME, error);

@@ -1,84 +1,242 @@
-<section>
-  <h2 class="page-title">Hola, {{ administratorName() }}</h2>
-  <p class="page-subtitle">Indicadores de {{ selectedBranchName() }} · últimos {{ indicatorPeriodDays }} días</p>
+<section class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h2 class="page-title">Hola, {{ administratorName() }}</h2>
+      <p class="page-subtitle">
+        {{ selectedBranchName() }} · últimos {{ selectedPeriodDays() }} días comparados con los {{ selectedPeriodDays() }} anteriores
+      </p>
+    </div>
+    <div class="dashboard-controls">
+      <span class="dashboard-live" role="status">
+        <span class="dashboard-live-dot" aria-hidden="true"></span>
+        En vivo
+        @if (lastUpdatedAt(); as updatedAt) {
+          <span class="dashboard-live-time">· {{ updatedAt | date: 'HH:mm:ss' }}</span>
+        }
+      </span>
+      <div class="btn-group" role="group" aria-label="Período">
+        @for (periodDays of periodOptions; track periodDays) {
+          <button type="button" class="btn btn-sm" [class.btn-primary]="selectedPeriodDays() === periodDays"
+            [class.btn-outline-primary]="selectedPeriodDays() !== periodDays" [attr.aria-pressed]="selectedPeriodDays() === periodDays"
+            (click)="selectPeriod(periodDays)">{{ periodDays }} días</button>
+        }
+      </div>
+    </div>
+  </header>
 
   @if (loadErrorMessage()) {
     <div class="alert alert-warning" role="alert">{{ loadErrorMessage() }}</div>
   }
 
-  <div class="dashboard-indicator-grid" [attr.aria-busy]="isLoading()">
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-receipt"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Ventas de hoy</p>
-        <p class="dashboard-indicator-value">{{ todaysSales() | currency: 'PEN' : 'S/ ' }}</p>
-        <p class="dashboard-indicator-source">{{ todaysOrders().length }} pedidos · {{ periodSales() | currency: 'PEN' : 'S/ ' }} en el período</p>
-      </div>
-    </article>
-
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-circle-check"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Pedidos atendidos correctamente</p>
-        <p class="dashboard-indicator-value">{{ correctFulfillmentRate() !== null ? (correctFulfillmentRate() | number: '1.0-1') + ' %' : 'Sin datos aún' }}</p>
-        <p class="dashboard-indicator-source">Entregados ÷ cerrados (sin cancelaciones del cliente)</p>
-      </div>
-    </article>
-
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-stopwatch"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Tiempo promedio de atención</p>
-        <p class="dashboard-indicator-value">{{ averageFulfillmentTime() ?? 'Sin datos aún' }}</p>
-        <p class="dashboard-indicator-source">Desde el pedido online hasta la entrega</p>
-      </div>
-    </article>
-
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon is-warning" aria-hidden="true"><i class="fas fa-triangle-exclamation"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Productos bajo el mínimo</p>
-        <p class="dashboard-indicator-value">{{ productsBelowMinimum().length }}</p>
-        <p class="dashboard-indicator-source"><a routerLink="/admin/stock">Ver stock</a> · <a routerLink="/admin/cotizaciones">Cotizar reposición</a></p>
-      </div>
-    </article>
-
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-star"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Satisfacción del cliente</p>
-        <p class="dashboard-indicator-value">{{ averageRating() !== null ? averageRating() + ' / 5' : 'Sin datos aún' }}</p>
-        <p class="dashboard-indicator-source">{{ ratings().length }} calificaciones de pedidos entregados</p>
-      </div>
-    </article>
-
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-list-check"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Pedidos en curso</p>
-        <p class="dashboard-indicator-value">{{ activeOrdersCount() }}</p>
-        <p class="dashboard-indicator-source">{{ pendingPrescriptionsCount() }} con receta por validar · <a routerLink="/admin/pedidos">Ver pedidos</a></p>
-      </div>
-    </article>
-
-    <article class="dashboard-indicator surface-card">
-      <span class="dashboard-indicator-icon" aria-hidden="true"><i class="fas fa-comment-medical"></i></span>
-      <div>
-        <p class="dashboard-indicator-label">Reclamos pendientes</p>
-        <p class="dashboard-indicator-value">{{ pendingClaimsCount() }}</p>
-        <p class="dashboard-indicator-source"><a routerLink="/admin/reclamos">Atender reclamos</a></p>
-      </div>
-    </article>
+  <!-- Indicadores con variación frente al período anterior -->
+  <div class="dashboard-tiles" [attr.aria-busy]="isLoading()">
+    @for (indicatorTile of indicatorTiles(); track indicatorTile.label) {
+      <article class="dashboard-tile surface-card">
+        <p class="dashboard-tile-label">{{ indicatorTile.label }}</p>
+        @if (isLoading()) {
+          <span class="dashboard-skeleton" aria-hidden="true"></span>
+        } @else {
+          <p class="dashboard-tile-value">{{ indicatorTile.value }}</p>
+          <p class="dashboard-tile-change">
+            @switch (describeChange(indicatorTile)) {
+              @case ('flat') {
+                <span class="dashboard-delta is-flat">{{ indicatorTile.change === null ? 'Sin comparación' : 'Igual' }}</span>
+              }
+              @default {
+                <span class="dashboard-delta" [class.is-good]="isChangeGood(indicatorTile)" [class.is-bad]="!isChangeGood(indicatorTile)">
+                  <i [class]="describeChange(indicatorTile) === 'up' ? 'fas fa-arrow-trend-up' : 'fas fa-arrow-trend-down'" aria-hidden="true"></i>
+                  {{ indicatorTile.change! > 0 ? '+' : '' }}{{ indicatorTile.change | number: '1.0-1' }} %
+                </span>
+              }
+            }
+            <span class="dashboard-tile-previous">{{ indicatorTile.previousText }}</span>
+          </p>
+          @if (indicatorTile.sparklineValues.length > 1) {
+            <app-sparkline [values]="indicatorTile.sparklineValues" />
+          }
+        }
+      </article>
+    }
   </div>
 
-  @if (productsBelowMinimum().length > 0) {
-    <div class="surface-card dashboard-next-steps">
-      <h3 class="h6">Reponer pronto</h3>
-      <ul class="mb-0">
-        @for (product of productsBelowMinimum().slice(0, 6); track product.id) {
-          <li>{{ product.name }} <span class="text-muted">· mínimo {{ product.minimumStock }}</span></li>
-        }
+  <div class="dashboard-grid">
+    <!-- Tendencia de ventas -->
+    <article class="dashboard-card surface-card is-wide">
+      <header class="dashboard-card-header">
+        <div>
+          <h3 class="dashboard-card-title">Ventas por día</h3>
+          <p class="dashboard-card-hint">Pasa el cursor por el gráfico para ver el detalle de cada día.</p>
+        </div>
+      </header>
+      <app-data-chart [configuration]="salesTrendChart()" [accessibleSummary]="salesTrendSummary()" height="280px" />
+      <details class="dashboard-data-table">
+        <summary>Ver datos</summary>
+        <table class="table table-sm panel-table">
+          <thead><tr><th scope="col">Día</th><th scope="col" class="text-end">Pedidos</th><th scope="col" class="text-end">Ventas</th></tr></thead>
+          <tbody>
+            @for (daySales of dailySales(); track daySales.date.getTime()) {
+              @if (daySales.orderCount > 0) {
+                <tr><td>{{ daySales.date | date: 'EEE dd/MM' }}</td><td class="text-end">{{ daySales.orderCount }}</td>
+                  <td class="text-end">{{ daySales.salesTotal | currency: 'PEN' : 'S/ ' }}</td></tr>
+              }
+            }
+          </tbody>
+        </table>
+      </details>
+    </article>
+
+    <!-- Lo urgente -->
+    <article class="dashboard-card surface-card">
+      <h3 class="dashboard-card-title">Requiere atención</h3>
+      <ul class="dashboard-attention">
+        <li>
+          <a routerLink="/admin/pedidos">
+            <span class="dashboard-attention-icon is-warning"><i class="fas fa-file-prescription" aria-hidden="true"></i></span>
+            <span class="dashboard-attention-text">Recetas por validar</span>
+            <strong>{{ pendingPrescriptionsCount() }}</strong>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/pedidos">
+            <span class="dashboard-attention-icon"><i class="fas fa-list-check" aria-hidden="true"></i></span>
+            <span class="dashboard-attention-text">Pedidos en curso</span>
+            <strong>{{ activeOrdersCount() }}</strong>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/stock">
+            <span class="dashboard-attention-icon is-warning"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i></span>
+            <span class="dashboard-attention-text">Productos bajo el mínimo</span>
+            <strong>{{ productsBelowMinimum().length }}</strong>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/admin/reclamos">
+            <span class="dashboard-attention-icon is-alert"><i class="fas fa-comment-medical" aria-hidden="true"></i></span>
+            <span class="dashboard-attention-text">Reclamos sin responder</span>
+            <strong>{{ pendingClaimsCount() }}</strong>
+          </a>
+        </li>
       </ul>
-    </div>
-  }
+      @if (productsBelowMinimum().length > 0) {
+        <p class="dashboard-card-hint mb-1">Reponer pronto:</p>
+        <ul class="dashboard-restock">
+          @for (product of productsBelowMinimum().slice(0, 4); track product.id) {
+            <li>{{ product.name }}</li>
+          }
+        </ul>
+        <a class="btn btn-sm btn-outline-primary w-100" routerLink="/admin/cotizaciones">Cotizar reposición</a>
+      }
+    </article>
+
+    <!-- Estados -->
+    <article class="dashboard-card surface-card">
+      <h3 class="dashboard-card-title">Pedidos por estado</h3>
+      @if (ordersByStatus().length) {
+        <app-data-chart [configuration]="ordersByStatusChart()" height="240px"
+          [accessibleSummary]="'Pedidos por estado en el período: ' + ordersByStatus().length + ' estados.'" />
+      } @else {
+        <p class="dashboard-empty">Sin pedidos en el período.</p>
+      }
+    </article>
+
+    <!-- Cómo compran -->
+    <article class="dashboard-card surface-card">
+      <h3 class="dashboard-card-title">¿Cómo compran?</h3>
+      <p class="dashboard-card-hint">Pedidos del período, sin contar cancelados.</p>
+      @for (shareBar of shareBars(); track shareBar.title) {
+        <div class="dashboard-share">
+          <p class="dashboard-share-title">{{ shareBar.title }}</p>
+          @if (shareBar.segments.length) {
+            <div class="dashboard-share-bar" role="img" [attr.aria-label]="shareBar.accessibleSummary">
+              @for (segment of shareBar.segments; track segment.label) {
+                <span class="dashboard-share-segment" [style.flex-grow]="segment.count" [style.background]="segment.color"
+                  [title]="segment.label + ': ' + segment.count + ' (' + segment.percentage + ' %)'"></span>
+              }
+            </div>
+            <ul class="dashboard-share-legend">
+              @for (segment of shareBar.segments; track segment.label) {
+                <li>
+                  <span class="dashboard-share-swatch" [style.background]="segment.color" aria-hidden="true"></span>
+                  {{ segment.label }} <strong>{{ segment.percentage }} %</strong> <span class="text-muted">({{ segment.count }})</span>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="dashboard-empty">Sin datos.</p>
+          }
+        </div>
+      }
+    </article>
+
+    <!-- Calidad de atención -->
+    <article class="dashboard-card surface-card">
+      <h3 class="dashboard-card-title">Calidad de atención</h3>
+      <dl class="dashboard-quality">
+        <div>
+          <dt>Tiempo promedio de atención</dt>
+          <dd>{{ averageFulfillmentTime() ?? 'Sin datos' }}</dd>
+          <p class="dashboard-card-hint">Desde el pedido online hasta la entrega.</p>
+        </div>
+        <div>
+          <dt>Satisfacción del cliente</dt>
+          <dd>
+            @if (averageRating(); as rating) {
+              {{ rating | number: '1.1-1' }} <span class="dashboard-quality-scale">/ 5</span>
+              <span class="dashboard-stars" [attr.aria-label]="rating + ' de 5 estrellas'">
+                @for (star of ratingStars; track star) {
+                  <i class="fa-star" [class.fas]="star <= rating + 0.25" [class.far]="star > rating + 0.25" aria-hidden="true"></i>
+                }
+              </span>
+            } @else {
+              Sin datos
+            }
+          </dd>
+          <p class="dashboard-card-hint">{{ ratings().length }} calificaciones de pedidos entregados.</p>
+        </div>
+      </dl>
+    </article>
+
+    <!-- Boticas -->
+    @if (isShowingAllBranches()) {
+      <article class="dashboard-card surface-card">
+        <h3 class="dashboard-card-title">Ventas por botica</h3>
+        @if (salesByBranch().length) {
+          <app-data-chart [configuration]="salesByBranchChart()" [height]="(salesByBranch().length * 38 + 30) + 'px'"
+            [accessibleSummary]="'Ventas por botica. Lidera ' + salesByBranch()[0].label + '.'" />
+        } @else {
+          <p class="dashboard-empty">Sin ventas en el período.</p>
+        }
+      </article>
+    }
+
+    <!-- Productos -->
+    <article class="dashboard-card surface-card" [class.is-wide]="!isShowingAllBranches()">
+      <h3 class="dashboard-card-title">Productos más vendidos</h3>
+      @if (bestSellingProducts().length) {
+        <app-data-chart [configuration]="bestSellingProductsChart()" [height]="(bestSellingProducts().length * 38 + 30) + 'px'"
+          [accessibleSummary]="'Productos más vendidos. El primero es ' + bestSellingProducts()[0].productName + '.'" />
+      } @else {
+        <p class="dashboard-empty">Sin ventas en el período.</p>
+      }
+    </article>
+
+    <!-- Horas -->
+    <article class="dashboard-card surface-card is-wide">
+      <header class="dashboard-card-header">
+        <div>
+          <h3 class="dashboard-card-title">Pedidos por hora del día</h3>
+          <p class="dashboard-card-hint">
+            @if (busiestHour() !== null) {
+              La hora con más pedidos es de {{ busiestHour() }}:00 a {{ busiestHour() }}:59: refuerza el personal en ese horario.
+            } @else {
+              Aún no hay pedidos en el período.
+            }
+          </p>
+        </div>
+      </header>
+      <app-data-chart [configuration]="ordersByHourChart()" height="200px"
+        [accessibleSummary]="busiestHour() !== null ? 'Pedidos por hora del día; el máximo es a las ' + busiestHour() + ' horas.' : 'Pedidos por hora del día: sin datos.'" />
+    </article>
+  </div>
 </section>

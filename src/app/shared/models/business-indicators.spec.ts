@@ -3,7 +3,12 @@ import {
   calculateAverageFulfillmentMinutes,
   calculateAverageRating,
   calculateCorrectFulfillmentRate,
+  calculatePercentageChange,
   calculateSalesTotal,
+  countOrdersBy,
+  countOrdersByHourOfDay,
+  filterOrdersCreatedBetween,
+  groupSalesByBranch,
   formatDurationInMinutes,
   groupSalesByDay,
   rankBestSellingProducts,
@@ -85,5 +90,37 @@ describe('indicadores del T2', () => {
   it('promedia las calificaciones con un decimal', () => {
     expect(calculateAverageRating([5, 4, 4])).toBe(4.3);
     expect(calculateAverageRating([])).toBeNull();
+  });
+});
+
+describe('comparaciones y distribuciones del dashboard', () => {
+  it('calcula la variación frente al período anterior', () => {
+    expect(calculatePercentageChange(150, 100)).toBe(50);
+    expect(calculatePercentageChange(80, 100)).toBe(-20);
+    expect(calculatePercentageChange(30, 0)).toBeNull();
+  });
+
+  it('separa los pedidos por rango de fechas', () => {
+    const lastWeek = new Date(2026, 10, 8);
+    const orders = [createOrder('delivered', 10, today), createOrder('delivered', 10, lastWeek)];
+    expect(filterOrdersCreatedBetween(orders, new Date(2026, 10, 14), new Date(2026, 10, 16))).toHaveLength(1);
+  });
+
+  it('agrupa ventas por botica sin contar cancelados', () => {
+    const orders = [
+      createOrder('delivered', 30, today, { branchName: 'El Bosque' }),
+      createOrder('delivered', 50, today, { branchName: 'El Molino' }),
+      createOrder('cancelled', 999, today, { branchName: 'El Bosque' }),
+    ];
+    expect(groupSalesByBranch(orders)).toEqual([
+      { label: 'El Molino', amount: 50 },
+      { label: 'El Bosque', amount: 30 },
+    ]);
+  });
+
+  it('cuenta pedidos por hora del día y por característica', () => {
+    const orders = [createOrder('delivered', 10, today), createOrder('confirmed', 10, today)];
+    expect(countOrdersByHourOfDay(orders)[10]).toBe(2);
+    expect(countOrdersBy(orders, (order) => order.status).get('delivered')).toBe(1);
   });
 });

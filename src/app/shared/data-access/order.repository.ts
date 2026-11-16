@@ -83,6 +83,28 @@ export class OrderRepository {
     return ordersSnapshot.docs.map((orderDocument) => this.mapDocumentToOrder(orderDocument.id, orderDocument.data()));
   }
 
+  /** Igual que findOrdersSince, pero en TIEMPO REAL: el dashboard se actualiza solo. */
+  watchOrdersSince(
+    branchId: string,
+    sinceDate: Date,
+    onOrders: OrdersListener,
+    onError: ListenerErrorHandler,
+  ): Unsubscribe {
+    const branchFilter = branchId ? [where('branchId', '==', branchId)] : [];
+    const ordersQuery = query(
+      collection(firestoreDatabase, ORDERS_COLLECTION),
+      ...branchFilter,
+      where('createdAt', '>=', Timestamp.fromDate(sinceDate)),
+      orderBy('createdAt', 'desc'),
+    );
+    return onSnapshot(
+      ordersQuery,
+      (ordersSnapshot) =>
+        onOrders(ordersSnapshot.docs.map((orderDocument) => this.mapDocumentToOrder(orderDocument.id, orderDocument.data()))),
+      onError,
+    );
+  }
+
   async createOrder(orderRequest: CreateOrderRequest): Promise<CreatedOrder> {
     return this.apiClient.postJson<CreatedOrder>('create-order', orderRequest);
   }

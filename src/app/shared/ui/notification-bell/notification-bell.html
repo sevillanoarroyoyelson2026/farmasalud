@@ -1,0 +1,64 @@
+<button type="button" class="bell-button" [class.has-unread]="unreadNotifications().length > 0"
+  [attr.aria-expanded]="isPanelOpen()" aria-controls="notification-panel"
+  [attr.aria-label]="unreadNotifications().length ? 'Notificaciones: ' + unreadNotifications().length + ' sin leer' : 'Notificaciones'"
+  (click)="togglePanel()">
+  <i class="fas fa-bell" aria-hidden="true"></i>
+  @if (unreadNotifications().length > 0) {
+    <span class="bell-count" aria-hidden="true">{{ unreadCountLabel() }}</span>
+  }
+</button>
+
+@if (isPanelOpen()) {
+  <section id="notification-panel" class="bell-panel" role="dialog" aria-label="Notificaciones">
+    <header class="bell-panel-header">
+      <h2 class="bell-panel-title">Notificaciones</h2>
+      @if (unreadNotifications().length > 0) {
+        <button type="button" class="bell-mark-all" (click)="markAllAsRead()">Marcar todas como leídas</button>
+      }
+    </header>
+
+    @if (notifications().length === 0) {
+      <div class="bell-empty">
+        <i class="fas fa-circle-check" aria-hidden="true"></i>
+        <p>Todo en orden: ningún producto está bajo el mínimo.</p>
+      </div>
+    } @else {
+      <ul class="bell-list">
+        @for (notification of notifications(); track notification.id) {
+          <li>
+            <button type="button" class="bell-item" [class.is-unread]="isUnread(notification)" (click)="openNotification(notification)">
+              <span class="bell-item-icon" [class.is-out]="notification.severity === 'out_of_stock'" aria-hidden="true">
+                <i [class]="notification.severity === 'out_of_stock' ? 'fas fa-box-open' : 'fas fa-triangle-exclamation'"></i>
+              </span>
+              <span class="bell-item-body">
+                <span class="bell-item-title">
+                  {{ notification.severity === 'out_of_stock' ? 'Agotado' : 'Stock bajo' }}: {{ notification.productName }}
+                </span>
+                <span class="bell-item-detail">
+                  {{ notification.branchName }} · quedan {{ notification.availableUnits }} (mínimo {{ notification.minimumStock }})
+                </span>
+                <span class="bell-item-time">{{ describeElapsedTime(notification.createdAt) }}</span>
+              </span>
+              @if (isUnread(notification)) {
+                <span class="bell-unread-dot" aria-label="Sin leer"></span>
+              }
+            </button>
+          </li>
+        }
+      </ul>
+      <p class="bell-footnote">Desaparecen solas cuando el stock se repone.</p>
+    }
+  </section>
+}
+
+@if (toastNotification(); as toast) {
+  <div class="bell-toast" role="status" aria-live="polite">
+    <i class="fas fa-triangle-exclamation bell-toast-icon" aria-hidden="true"></i>
+    <div class="bell-toast-body">
+      <strong>{{ toast.severity === 'out_of_stock' ? 'Producto agotado' : 'Stock bajo el mínimo' }}</strong>
+      <span>{{ toast.productName }} · {{ toast.branchName }} ({{ toast.availableUnits }} u.)</span>
+    </div>
+    <button type="button" class="btn btn-sm btn-primary" (click)="openNotification(toast)">Ver</button>
+    <button type="button" class="btn-close" aria-label="Cerrar aviso" (click)="dismissToast()"></button>
+  </div>
+}

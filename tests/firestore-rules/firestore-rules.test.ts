@@ -187,6 +187,37 @@ describe('compras, reclamos y reseñas', () => {
   });
 });
 
+describe('notificaciones de stock bajo', () => {
+  const notificationPath = 'notifications/low-stock__el-bosque__paracetamol';
+  beforeEach(async () => {
+    await rulesTestEnvironment.withSecurityRulesDisabled(async (adminContext) => {
+      await setDoc(doc(adminContext.firestore(), notificationPath), {
+        branchId: 'el-bosque', productId: 'paracetamol', status: 'active', availableUnits: 3, readByUids: [],
+      });
+    });
+  });
+
+  it('solo el personal de esa botica (y el admin) la ve', async () => {
+    await assertSucceeds(getDoc(doc(firestoreAs(WORKER_UID, 'worker', 'el-bosque'), notificationPath)));
+    await assertSucceeds(getDoc(doc(firestoreAs(ADMIN_UID, 'admin'), notificationPath)));
+    await assertFails(getDoc(doc(firestoreAs(WORKER_UID, 'worker', 'la-esperanza'), notificationPath)));
+    await assertFails(getDoc(doc(firestoreAs(CUSTOMER_UID, 'customer'), notificationPath)));
+  });
+
+  it('el trabajador la marca como leída solo en su propio nombre', async () => {
+    const workerDatabase = firestoreAs(WORKER_UID, 'worker', 'el-bosque');
+    await assertSucceeds(updateDoc(doc(workerDatabase, notificationPath), { readByUids: [WORKER_UID] }));
+    await assertFails(updateDoc(doc(workerDatabase, notificationPath), { readByUids: [WORKER_UID, 'otro-usuario'] }));
+  });
+
+  it('nadie la resuelve, crea ni cambia sus cifras desde el navegador', async () => {
+    const adminDatabase = firestoreAs(ADMIN_UID, 'admin');
+    await assertFails(updateDoc(doc(adminDatabase, notificationPath), { status: 'resolved' }));
+    await assertFails(updateDoc(doc(adminDatabase, notificationPath), { availableUnits: 99 }));
+    await assertFails(setDoc(doc(adminDatabase, 'notifications/falsa'), { branchId: 'el-bosque', status: 'active' }));
+  });
+});
+
 describe('auditoría', () => {
   it('solo el admin lee la auditoría y nadie la escribe', async () => {
     await assertSucceeds(getDoc(doc(firestoreAs(ADMIN_UID, 'admin'), 'audit_logs', 'log-1')));

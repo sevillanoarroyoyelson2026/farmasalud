@@ -12,6 +12,7 @@ import { buildPrescriptionFolder } from '../lib/cloudinary';
 import { chargeCardWithCulqi, isCulqiPaymentEnabled } from '../lib/culqi';
 import { notifyOrderRegistered } from '../lib/email-notifications';
 import { writeStockReleaseForOrder } from '../lib/order-stock-release';
+import { refreshLowStockNotifications } from '../lib/low-stock-notifications';
 import { adminFirestore } from '../lib/firebase-admin';
 import {
   createErrorResponse,
@@ -405,6 +406,13 @@ export const handler: Handler = async (requestEvent) => {
         createdOrder.orderNumber,
         createdOrder.orderTotal,
         createdOrder.requiresPrescription,
+      );
+    }
+
+    if (createdOrder.isNewOrder) {
+      await refreshLowStockNotifications(
+        orderRequest.items.map((orderItem) => orderItem.productId),
+        [orderRequest.branchId],
       );
     }
 

@@ -223,6 +223,20 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    // ---------------------------------------------------------------- notificaciones
+    // Alertas de stock bajo: las crea y resuelve el servidor. El admin ve todas y el
+    // trabajador solo las de su botica. Lo único que el personal puede hacer es
+    // marcarlas como leídas agregando SU propio uid a readByUids.
+    match /notifications/{notificationId} {
+      allow read: if isStaffMember() && canOperateInBranch(resource.data.branchId);
+      allow update: if isStaffMember()
+        && canOperateInBranch(resource.data.branchId)
+        && changesOnlyFields(['readByUids'])
+        && request.resource.data.readByUids.hasAll(resource.data.readByUids)
+        && request.resource.data.readByUids.removeAll(resource.data.readByUids).hasOnly([request.auth.uid]);
+      allow create, delete: if false;
+    }
+
     // Correlativos (número de pedido, de orden de compra): solo el servidor.
     match /counters/{counterId} {
       allow read, write: if false;

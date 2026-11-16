@@ -1,0 +1,272 @@
+:host {
+  position: relative;
+  display: inline-flex;
+}
+
+.bell-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+}
+
+.bell-button:hover,
+.bell-button[aria-expanded='true'] {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* La campana "suena" una vez cuando hay alertas sin leer */
+.bell-button.has-unread i {
+  color: var(--color-primary);
+  animation: bell-ring 1.2s var(--ease-out-expo) 1;
+  transform-origin: 50% 0;
+}
+
+@keyframes bell-ring {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(14deg); }
+  40% { transform: rotate(-12deg); }
+  60% { transform: rotate(8deg); }
+  80% { transform: rotate(-4deg); }
+}
+
+.bell-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  display: grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.3rem;
+  border: 2px solid #fff;
+  border-radius: var(--radius-pill);
+  background: var(--route-alert);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.bell-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 60;
+  width: min(380px, calc(100vw - 1.5rem));
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  box-shadow: var(--shadow-raised);
+}
+
+.bell-panel-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.bell-panel-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.bell-mark-all {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.bell-mark-all:hover {
+  text-decoration: underline;
+}
+
+.bell-list {
+  padding: 0.25rem 0;
+  margin: 0;
+  list-style: none;
+}
+
+.bell-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 0;
+  background: none;
+  text-align: left;
+  transition: background var(--transition-base);
+}
+
+.bell-item:hover,
+.bell-item:focus-visible {
+  background: var(--color-primary-soft);
+}
+
+.bell-item.is-unread {
+  background: #fffaf3;
+}
+
+.bell-item-icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+  font-size: 0.85rem;
+}
+
+.bell-item-icon.is-out {
+  background: var(--route-alert-wash);
+  color: var(--route-alert);
+}
+
+.bell-item-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.bell-item-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.bell-item.is-unread .bell-item-title {
+  font-weight: 700;
+}
+
+.bell-item-detail {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.bell-item-time {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.bell-unread-dot {
+  flex-shrink: 0;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.bell-empty {
+  padding: 2rem 1.25rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+.bell-empty i {
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  color: var(--route-live);
+}
+
+.bell-empty p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.bell-footnote {
+  margin: 0;
+  padding: 0.6rem 1rem 0.8rem;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* -- Aviso emergente cuando entra una alerta nueva -- */
+.bell-toast {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1080;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(420px, calc(100vw - 2rem));
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--color-warning);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  box-shadow: var(--shadow-raised);
+  animation: bell-toast-in 0.35s var(--ease-out-expo);
+}
+
+.bell-toast-icon {
+  color: var(--color-warning);
+  font-size: 1.1rem;
+}
+
+.bell-toast-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 0.85rem;
+}
+
+.bell-toast-body span {
+  color: var(--color-text-secondary);
+}
+
+@keyframes bell-toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  /* En el celular la barra inferior del panel ocupa el borde: el aviso sube */
+  .bell-toast {
+    right: 0.75rem;
+    bottom: 5.5rem;
+    left: 0.75rem;
+    width: auto;
+  }
+
+  .bell-panel {
+    position: fixed;
+    top: 4.25rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bell-button.has-unread i,
+  .bell-toast {
+    animation: none;
+  }
+}
