@@ -15,7 +15,8 @@
     "test:rules": "firebase emulators:exec --only firestore --project demo-farmasalud-rules \"vitest run -c vitest.rules.config.mts\"",
     "emulators:auth": "firebase emulators:start --only auth --project demo-farmasalud",
     "seed:auth": "node scripts/seed-auth-emulator.mjs",
-    "test:e2e": "node scripts/e2e-smoke-test.mjs"
+    "test:e2e": "node scripts/e2e-smoke-test.mjs",
+    "seed:demo": "node scripts/seed-demo-data.mjs"
   },
   "private": true,
   "packageManager": "npm@12.2.0",
