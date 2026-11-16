@@ -4,6 +4,7 @@
  * aquí solo se replican para decidir qué botones mostrar.
  */
 export type OrderStatus =
+  | 'pending_payment'
   | 'pending_prescription'
   | 'confirmed'
   | 'preparing'
@@ -23,8 +24,8 @@ export type OrderAction =
   | 'cancel_by_customer';
 
 export type FulfillmentType = 'delivery' | 'pickup';
-export type PaymentMethod = 'simulated_card' | 'cash_on_delivery';
-export type PaymentStatus = 'paid' | 'pending' | 'refunded';
+export type PaymentMethod = 'culqi_card' | 'simulated_card' | 'cash_on_delivery';
+export type PaymentStatus = 'paid' | 'pending' | 'refunded' | 'failed' | 'refund_failed';
 export type PrescriptionReviewStatus = 'pending' | 'approved' | 'rejected';
 
 export interface OrderItem {
@@ -86,6 +87,7 @@ export interface CreateOrderRequest {
   contactPhone: string;
   paymentMethod: PaymentMethod;
   simulatedCardLastDigits: string | null;
+  culqiToken: string | null;
   prescriptionFile: { publicId: string; version: number; format: string } | null;
   customerNote: string;
 }
@@ -93,6 +95,7 @@ export interface CreateOrderRequest {
 export const DELIVERY_FEE_IN_SOLES = 6;
 
 export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+  pending_payment: 'Procesando pago',
   pending_prescription: 'Validando receta',
   confirmed: 'Confirmado',
   preparing: 'En preparación',
@@ -104,6 +107,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
 
 /** Clase de `status-badge` para cada estado. */
 export const ORDER_STATUS_TONE: Record<OrderStatus, string> = {
+  pending_payment: 'is-neutral',
   pending_prescription: 'is-warning',
   confirmed: 'is-info',
   preparing: 'is-info',
@@ -122,6 +126,7 @@ export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
 ];
 
 export const PAYMENT_METHOD_LABEL: Record<PaymentMethod, string> = {
+  culqi_card: 'Tarjeta (Culqi)',
   simulated_card: 'Tarjeta (pago simulado)',
   cash_on_delivery: 'Pago al recibir',
 };
@@ -130,6 +135,8 @@ export const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
   paid: 'Pagado',
   pending: 'Por cobrar',
   refunded: 'Reembolsado',
+  failed: 'Rechazado',
+  refund_failed: 'Devolución pendiente',
 };
 
 export interface OrderActionDefinition {

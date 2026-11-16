@@ -4,6 +4,8 @@
  * no repartir if/else por las functions.
  */
 export type OrderStatus =
+  /** Esperando la confirmación de Culqi (segundos). El personal no lo ve. */
+  | 'pending_payment'
   | 'pending_prescription'
   | 'confirmed'
   | 'preparing'

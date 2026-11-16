@@ -1,7 +1,9 @@
 import type { Handler } from '@netlify/functions';
-import { FieldPath, FieldValue, Timestamp } from 'firebase-admin/firestore';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import { recordAuditEvent } from '../lib/audit-log';
+import { refundCulqiCharge } from '../lib/culqi';
+import { notifyOrderStatusChanged } from '../lib/email-notifications';
 import { adminFirestore } from '../lib/firebase-admin';
 import {
   createErrorResponse,
@@ -15,9 +17,9 @@ import {
   type FulfillmentType,
   type OrderStatus,
 } from '../lib/order-workflow';
+import { writeStockReleaseForOrder } from '../lib/order-stock-release';
 import { enforceRateLimit } from '../lib/rate-limiter';
 import { authenticateCallerWithRole, parseRequestBody } from '../lib/request-guard';
-import type { LotAllocation } from '../lib/stock-allocation';
 
 const FUNCTION_NAME = 'update-order-status';
 
@@ -38,12 +40,6 @@ const updateOrderStatusSchema = z
     courierName: z.string().trim().max(80).nullable(),
   })
   .strict();
-
-interface StoredOrderItem {
-  productId: string;
-  quantity: number;
-  allocatedLots: LotAllocation[];
-}
 
 /**
  * Avanza un pedido por su flujo (validar receta → preparar → despachar → entregar)
@@ -121,37 +117,36 @@ export const handler: Handler = async (requestEvent) => {
         if (orderSnapshot.get('payment.status') === 'paid') {
           orderUpdate['payment.status'] = 'refunded';
         }
-        for (const orderItem of orderSnapshot.get('items') as StoredOrderItem[]) {
-          const productReference = adminFirestore.collection('products').doc(orderItem.productId);
-          for (const lotAllocation of orderItem.allocatedLots) {
-            transaction.update(productReference.collection('lots').doc(lotAllocation.lotId), {
-              quantityAvailable: FieldValue.increment(lotAllocation.quantity),
-              updatedAt: FieldValue.serverTimestamp(),
-            });
-            transaction.set(adminFirestore.collection('stock_movements').doc(), {
-              productId: orderItem.productId,
-              branchId: orderBranchId,
-              lotId: lotAllocation.lotId,
-              lotNumber: lotAllocation.lotNumber,
-              movementType: 'entry',
-              reason: 'order_cancelled',
-              quantity: lotAllocation.quantity,
-              orderId: orderReference.id,
-              performedByUid: caller.uid,
-              createdAt: FieldValue.serverTimestamp(),
-            });
-          }
-          transaction.update(
-            productReference,
-            new FieldPath('stockByBranch', orderBranchId),
-            FieldValue.increment(orderItem.quantity),
-          );
-        }
+        writeStockReleaseForOrder(transaction, orderSnapshot, caller.uid, 'order_cancelled');
       }
 
       transaction.update(orderReference, orderUpdate);
-      return { orderNumber: orderSnapshot.get('orderNumber') as string, nextStatus };
+      return {
+        orderNumber: orderSnapshot.get('orderNumber') as string,
+        nextStatus,
+        customerEmail: (orderSnapshot.get('customerEmail') as string) ?? '',
+        culqiChargeIdToRefund:
+          nextStatus === 'cancelled' && orderSnapshot.get('payment.status') === 'paid'
+            ? ((orderSnapshot.get('payment.culqiChargeId') as string | null) ?? null)
+            : null,
+        orderTotal: orderSnapshot.get('orderTotal') as number,
+      };
     });
+
+    // Pago real con Culqi: la cancelación devuelve el dinero en la pasarela.
+    if (updatedOrder.culqiChargeIdToRefund) {
+      const isRefunded = await refundCulqiCharge(updatedOrder.culqiChargeIdToRefund, updatedOrder.orderTotal);
+      if (!isRefunded) {
+        await orderReference.update({ 'payment.status': 'refund_failed', updatedAt: FieldValue.serverTimestamp() });
+      }
+    }
+    await notifyOrderStatusChanged(
+      updatedOrder.customerEmail,
+      statusRequest.orderId,
+      updatedOrder.orderNumber,
+      updatedOrder.nextStatus,
+      statusRequest.note,
+    );
 
     if (
       statusRequest.action === 'approve_prescription' ||

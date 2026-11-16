@@ -216,16 +216,11 @@ service cloud.firestore {
     }
 
     // ---------------------------------------------------------------- reclamos
-    // Se registran con la function submit-claim (número correlativo). El admin responde.
+    // Libro de Reclamaciones: número correlativo y respuesta solo desde el servidor.
     match /claims/{claimId} {
       allow read: if isAdmin() || (isSignedIn() && resource.data.customerUid == request.auth.uid);
-      allow create, delete: if false;
-      allow update: if isAdmin()
-        && changesOnlyFields(['status', 'response', 'respondedByUid', 'respondedAt', 'updatedAt'])
-        && request.resource.data.status in ['open', 'in_review', 'resolved']
-        && isShortText(request.resource.data.response, 0, 2000)
-        && request.resource.data.respondedByUid == request.auth.uid
-        && request.resource.data.updatedAt == request.time;
+      // Se crean con submit-claim y se responden con respond-claim (envía el correo al cliente).
+      allow write: if false;
     }
 
     // Correlativos (número de pedido, de orden de compra): solo el servidor.

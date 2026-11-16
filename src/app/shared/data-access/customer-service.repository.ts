@@ -7,7 +7,6 @@ import {
   query,
   serverTimestamp,
   setDoc,
-  updateDoc,
   where,
   type DocumentData,
 } from 'firebase/firestore';
@@ -42,14 +41,9 @@ export class CustomerServiceRepository {
     return this.sortClaimsByNewest(claimsSnapshot.docs.map((claimDocument) => this.mapDocumentToClaim(claimDocument.id, claimDocument.data())));
   }
 
-  async respondToClaim(claimId: string, status: ClaimStatus, response: string, administratorUid: string): Promise<void> {
-    await updateDoc(doc(firestoreDatabase, 'claims', claimId), {
-      status,
-      response,
-      respondedByUid: administratorUid,
-      respondedAt: status === 'resolved' ? serverTimestamp() : null,
-      updatedAt: serverTimestamp(),
-    });
+  /** La respuesta va por el servidor: así el cliente también la recibe por correo. */
+  async respondToClaim(claimId: string, status: ClaimStatus, response: string): Promise<void> {
+    await this.apiClient.postJson('respond-claim', { claimId, status, response });
   }
 
   // ------------------------------------------------------------ reseñas

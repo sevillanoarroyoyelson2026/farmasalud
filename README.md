@@ -45,7 +45,8 @@ Usuarios de prueba: `admin@farmasalud.test`, `trabajador@farmasalud.test`, `clie
 | Comando | Uso |
 |---|---|
 | `npm test` | Pruebas unitarias (Vitest) |
-| `npm run test:rules` | Pruebas de reglas de Firestore en el emulador |
+| `npm run test:rules` | Pruebas de reglas de Firestore en el emulador (requiere Java 11+) |
+| `npm run test:e2e` | Prueba de punta a punta contra Firebase real con `npm run dev:full` encendido; crea datos de prueba y los borra al terminar |
 | `npm run typecheck:functions` | Revisión de tipos de las functions |
 | `npm run build` | Build de producción |
 | `npm run audit:security` | `npm audit` de dependencias de producción |
@@ -63,6 +64,8 @@ Variables de entorno (Site configuration → Environment variables). Todas son *
 | `CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary |
 | `CLOUDINARY_API_KEY` | API key de Cloudinary |
 | `CLOUDINARY_API_SECRET` | API secret de Cloudinary |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_FROM` | Opcionales: correos al cliente (pedido registrado, cambios de estado, respuesta a reclamos). Sin ellas no se envían correos y todo lo demás funciona igual |
+| `CULQI_SECRET_KEY` | Opcional: cobro real con Culqi (requiere además `culqiPublicKey` en `environment.ts`). Sin ella, pago simulado |
 
 **No** crear en Netlify `FIREBASE_AUTH_EMULATOR_HOST`, `FIRESTORE_EMULATOR_HOST` ni `FIREBASE_PROJECT_ID` (son solo para emuladores locales).
 

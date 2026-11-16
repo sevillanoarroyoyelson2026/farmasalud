@@ -143,6 +143,50 @@ describe('pedidos', () => {
   });
 });
 
+describe('compras, reclamos y reseñas', () => {
+  beforeEach(async () => {
+    await rulesTestEnvironment.withSecurityRulesDisabled(async (adminContext) => {
+      const seedDatabase = adminContext.firestore();
+      await setDoc(doc(seedDatabase, 'purchase_orders', 'oc-1'), { branchId: 'el-bosque', status: 'issued', orderTotal: 100 });
+      await setDoc(doc(seedDatabase, 'claims', 'reclamo-1'), { customerUid: CUSTOMER_UID, status: 'open', response: '' });
+      await setDoc(doc(seedDatabase, 'orders', 'pedido-entregado'), { customerUid: CUSTOMER_UID, branchId: 'el-bosque', status: 'delivered' });
+      await setDoc(doc(seedDatabase, 'orders', 'pedido-en-curso'), { customerUid: CUSTOMER_UID, branchId: 'el-bosque', status: 'preparing' });
+    });
+  });
+
+  it('las órdenes de compra solo las ve el personal de esa botica y nadie las escribe', async () => {
+    await assertSucceeds(getDoc(doc(firestoreAs(WORKER_UID, 'worker', 'el-bosque'), 'purchase_orders', 'oc-1')));
+    await assertFails(getDoc(doc(firestoreAs(WORKER_UID, 'worker', 'la-esperanza'), 'purchase_orders', 'oc-1')));
+    await assertFails(getDoc(doc(firestoreAs(CUSTOMER_UID, 'customer'), 'purchase_orders', 'oc-1')));
+    await assertFails(updateDoc(doc(firestoreAs(ADMIN_UID, 'admin'), 'purchase_orders', 'oc-1'), { status: 'received' }));
+  });
+
+  it('solo el admin registra proveedores y con RUC válido', async () => {
+    const validSupplier = {
+      name: 'Droguería Norte', ruc: '20123456789', contactName: '', phone: '', email: '', address: '',
+      paymentTerms: 'Contado', deliveryDays: 3, isActive: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+    };
+    await assertFails(setDoc(doc(firestoreAs(WORKER_UID, 'worker', 'el-bosque'), 'suppliers', '20123456789'), validSupplier));
+    await assertFails(setDoc(doc(firestoreAs(ADMIN_UID, 'admin'), 'suppliers', 'malo'), { ...validSupplier, ruc: '123' }));
+    await assertSucceeds(setDoc(doc(firestoreAs(ADMIN_UID, 'admin'), 'suppliers', '20123456789'), validSupplier));
+  });
+
+  it('el reclamo lo ve su dueño y nadie lo modifica desde el navegador', async () => {
+    await assertSucceeds(getDoc(doc(firestoreAs(CUSTOMER_UID, 'customer'), 'claims', 'reclamo-1')));
+    await assertFails(getDoc(doc(firestoreAs(OTHER_CUSTOMER_UID, 'customer'), 'claims', 'reclamo-1')));
+    await assertFails(updateDoc(doc(firestoreAs(ADMIN_UID, 'admin'), 'claims', 'reclamo-1'), { status: 'resolved' }));
+  });
+
+  it('solo se califica un pedido propio y ya entregado', async () => {
+    const reviewFor = (orderId: string, customerUid: string) => ({
+      orderId, customerUid, branchId: 'el-bosque', rating: 5, comment: 'Excelente', createdAt: serverTimestamp(),
+    });
+    await assertSucceeds(setDoc(doc(firestoreAs(CUSTOMER_UID, 'customer'), 'reviews', 'pedido-entregado'), reviewFor('pedido-entregado', CUSTOMER_UID)));
+    await assertFails(setDoc(doc(firestoreAs(CUSTOMER_UID, 'customer'), 'reviews', 'pedido-en-curso'), reviewFor('pedido-en-curso', CUSTOMER_UID)));
+    await assertFails(setDoc(doc(firestoreAs(OTHER_CUSTOMER_UID, 'customer'), 'reviews', 'pedido-entregado'), reviewFor('pedido-entregado', OTHER_CUSTOMER_UID)));
+  });
+});
+
 describe('auditoría', () => {
   it('solo el admin lee la auditoría y nadie la escribe', async () => {
     await assertSucceeds(getDoc(doc(firestoreAs(ADMIN_UID, 'admin'), 'audit_logs', 'log-1')));

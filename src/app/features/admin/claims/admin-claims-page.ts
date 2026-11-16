@@ -1,7 +1,6 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../../core/auth/auth.service';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import { CustomerServiceRepository } from '../../../shared/data-access/customer-service.repository';
 import {
@@ -25,7 +24,6 @@ const MILLISECONDS_PER_DAY = 86_400_000;
 })
 export class AdminClaimsPage implements OnInit {
   private readonly customerServiceRepository = inject(CustomerServiceRepository);
-  private readonly authService = inject(AuthService);
   private readonly logger = inject(AppLoggerService);
 
   readonly claimTypeLabel = CLAIM_TYPE_LABEL;
@@ -77,8 +75,7 @@ export class AdminClaimsPage implements OnInit {
 
   async saveResponse(): Promise<void> {
     const claim = this.selectedClaim();
-    const administratorUid = this.authService.currentSession()?.uid;
-    if (!claim || !administratorUid) {
+    if (!claim) {
       return;
     }
     if (this.responseStatus() === 'resolved' && this.responseText().trim().length < 10) {
@@ -92,7 +89,6 @@ export class AdminClaimsPage implements OnInit {
         claim.id,
         this.responseStatus(),
         this.responseText().trim().slice(0, 2000),
-        administratorUid,
       );
       this.closeClaim();
       await this.loadClaims();

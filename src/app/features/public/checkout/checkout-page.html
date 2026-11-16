@@ -96,8 +96,8 @@
         <fieldset class="checkout-step surface-card">
           <legend class="checkout-step-title"><span>{{ cartDetails.requiresPrescription() ? 3 : 2 }}</span>Pago</legend>
           <div class="checkout-options">
-            <label class="checkout-option" [class.is-selected]="selectedPaymentMethod() === 'simulated_card'">
-              <input type="radio" formControlName="paymentMethod" value="simulated_card" />
+            <label class="checkout-option" [class.is-selected]="selectedPaymentMethod() === 'simulated_card' || selectedPaymentMethod() === 'culqi_card'">
+              <input type="radio" formControlName="paymentMethod" [value]="isRealCardPaymentEnabled ? 'culqi_card' : 'simulated_card'" />
               <i class="fas fa-credit-card" aria-hidden="true"></i>
               <span><strong>Tarjeta</strong><small>Débito o crédito</small></span>
             </label>
@@ -108,6 +108,12 @@
             </label>
           </div>
 
+          @if (selectedPaymentMethod() === 'culqi_card') {
+            <p class="checkout-pickup-note">
+              <i class="fas fa-lock me-2" aria-hidden="true"></i>
+              Al pulsar <strong>Pagar</strong> se abre el formulario seguro de <strong>Culqi</strong>. Farmasalud no ve ni guarda los datos de tu tarjeta.
+            </p>
+          }
           @if (selectedPaymentMethod() === 'simulated_card') {
             <div class="alert alert-info small mt-3 mb-0" role="note">
               <i class="fas fa-flask me-1" aria-hidden="true"></i>
@@ -165,11 +171,11 @@
         }
 
         <button type="submit" class="btn btn-primary btn-lg w-100"
-          [disabled]="isPlacingOrder() || isUploadingPrescription() || !isEmailVerified() || cartDetails.hasStockProblems()">
+          [disabled]="isPlacingOrder() || isWaitingForCardForm() || isUploadingPrescription() || !isEmailVerified() || cartDetails.hasStockProblems()">
           @if (isPlacingOrder()) {
             <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Procesando…
           } @else {
-            {{ selectedPaymentMethod() === 'simulated_card' ? 'Pagar' : 'Confirmar pedido' }} {{ orderTotal() | currency: 'PEN' : 'S/ ' }}
+            {{ selectedPaymentMethod() === 'cash_on_delivery' ? 'Confirmar pedido' : 'Pagar' }} {{ orderTotal() | currency: 'PEN' : 'S/ ' }}
           }
         </button>
         <p class="form-text mt-2 mb-0">El precio final lo confirma el sistema al registrar el pedido.</p>

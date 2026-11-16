@@ -18,5 +18,6 @@ export const environment = {
   },
   // TODO antes de publicar: site key de reCAPTCHA v3 (App Check).
   appCheckRecaptchaSiteKey: '',
-  culqiPublicKey: 'REEMPLAZAR_CULQI_PUBLIC_KEY',
+  /** Llave PÚBLICA de Culqi (pk_test_... o pk_live_...). Vacía = pago simulado. */
+  culqiPublicKey: '',
 };

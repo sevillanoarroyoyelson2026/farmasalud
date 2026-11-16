@@ -9,6 +9,9 @@ import {
 } from 'firebase-admin/firestore';
 import { z } from 'zod';
 import { buildPrescriptionFolder } from '../lib/cloudinary';
+import { chargeCardWithCulqi, isCulqiPaymentEnabled } from '../lib/culqi';
+import { notifyOrderRegistered } from '../lib/email-notifications';
+import { writeStockReleaseForOrder } from '../lib/order-stock-release';
 import { adminFirestore } from '../lib/firebase-admin';
 import {
   createErrorResponse,
@@ -61,7 +64,9 @@ const createOrderSchema = z
       .strict()
       .nullable(),
     contactPhone: z.string().regex(/^9\d{8}$/),
-    paymentMethod: z.enum(['simulated_card', 'cash_on_delivery']),
+    paymentMethod: z.enum(['culqi_card', 'simulated_card', 'cash_on_delivery']),
+    /** Token de Culqi Checkout (tkn_...): solo con paymentMethod = culqi_card. */
+    culqiToken: z.string().max(100).regex(/^tkn_[A-Za-z0-9_]+$/, 'Token no válido').nullable(),
     simulatedCardLastDigits: z.string().regex(/^\d{4}$/).nullable(),
     prescriptionFile: z
       .object({
@@ -77,6 +82,10 @@ const createOrderSchema = z
   .refine((orderRequest) => orderRequest.fulfillmentType === 'pickup' || orderRequest.deliveryAddress !== null, {
     message: 'Falta la dirección de entrega',
     path: ['deliveryAddress'],
+  })
+  .refine((orderRequest) => orderRequest.paymentMethod !== 'culqi_card' || orderRequest.culqiToken !== null, {
+    message: 'Falta el token de la tarjeta',
+    path: ['culqiToken'],
   })
   .refine(
     (orderRequest) => orderRequest.paymentMethod !== 'simulated_card' || orderRequest.simulatedCardLastDigits !== null,
@@ -150,11 +159,71 @@ function priceAndReserveOrderItems(
 }
 
 /**
+ * Cobra un pedido ya registrado (stock reservado). Si Culqi rechaza la tarjeta,
+ * el pedido se anula y el stock vuelve a sus lotes; el cliente recibe el mensaje de Culqi.
+ */
+async function chargeOrderWithCulqi(
+  orderReference: DocumentReference,
+  customerUid: string,
+  customerEmail: string,
+  culqiToken: string,
+  orderNumber: string,
+  orderTotal: number,
+  statusAfterPayment: OrderStatus,
+): Promise<void> {
+  let chargeResult;
+  try {
+    chargeResult = await chargeCardWithCulqi({
+      amountInSoles: orderTotal,
+      customerEmail,
+      cardToken: culqiToken,
+      orderId: orderReference.id,
+      orderNumber,
+    });
+  } catch (paymentError) {
+    await adminFirestore.runTransaction(async (transaction) => {
+      const orderSnapshot = await transaction.get(orderReference);
+      if (orderSnapshot.get('status') !== 'pending_payment') {
+        return;
+      }
+      writeStockReleaseForOrder(transaction, orderSnapshot, customerUid, 'payment_rejected');
+      transaction.update(orderReference, {
+        status: 'cancelled',
+        'payment.status': 'failed',
+        statusHistory: FieldValue.arrayUnion({
+          status: 'cancelled',
+          changedAt: Timestamp.now(),
+          changedByUid: customerUid,
+          note: 'Pago rechazado por la pasarela',
+        }),
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    });
+    throw paymentError;
+  }
+
+  await orderReference.update({
+    status: statusAfterPayment,
+    'payment.status': 'paid',
+    'payment.culqiChargeId': chargeResult.chargeId,
+    'payment.cardLastDigits': chargeResult.cardLastDigits,
+    statusHistory: FieldValue.arrayUnion({
+      status: statusAfterPayment,
+      changedAt: Timestamp.now(),
+      changedByUid: customerUid,
+      note: 'Pago aprobado',
+    }),
+    updatedAt: FieldValue.serverTimestamp(),
+  });
+}
+
+/**
  * Crea el pedido (procedimiento O04.02). Todo en una transacción:
  * 1. Recalcula precios desde Firestore (el navegador nunca manda precios).
  * 2. Reserva stock por lotes FEFO en la botica elegida y lo descuenta.
  * 3. Registra movimientos de stock y el pedido con su número correlativo.
- * El pago es SIMULADO (proyecto académico): no se reciben datos de tarjeta, solo los 4 últimos dígitos.
+ * Pago: Culqi real si hay CULQI_SECRET_KEY (el servidor cobra el monto que él calculó);
+ * si no, pago SIMULADO (no se reciben datos de tarjeta, solo los 4 últimos dígitos).
  */
 export const handler: Handler = async (requestEvent) => {
   const methodRejection = rejectUnsupportedMethod(requestEvent);
@@ -169,6 +238,12 @@ export const handler: Handler = async (requestEvent) => {
     }
     await enforceRateLimit(`${FUNCTION_NAME}:${customer.uid}`, 10, 600);
     const orderRequest = parseRequestBody(requestEvent, createOrderSchema);
+    if (orderRequest.paymentMethod === 'culqi_card' && !isCulqiPaymentEnabled()) {
+      throw new HttpError(400, 'El pago con tarjeta no está disponible en este momento.');
+    }
+    if (orderRequest.paymentMethod === 'simulated_card' && isCulqiPaymentEnabled()) {
+      throw new HttpError(400, 'El pago simulado está desactivado: paga con tarjeta a través de la pasarela.');
+    }
 
     if (
       orderRequest.prescriptionFile &&
@@ -194,7 +269,14 @@ export const handler: Handler = async (requestEvent) => {
         if (existingOrder.get('customerUid') !== customer.uid) {
           throw new HttpError(409, 'No se pudo registrar el pedido. Inténtalo de nuevo.');
         }
-        return { orderId: existingOrder.id, orderNumber: existingOrder.get('orderNumber') as string };
+        return {
+          orderId: existingOrder.id,
+          orderNumber: existingOrder.get('orderNumber') as string,
+          isNewOrder: false,
+          orderTotal: existingOrder.get('orderTotal') as number,
+          requiresPrescription: existingOrder.get('prescription') !== null,
+          statusAfterPayment: existingOrder.get('status') as OrderStatus,
+        };
       }
       const [branchSnapshot, orderCounterSnapshot, ...productSnapshots] = await transaction.getAll(
         branchReference,
@@ -226,8 +308,12 @@ export const handler: Handler = async (requestEvent) => {
       const itemsTotal = roundToCents(pricedItems.reduce((total, pricedItem) => total + pricedItem.subtotal, 0));
       const deliveryFee = orderRequest.fulfillmentType === 'delivery' ? DELIVERY_FEE_IN_SOLES : 0;
       const orderNumber = formatOrderNumber(((orderCounterSnapshot.get('lastOrderNumber') as number) ?? 0) + 1);
-      const initialStatus: OrderStatus = requiresPrescription ? 'pending_prescription' : 'confirmed';
-      const isPaidByCard = orderRequest.paymentMethod === 'simulated_card';
+      const statusAfterPayment: OrderStatus = requiresPrescription ? 'pending_prescription' : 'confirmed';
+      // Con Culqi, el pedido espera en "pending_payment" hasta que la pasarela confirme el cobro.
+      const isCulqiPayment = orderRequest.paymentMethod === 'culqi_card';
+      const initialStatus: OrderStatus = isCulqiPayment ? 'pending_payment' : statusAfterPayment;
+      const isPaidBySimulatedCard = orderRequest.paymentMethod === 'simulated_card';
+      const orderTotal = roundToCents(itemsTotal + deliveryFee);
 
       // ---- Escrituras
       transaction.set(orderCounterReference, { lastOrderNumber: FieldValue.increment(1) }, { merge: true });
@@ -273,12 +359,13 @@ export const handler: Handler = async (requestEvent) => {
         items: pricedItems,
         itemsTotal,
         deliveryFee,
-        orderTotal: roundToCents(itemsTotal + deliveryFee),
+        orderTotal,
         payment: {
           method: orderRequest.paymentMethod,
-          status: isPaidByCard ? 'paid' : 'pending',
-          simulatedReference: isPaidByCard ? `SIM-${randomBytes(4).toString('hex').toUpperCase()}` : null,
-          cardLastDigits: isPaidByCard ? orderRequest.simulatedCardLastDigits : null,
+          status: isPaidBySimulatedCard ? 'paid' : 'pending',
+          simulatedReference: isPaidBySimulatedCard ? `SIM-${randomBytes(4).toString('hex').toUpperCase()}` : null,
+          cardLastDigits: isPaidBySimulatedCard ? orderRequest.simulatedCardLastDigits : null,
+          culqiChargeId: null,
         },
         prescription: requiresPrescription
           ? { file: orderRequest.prescriptionFile, reviewStatus: 'pending', reviewNote: '', reviewedByUid: null }
@@ -289,10 +376,42 @@ export const handler: Handler = async (requestEvent) => {
         createdAt: FieldValue.serverTimestamp(),
         updatedAt: FieldValue.serverTimestamp(),
       });
-      return { orderId: orderReference.id, orderNumber };
+      return {
+        orderId: orderReference.id,
+        orderNumber,
+        isNewOrder: true,
+        orderTotal,
+        requiresPrescription,
+        statusAfterPayment,
+      };
     });
 
-    return createJsonResponse(requestEvent, 201, createdOrder);
+    if (createdOrder.isNewOrder && orderRequest.paymentMethod === 'culqi_card' && orderRequest.culqiToken) {
+      await chargeOrderWithCulqi(
+        orderReference,
+        customer.uid,
+        customer.email,
+        orderRequest.culqiToken,
+        createdOrder.orderNumber,
+        createdOrder.orderTotal,
+        createdOrder.statusAfterPayment,
+      );
+    }
+    if (createdOrder.isNewOrder) {
+      await notifyOrderRegistered(
+        customer.email,
+        customerName,
+        createdOrder.orderId,
+        createdOrder.orderNumber,
+        createdOrder.orderTotal,
+        createdOrder.requiresPrescription,
+      );
+    }
+
+    return createJsonResponse(requestEvent, 201, {
+      orderId: createdOrder.orderId,
+      orderNumber: createdOrder.orderNumber,
+    });
   } catch (error) {
     return createErrorResponse(requestEvent, FUNCTION_NAME, error);
   }

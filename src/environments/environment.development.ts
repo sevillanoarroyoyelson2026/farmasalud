@@ -17,5 +17,6 @@ export const environment = {
     appId: '1:1043517636428:web:049f44f96c1292a67059e9',
   },
   appCheckRecaptchaSiteKey: '',
-  culqiPublicKey: 'pk_test_REEMPLAZAR',
+  /** Llave PÚBLICA de Culqi (pk_test_... o pk_live_...). Vacía = pago simulado. */
+  culqiPublicKey: '',
 };
