@@ -60,7 +60,7 @@ Variables de entorno (Site configuration → Environment variables). Todas son *
 |---|---|
 | `FIREBASE_SERVICE_ACCOUNT_KEY` | JSON de la cuenta de servicio de Firebase, en una sola línea |
 | `ALLOWED_ORIGIN` | URL pública del sitio, p. ej. `https://farmasalud.netlify.app` (sin `/` final) |
-| `REQUIRE_APP_CHECK` | `false` (cambiar a `true` cuando se configure reCAPTCHA v3 / App Check) |
+| `REQUIRE_APP_CHECK` | `false` (cambiar a `true` cuando se configure App Check (reCAPTCHA Enterprise)) |
 | `CLOUDINARY_CLOUD_NAME` | Cloud name de Cloudinary |
 | `CLOUDINARY_API_KEY` | API key de Cloudinary |
 | `CLOUDINARY_API_SECRET` | API secret de Cloudinary |
@@ -72,7 +72,7 @@ Variables de entorno (Site configuration → Environment variables). Todas son *
 Después del primer deploy: Firebase → Authentication → Configuración → **Dominios autorizados** → agregar el dominio de Netlify (sin esto el login con Google falla).
 
 ## Producción
-1. Crear proyecto Firebase: habilitar Auth (Google + correo), Firestore, **App Check con reCAPTCHA v3** y la *password policy* (mín. 8, letras y números).
+1. Crear proyecto Firebase: habilitar Auth (Google + correo), Firestore, **App Check con reCAPTCHA Enterprise (Fraud Defense)** y la *password policy* (mín. 8, letras y números).
 2. Poner la configuración web pública en `src/environments/environment.ts`.
 3. En Netlify, variables: `FIREBASE_SERVICE_ACCOUNT_KEY`, `ALLOWED_ORIGIN`, `REQUIRE_APP_CHECK=true` (y luego las de Culqi/Cloudinary).
 4. `firebase deploy --only firestore:rules,firestore:indexes`.

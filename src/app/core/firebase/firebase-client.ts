@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, type AppCheck } from 'firebase/app-check';
 import { connectAuthEmulator, getAuth } from 'firebase/auth';
 import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
 import { environment } from '../../../environments/environment';
@@ -16,10 +16,13 @@ firebaseAuth.languageCode = 'es';
 
 export const firestoreDatabase = getFirestore(firebaseApp);
 
-/** App Check protege Firestore y las functions contra tráfico automatizado (bots). */
+/**
+ * App Check protege Firestore y las functions contra tráfico automatizado (bots).
+ * Proveedor: reCAPTCHA Enterprise / Google Cloud Fraud Defense (reCAPTCHA v3 clásico está obsoleto).
+ */
 export const firebaseAppCheck: AppCheck | null = environment.appCheckRecaptchaSiteKey
   ? initializeAppCheck(firebaseApp, {
-      provider: new ReCaptchaV3Provider(environment.appCheckRecaptchaSiteKey),
+      provider: new ReCaptchaEnterpriseProvider(environment.appCheckRecaptchaSiteKey),
       isTokenAutoRefreshEnabled: true,
     })
   : null;

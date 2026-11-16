@@ -16,6 +16,7 @@ export const environment = {
     messagingSenderId: '1043517636428',
     appId: '1:1043517636428:web:049f44f96c1292a67059e9',
   },
+  /** Clave del sitio de reCAPTCHA Enterprise (Fraud Defense) para App Check. Vacía = sin App Check. */
   appCheckRecaptchaSiteKey: '',
   /** Llave PÚBLICA de Culqi (pk_test_... o pk_live_...). Vacía = pago simulado. */
   culqiPublicKey: '',
