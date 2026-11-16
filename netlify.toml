@@ -9,6 +9,9 @@
 
 [build.environment]
   NODE_VERSION = "24"
+  # Variables NO secretas cuyos valores ("false", la URL del sitio) aparecen legítimamente en
+  # los archivos generados: el escáner de secretos de Netlify no debe cancelar el deploy por ellas.
+  SECRETS_SCAN_OMIT_KEYS = "ALLOWED_ORIGIN,REQUIRE_APP_CHECK,SMTP_PORT,EMAIL_FROM"
 
 [functions]
   directory = "netlify/functions"
