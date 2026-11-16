@@ -39,9 +39,10 @@
 }
 
 .catalog-sign-photo {
-  width: 8.5rem;
-  height: 8.5rem;
-  border-radius: 50%;
+  width: 14rem;
+  height: 10rem;
+  margin-left: auto;
+  border-radius: var(--radius-lg);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -430,22 +431,22 @@
   background: var(--field-periwinkle);
 }
 
-/* Las fotos se recortan entre sí, como los paraderos que se ven uno tras otro */
+/* Tres tomas del mundo de la botica: la ciudad, la tradición y el producto */
 .catalog-branches-photos {
-  display: flex;
-  flex-shrink: 0;
+  display: grid;
+  flex: 1 1 30rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  max-width: 50rem;
 }
 
+/* Las tres tomas se reparten el ancho disponible: nunca se salen de la banda en móvil */
 .catalog-branches-photos img {
-  width: clamp(6rem, 9vw, 8.5rem);
-  height: clamp(6rem, 9vw, 8.5rem);
-  border-radius: 50%;
-  border: 5px solid var(--field-periwinkle);
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
   object-fit: cover;
-}
-
-.catalog-branches-photos img + img {
-  margin-left: -1.75rem;
 }
 
 .catalog-branches-text {
@@ -477,7 +478,29 @@
   width: 65%;
 }
 
+/* Tableta: la foto baja a su propia fila como una franja a todo el ancho del letrero */
+@media (max-width: 991px) {
+  .catalog-sign-photo {
+    width: 100%;
+    height: clamp(8rem, 26vw, 12rem);
+    margin-left: 0;
+  }
+}
+
 @media (max-width: 576px) {
+  /* En el celular el buscador y el stock van primero: la foto queda como franja baja */
+  .catalog-sign-photo {
+    height: 7.5rem;
+  }
+
+  .catalog-branches-band {
+    padding: 1.25rem 1rem;
+  }
+
+  .catalog-branches-photos {
+    gap: 0.5rem;
+  }
+
   .catalog-row {
     grid-template-columns: 3.5rem minmax(0, 1fr);
     grid-template-areas:
