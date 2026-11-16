@@ -13,7 +13,8 @@ const AUTH_ERROR_MESSAGE_BY_CODE: Record<string, string> = {
   'auth/password-does-not-meet-requirements':
     'La contraseña debe tener al menos 8 caracteres, con letras y números.',
   'auth/too-many-requests': 'Demasiados intentos. Espera unos minutos e inténtalo de nuevo.',
-  'auth/popup-closed-by-user': 'Cerraste la ventana de Google antes de terminar.',
+  'auth/popup-closed-by-user': 'No se completó el inicio con Google. Inténtalo de nuevo.',
+  'auth/session-timeout': 'El servidor tardó demasiado en responder. Inténtalo de nuevo en un momento.',
   'auth/cancelled-popup-request': 'Cerraste la ventana de Google antes de terminar.',
   'auth/network-request-failed': 'Sin conexión. Revisa tu internet e inténtalo de nuevo.',
   'auth/account-exists-with-different-credential':

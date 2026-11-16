@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, untracked } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthActionResult } from '../../../core/auth/auth-session';
@@ -29,6 +29,17 @@ export class LoginPage {
   readonly isPasswordVisible = signal(false);
   readonly errorMessage = signal('');
   readonly informationMessage = signal('');
+
+  constructor() {
+    // Si la sesión se completa por otro camino (p. ej. Google terminó después de que
+    // dimos el intento por cancelado), no se deja al usuario en la pantalla de login.
+    effect(() => {
+      const activeSession = this.authService.currentSession();
+      if (activeSession && this.authService.isSessionResolved() && !this.isSubmitting()) {
+        void this.router.navigateByUrl(resolvePostLoginRoute(activeSession, untracked(this.returnUrl)));
+      }
+    });
+  }
 
   async submitEmailLogin(): Promise<void> {
     if (this.loginForm.invalid) {
@@ -71,8 +82,15 @@ export class LoginPage {
     this.errorMessage.set('');
     this.informationMessage.set('');
 
-    const loginResult = await loginAction();
-    this.isSubmitting.set(false);
+    let loginResult: AuthActionResult;
+    try {
+      loginResult = await loginAction();
+    } catch {
+      // Red de seguridad: pase lo que pase, el botón vuelve a quedar disponible.
+      loginResult = { isSuccessful: false, errorMessage: 'No se pudo iniciar sesión. Inténtalo de nuevo.' };
+    } finally {
+      this.isSubmitting.set(false);
+    }
 
     if (!loginResult.isSuccessful) {
       this.errorMessage.set(loginResult.errorMessage ?? 'No se pudo iniciar sesión.');

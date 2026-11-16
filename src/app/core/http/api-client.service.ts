@@ -18,6 +18,9 @@ interface ApiErrorBody {
 }
 
 const CONNECTION_ERROR_MESSAGE = 'No se pudo conectar con el servidor. Inténtalo de nuevo.';
+const TIMEOUT_ERROR_MESSAGE = 'El servidor tardó demasiado en responder. Inténtalo de nuevo.';
+/** Un pago con Culqi puede tardar; 30 s cubre ese caso sin dejar pantallas colgadas. */
+const REQUEST_TIMEOUT_MS = 30_000;
 
 /**
  * Cliente HTTP hacia las Netlify Functions (`/api/*`).
@@ -35,9 +38,12 @@ export class ApiClientService {
         method: 'POST',
         headers: requestHeaders,
         body: JSON.stringify(requestBody ?? {}),
+        // Ninguna llamada espera para siempre: la pantalla puede mostrar el error y reintentar.
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       });
-    } catch {
-      throw new ApiRequestError(0, CONNECTION_ERROR_MESSAGE);
+    } catch (error) {
+      const isTimeout = error instanceof DOMException && error.name === 'TimeoutError';
+      throw new ApiRequestError(0, isTimeout ? TIMEOUT_ERROR_MESSAGE : CONNECTION_ERROR_MESSAGE);
     }
 
     const responseBody = await this.readJsonSafely(httpResponse);

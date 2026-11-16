@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { AuthActionResult } from '../../../core/auth/auth-session';
 import { AuthService } from '../../../core/auth/auth.service';
 import { resolvePostLoginRoute } from '../../../core/auth/post-login-redirect';
 import {
@@ -42,10 +43,15 @@ export class RegisterPage {
 
     this.isSubmitting.set(true);
     this.errorMessage.set('');
-    const registrationResult = await this.authService.registerCustomer(
-      this.registerForm.getRawValue(),
-    );
-    this.isSubmitting.set(false);
+    let registrationResult: AuthActionResult;
+    try {
+      registrationResult = await this.authService.registerCustomer(this.registerForm.getRawValue());
+    } catch {
+      // Red de seguridad: el botón nunca queda en "cargando" si algo inesperado falla.
+      registrationResult = { isSuccessful: false, errorMessage: 'No se pudo crear tu cuenta. Inténtalo de nuevo.' };
+    } finally {
+      this.isSubmitting.set(false);
+    }
 
     if (!registrationResult.isSuccessful || !registrationResult.session) {
       this.errorMessage.set(registrationResult.errorMessage ?? 'No se pudo crear tu cuenta.');

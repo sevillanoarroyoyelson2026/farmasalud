@@ -18,7 +18,13 @@ import { ApiClientService } from '../http/api-client.service';
 import { AppLoggerService } from '../logger/app-logger.service';
 import { getAuthErrorMessage } from './auth-error-messages';
 import { AuthActionResult, AuthSession } from './auth-session';
+import { settleWithTimeout, watchForAbandonedPopup } from './settle-with-timeout';
 import { isKnownUserRole, STAFF_ROLES, UserRole } from './user-role';
+
+/** Tiempo máximo con la ventana de Google abierta antes de dar el intento por cancelado. */
+const GOOGLE_POPUP_TIMEOUT_MS = 3 * 60_000;
+/** Tiempo máximo para dejar lista la sesión (incluye crear el perfil en el servidor). */
+const SESSION_RESOLUTION_TIMEOUT_MS = 25_000;
 
 /** Datos que el cliente envía al crear su perfil (el rol lo asigna SIEMPRE el servidor). */
 interface CustomerProfileRequest {
@@ -109,11 +115,20 @@ export class AuthService {
       hasAcceptedPrivacyPolicy: true,
     };
 
+    // Si el usuario cierra la ventana de Google, Firebase no siempre lo detecta:
+    // se vigila el regreso del foco y hay un tope máximo de espera.
+    const popupWatcher = watchForAbandonedPopup();
     try {
       this.markSessionAsResolving();
-      await signInWithPopup(firebaseAuth, googleProvider);
+      await settleWithTimeout(
+        Promise.race([signInWithPopup(firebaseAuth, googleProvider), popupWatcher.abandonment]),
+        GOOGLE_POPUP_TIMEOUT_MS,
+        'auth/popup-closed-by-user',
+      );
+      popupWatcher.stopWatching();
       return this.buildResultFromResolvedSession();
     } catch (error) {
+      popupWatcher.stopWatching();
       const errorCode = (error as { code?: string }).code ?? '';
       if (POPUP_UNAVAILABLE_ERROR_CODES.includes(errorCode)) {
         await signInWithRedirect(firebaseAuth, googleProvider);
@@ -255,8 +270,24 @@ export class AuthService {
     waitersToNotify.forEach((notifyWaiter) => notifyWaiter(session));
   }
 
+  /**
+   * Espera a que la sesión quede lista (rol asignado, perfil creado). Con tope de tiempo:
+   * si el servidor no responde, se cierra la sesión a medias y se informa el error.
+   */
   private async buildResultFromResolvedSession(): Promise<AuthActionResult> {
-    const resolvedSession = await this.waitForResolvedSession();
+    let resolvedSession: AuthSession | null;
+    try {
+      resolvedSession = await settleWithTimeout(
+        this.waitForResolvedSession(),
+        SESSION_RESOLUTION_TIMEOUT_MS,
+        'auth/session-timeout',
+      );
+    } catch (error) {
+      this.logger.logError('AuthService.buildResultFromResolvedSession', error);
+      await this.signOutCurrentUser();
+      this.publishSession(null);
+      return { isSuccessful: false, errorMessage: getAuthErrorMessage(error) };
+    }
     if (!resolvedSession) {
       return {
         isSuccessful: false,
@@ -269,8 +300,12 @@ export class AuthService {
   private buildFailedResult(context: string, error: unknown): AuthActionResult {
     this.logger.logError(context, error);
     this.pendingCustomerProfileRequest = null;
+    // El intento falló: la sesión vuelve a quedar "resuelta" con lo que había antes.
+    // Si no se hiciera, todo lo que espera la sesión (guards, pantallas) quedaría colgado.
     if (!firebaseAuth.currentUser) {
       this.publishSession(null);
+    } else if (!this.isSessionResolvedSignal()) {
+      this.publishSession(this.currentSessionSignal());
     }
     return { isSuccessful: false, errorMessage: getAuthErrorMessage(error) };
   }
