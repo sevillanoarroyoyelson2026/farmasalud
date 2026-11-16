@@ -20,10 +20,17 @@ function initializeAdminApp(): App {
   }
 
   const serviceAccountJson = process.env['FIREBASE_SERVICE_ACCOUNT_KEY'];
-  if (!serviceAccountJson) {
-    throw new Error('Falta la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY');
+  try {
+    if (!serviceAccountJson) {
+      throw new Error('Falta la variable de entorno FIREBASE_SERVICE_ACCOUNT_KEY');
+    }
+    return initializeApp({ credential: cert(JSON.parse(serviceAccountJson)) });
+  } catch (error) {
+    // No se lanza al cargar el módulo: así el handler responde un error GENÉRICO (500)
+    // en vez de que Netlify muestre la traza interna. El detalle queda en el log.
+    console.error(`[firebase-admin] Configuración inválida: ${error instanceof Error ? error.message : String(error)}`);
+    return initializeApp({ projectId: 'configuracion-faltante' });
   }
-  return initializeApp({ credential: cert(JSON.parse(serviceAccountJson)) });
 }
 
 export const adminApp = initializeAdminApp();
