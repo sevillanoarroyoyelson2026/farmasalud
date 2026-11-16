@@ -22,9 +22,9 @@ const STROKE_PADDING = 3;
   styles: `
     :host { display: block; width: 100%; height: 36px; }
     svg { display: block; width: 100%; height: 100%; overflow: visible; }
-    .sparkline-line { fill: none; stroke: #0f5257; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-    .sparkline-area { fill: rgba(15, 82, 87, 0.1); }
-    .sparkline-end { fill: #0f5257; }
+    .sparkline-line { fill: none; stroke: #c9480d; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+    .sparkline-area { fill: rgba(201, 72, 13, 0.1); }
+    .sparkline-end { fill: #c9480d; }
   `,
 })
 export class Sparkline {

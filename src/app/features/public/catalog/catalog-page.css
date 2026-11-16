@@ -290,171 +290,29 @@
   list-style: none;
 }
 
-.catalog-card {
-  position: relative;
+.catalog-grid-item {
+  min-width: 0;
+}
+
+/* Esqueleto de carga con la misma silueta que la tarjeta real */
+.catalog-card.is-placeholder {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: #fff;
-  transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-base);
 }
 
-.catalog-card:hover {
-  border-color: var(--color-border-strong);
-  box-shadow: 0 18px 36px -22px rgba(20, 20, 20, 0.45);
-  transform: translateY(-3px);
-}
-
-.catalog-card-media {
-  position: relative;
-  display: grid;
-  place-items: center;
+.catalog-card.is-placeholder .catalog-card-media {
   aspect-ratio: 1;
-  overflow: hidden;
-  background: #f7f8fb;
-  text-decoration: none;
 }
 
-.catalog-card-media img {
-  width: 100%;
-  height: 100%;
-  padding: 1.25rem;
-  object-fit: contain;
-  transition: transform 0.5s var(--ease-out-expo);
-}
-
-.catalog-card:hover .catalog-card-media img {
-  transform: scale(1.04);
-}
-
-/* Sin foto: la inicial sobre un campo pastel del sistema (alternado) */
-.catalog-card-media.is-tone-1 { background: var(--field-sand); }
-.catalog-card-media.is-tone-2 { background: var(--field-pink); }
-.catalog-card-media.is-tone-3 { background: var(--field-sage); }
-
-.catalog-card-initial {
-  color: rgba(20, 20, 20, 0.28);
-  font-family: var(--font-heading);
-  font-size: clamp(3.5rem, 7vw, 5rem);
-  font-weight: 700;
-}
-
-.catalog-card.is-out-of-stock .catalog-card-media > :is(img, .catalog-card-initial) {
-  filter: grayscale(1);
-  opacity: 0.55;
-}
-
-.catalog-card-discount {
-  position: absolute;
-  top: 0.75rem;
-  left: 0.75rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-pill);
-  background: var(--route-alert);
-  color: #fff;
-  font-size: 0.8rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.catalog-card-prescription {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: var(--radius-pill);
-  background: var(--field-peach);
-  color: var(--route-ink);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.catalog-card-body {
+.catalog-card.is-placeholder .catalog-card-body {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 1rem 1rem 1.1rem;
-}
-
-.catalog-card-presentation {
-  color: var(--color-text-muted);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.catalog-card-name {
-  display: -webkit-box;
-  min-height: 2.5em;
-  overflow: hidden;
-  color: var(--color-text);
-  font-size: 1.02rem;
-  font-weight: 500;
-  line-height: 1.25;
-  text-decoration: none;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-/* Toda la tarjeta lleva a la ficha (enlace extendido), salvo el botón de agregar */
-.catalog-card-name::after {
-  position: absolute;
-  inset: 0;
-  content: '';
-}
-
-.catalog-card:hover .catalog-card-name {
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
-}
-
-.catalog-card.is-out-of-stock .catalog-card-name {
-  color: var(--color-text-muted);
-}
-
-.catalog-card-availability {
-  align-self: flex-start;
-}
-
-.catalog-card-price {
-  margin-top: auto;
-  padding-top: 0.35rem;
-}
-
-.catalog-card-add {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  width: 100%;
-  min-height: 46px;
-  margin-top: 0.5rem;
-  border-radius: var(--radius-pill);
-  font-weight: 600;
-}
-
-.catalog-card-add.is-in-cart {
-  --bs-btn-bg: var(--route-ink);
-  --bs-btn-border-color: var(--route-ink);
-  --bs-btn-hover-bg: #000;
-  --bs-btn-hover-border-color: #000;
-  font-size: 0.88rem;
-}
-
-.catalog-card-add:disabled {
-  --bs-btn-disabled-bg: var(--route-enamel-deep);
-  --bs-btn-disabled-border-color: var(--route-enamel-deep);
-  --bs-btn-disabled-color: var(--color-text-muted);
-  --bs-btn-disabled-opacity: 1;
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
 .catalog-card.is-placeholder .catalog-card-media {
@@ -555,37 +413,6 @@
 
   .catalog-branches-photos {
     gap: 0.5rem;
-  }
-
-  /* Celular: dos columnas compactas, como una vitrina de bolsillo */
-  .catalog-card-media img {
-    padding: 0.75rem;
-  }
-
-  .catalog-card-body {
-    gap: 0.3rem;
-    padding: 0.7rem 0.7rem 0.8rem;
-  }
-
-  .catalog-card-name {
-    font-size: 0.92rem;
-  }
-
-  .catalog-card-prescription {
-    top: auto;
-    right: auto;
-    bottom: 0.5rem;
-    left: 0.5rem;
-    font-size: 0.68rem;
-  }
-
-  .catalog-card-add {
-    min-height: 44px;
-    font-size: 0.82rem;
-  }
-
-  .catalog-card-add.is-in-cart {
-    font-size: 0.75rem;
   }
 
   .catalog-filters {

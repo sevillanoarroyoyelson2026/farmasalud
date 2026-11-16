@@ -79,6 +79,14 @@ export function buildSalesTrendChart(dailySales: DailySales[]): ChartConfigurati
 }
 
 /** Ranking horizontal de una sola serie (boticas, productos, estados) con el valor escrito al final. */
+const MAXIMUM_AXIS_LABEL_LENGTH = 20;
+
+function shortenAxisLabel(label: string): string {
+  return label.length > MAXIMUM_AXIS_LABEL_LENGTH
+    ? `${label.slice(0, MAXIMUM_AXIS_LABEL_LENGTH - 1).trimEnd()}…`
+    : label;
+}
+
 export function buildRankingBarChart(
   labels: string[],
   values: number[],
@@ -95,7 +103,7 @@ export function buildRankingBarChart(
           label: valueName,
           data: values,
           backgroundColor: SINGLE_SERIES_COLOR,
-          hoverBackgroundColor: '#0a3b3e',
+          hoverBackgroundColor: '#a3380a',
           borderRadius: 4,
           borderSkipped: 'start',
           barThickness: 'flex',
@@ -118,7 +126,16 @@ export function buildRankingBarChart(
       scales: {
         // Sin eje numérico visible: cada barra ya lleva su cifra escrita.
         x: { display: false, beginAtZero: true, suggestedMax: largestValue * 1.05 },
-        y: { grid: { display: false }, border: { display: false }, ticks: { color: CHART_MUTED_TEXT_COLOR, autoSkip: false } },
+        y: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: {
+            color: CHART_MUTED_TEXT_COLOR,
+            autoSkip: false,
+            // Nombres largos se acortan para que el lienzo no los recorte; el tooltip muestra el completo.
+            callback: (_tickValue, tickIndex) => shortenAxisLabel(labels[tickIndex] ?? ''),
+          },
+        },
       },
     },
   };
@@ -135,7 +152,7 @@ export function buildOrdersByHourChart(ordersByHour: number[]): ChartConfigurati
           label: 'Pedidos',
           data: ordersByHour,
           backgroundColor: SINGLE_SERIES_COLOR,
-          hoverBackgroundColor: '#0a3b3e',
+          hoverBackgroundColor: '#a3380a',
           borderRadius: { topLeft: 4, topRight: 4 },
           borderSkipped: 'start',
           categoryPercentage: 0.82,

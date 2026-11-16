@@ -7,8 +7,8 @@
  *   etiquetas visibles y vista de tabla.
  * Los colores de estado (verde/rojo) no se usan para series: están reservados para alertas.
  */
-export const SINGLE_SERIES_COLOR = '#0f5257';
-export const SINGLE_SERIES_AREA_COLOR = 'rgba(15, 82, 87, 0.12)';
+export const SINGLE_SERIES_COLOR = '#c9480d';
+export const SINGLE_SERIES_AREA_COLOR = 'rgba(201, 72, 13, 0.12)';
 export const CATEGORICAL_SERIES_COLORS = ['#1baf7a', '#eb6834', '#2a78d6'] as const;
 
 export const CHART_TEXT_COLOR = '#3d4456';

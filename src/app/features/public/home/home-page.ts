@@ -1,131 +1,96 @@
-import {
-  afterNextRender,
-  Component,
-  computed,
-  ElementRef,
-  inject,
-  Injector,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/auth/auth.service';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
 import { BranchRepository } from '../../../shared/data-access/branch.repository';
+import { BranchSelectionService } from '../../../shared/data-access/branch-selection.service';
 import { CategoryRepository } from '../../../shared/data-access/category.repository';
-import {
-  ALL_BRANCHES_OPTION,
-  BranchSelectionService,
-} from '../../../shared/data-access/branch-selection.service';
-import { CartService } from '../../../shared/data-access/cart.service';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
-import { Branch } from '../../../shared/models/branch';
 import { Category } from '../../../shared/models/category';
-import { getStockInBranch, hasActivePromotion, Product } from '../../../shared/models/product';
-import { CartNoticeService } from '../../../shared/ui/cart-notice/cart-notice';
-import { CountUp } from '../../../shared/ui/count-up/count-up';
-import { ProductPrice } from '../../../shared/ui/product-price/product-price';
+import { DELIVERY_FEE_IN_SOLES } from '../../../shared/models/order';
+import { hasActivePromotion, Product } from '../../../shared/models/product';
+import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { RevealOnScroll } from '../../../shared/ui/reveal-on-scroll/reveal-on-scroll';
 import { describeProductAvailability, ProductAvailability } from '../catalog/product-availability';
 
-const MAXIMUM_FEATURED_PROMOTIONS = 5;
-const SKELETON_STOP_COUNT = 6;
-
-/** Paradero de la ruta: una botica activa con cuántos productos tiene en stock. */
-interface RouteStop {
-  branch: Branch;
-  availableProductCount: number;
+/** Diapositiva del carrusel principal. */
+interface HeroSlide {
+  eyebrow: string;
+  title: string;
+  text: string;
+  ctaLabel: string;
+  ctaLink: string;
+  image: string;
+  imageAlt: string;
+  floatingBadge: string;
+  tone: 'sunset' | 'cream' | 'cocoa';
 }
 
-interface PromotedProductRow {
+interface ProductCardRow {
   product: Product;
   availability: ProductAvailability;
 }
 
-/** Ficha de texto del diagrama "muchos → uno". */
-interface FlowStep {
+interface CategoryShortcut {
+  category: Category;
+  iconClass: string;
+}
+
+interface FeaturedTab {
+  id: string;
   name: string;
-  description: string;
 }
 
-/** Punto del diagrama: un círculo del motivo, con su tono por zona. */
-interface DiagramDot {
-  x: number;
-  y: string;
-  tone: 'pale' | 'deep' | 'ribbon' | 'order';
+interface CountdownPart {
+  value: string;
+  unit: string;
 }
 
-const FLOW_STEPS: FlowStep[] = [
-  {
-    name: 'Eliges',
-    description: 'Busca en el catálogo y revisa el stock real de tu botica antes de comprar.',
-  },
-  {
-    name: 'Ordenas',
-    description: 'Arma tu pedido; si tu medicamento exige receta, un farmacéutico la valida.',
-  },
-  {
-    name: 'Recibes',
-    description: 'Paga en línea con tarjeta y sigue tu pedido hasta la puerta de tu casa.',
-  },
+const MAXIMUM_OFFERS = 10;
+const MAXIMUM_FEATURED_PRODUCTS = 8;
+const MAXIMUM_FEATURED_TABS = 5;
+const ALL_PRODUCTS_TAB = '';
+const MILLISECONDS_PER_SECOND = 1000;
+
+/** Ícono por palabra clave del nombre de la categoría (las categorías las crea el admin). */
+const CATEGORY_ICON_BY_KEYWORD: [string, string][] = [
+  ['analg', 'fa-capsules'],
+  ['antibi', 'fa-bacteria'],
+  ['grip', 'fa-head-side-cough'],
+  ['respir', 'fa-lungs'],
+  ['beb', 'fa-baby'],
+  ['mam', 'fa-baby-carriage'],
+  ['cuidado', 'fa-pump-soap'],
+  ['auxilio', 'fa-kit-medical'],
+  ['vitamin', 'fa-apple-whole'],
+  ['suplement', 'fa-apple-whole'],
+  ['derma', 'fa-hand-sparkles'],
+  ['belleza', 'fa-spa'],
 ];
 
-/**
- * Puntos del diagrama "muchos → uno": dispersos a la izquierda, apretados en
- * una cinta al centro y ordenados en hileras a la derecha. Posiciones
- * deterministas (sin azar en cada render): ~120 círculos de 12px sobre un
- * lienzo de 1200 × 270.
- */
-function buildDiagramDots(): DiagramDot[] {
-  const dots: DiagramDot[] = [];
-  const jitter = (seed: number): number => Math.sin(seed * 12.9898) * 0.5;
+export function chooseCategoryIcon(categoryName: string): string {
+  const normalizedName = categoryName.toLowerCase();
+  return CATEGORY_ICON_BY_KEYWORD.find(([keyword]) => normalizedName.includes(keyword))?.[1] ?? 'fa-pills';
+}
 
-  // Zona izquierda: dispersión suelta en dos tonos pálidos.
-  for (let column = 0; column < 11; column++) {
-    for (let row = 0; row < 7; row++) {
-      const seed = column * 7 + row;
-      if (Math.abs(jitter(seed + 3)) < 0.25) continue;
-      dots.push({
-        x: 16 + column * 34 + jitter(seed) * 6,
-        y: `${22 + row * 34 + jitter(seed + 9) * 6}px`,
-        tone: seed % 2 === 0 ? 'pale' : 'deep',
-      });
-    }
-  }
-
-  // Zona central: cinta apretada de tres hileras.
-  for (let column = 0; column < 25; column++) {
-    for (let row = 0; row < 3; row++) {
-      dots.push({
-        x: 408 + column * 15,
-        y: `${112 + row * 15}px`,
-        tone: 'ribbon',
-      });
-    }
-  }
-
-  // Zona derecha: hileras parejas en el acento.
-  for (let column = 0; column < 8; column++) {
-    for (let row = 0; row < 6; row++) {
-      dots.push({
-        x: 836 + column * 44,
-        y: `${30 + row * 42}px`,
-        tone: 'order',
-      });
-    }
-  }
-
-  return dots;
+/** Días, horas, minutos y segundos que faltan; nunca negativo. */
+export function splitRemainingTime(remainingMilliseconds: number): CountdownPart[] {
+  const totalSeconds = Math.max(0, Math.floor(remainingMilliseconds / MILLISECONDS_PER_SECOND));
+  const pad = (value: number): string => String(value).padStart(2, '0');
+  return [
+    { value: pad(Math.floor(totalSeconds / 86400)), unit: 'días' },
+    { value: pad(Math.floor((totalSeconds % 86400) / 3600)), unit: 'horas' },
+    { value: pad(Math.floor((totalSeconds % 3600) / 60)), unit: 'min' },
+    { value: pad(totalSeconds % 60), unit: 'seg' },
+  ];
 }
 
 /**
- * Inicio de la tienda: ficha impresa + la ruta de boticas en vivo (paraderos
- * con stock real), ofertas, el flujo de compra como diagrama, tablero de
- * categorías, cifras y cierre.
+ * Inicio de la tienda: carrusel principal, accesos por categoría, ofertas con
+ * cuenta regresiva, cinta de beneficios y productos destacados por pestañas.
  */
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink, ProductPrice, RevealOnScroll, CountUp],
+  imports: [RouterLink, ProductCard, RevealOnScroll],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
@@ -133,130 +98,199 @@ export class HomePage implements OnInit {
   private readonly productRepository = inject(ProductRepository);
   private readonly branchRepository = inject(BranchRepository);
   private readonly categoryRepository = inject(CategoryRepository);
-  private readonly router = inject(Router);
+  private readonly branchSelection = inject(BranchSelectionService);
   private readonly logger = inject(AppLoggerService);
-  private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
-  private readonly injector = inject(Injector);
-  readonly branchSelection = inject(BranchSelectionService);
-  readonly cartService = inject(CartService);
-  private readonly cartNotice = inject(CartNoticeService);
-  readonly isStaffMember = inject(AuthService).isStaffMember;
-  readonly currentSession = inject(AuthService).currentSession;
-
-  readonly flowSteps = FLOW_STEPS;
-  readonly diagramDots = buildDiagramDots();
-  readonly skeletonStops = Array.from({ length: SKELETON_STOP_COUNT }, (_, stopIndex) => stopIndex);
 
   private readonly products = signal<Product[]>([]);
   private readonly categories = signal<Category[]>([]);
-  readonly isLoadingRoute = signal(true);
-  readonly hasRouteLoadFailed = signal(false);
-  readonly searchTerm = signal('');
+  private readonly currentTime = signal(Date.now());
+  readonly isLoading = signal(true);
 
-  readonly routeStops = computed<RouteStop[]>(() =>
-    this.branchSelection.availableBranches().map((branch) => ({
-      branch,
-      availableProductCount: this.products().filter(
-        (product) => getStockInBranch(product, branch.id) > 0,
-      ).length,
-    })),
+  // -- Carrusel principal --
+  readonly activeSlideIndex = signal(0);
+  readonly isCarouselPaused = signal(false);
+  private swipeStartX: number | null = null;
+
+  readonly heroSlides = computed<HeroSlide[]>(() => {
+    const largestDiscount = Math.max(
+      0,
+      ...this.products()
+        .filter((product) => hasActivePromotion(product))
+        .map((product) => product.promotion?.discountPercent ?? 0),
+    );
+    return [
+      {
+        eyebrow: 'Ofertas de la semana',
+        title: largestDiscount > 0 ? `Hasta -${largestDiscount}% en tu botica` : 'Tu botica de confianza, en línea',
+        text: 'Medicamentos y cuidado personal con stock real y precios que te cuidan.',
+        ctaLabel: 'Ver ofertas',
+        ctaLink: '/catalogo',
+        image: 'images/pills-and-medicines-02.jpg',
+        imageAlt: 'Frascos de medicinas y pastillas sobre una superficie clara',
+        floatingBadge: largestDiscount > 0 ? `-${largestDiscount}%` : 'Nuevo',
+        tone: 'sunset',
+      },
+      {
+        eyebrow: 'Delivery en Trujillo',
+        title: `Tu pedido en casa por solo S/ ${DELIVERY_FEE_IN_SOLES}`,
+        text: 'Compra en minutos desde tu celular y síguelo hasta tu puerta.',
+        ctaLabel: 'Comprar ahora',
+        ctaLink: '/catalogo',
+        image: 'images/pills-and-medicines-01.jpg',
+        imageAlt: 'Frascos de medicinas de colores sobre fondo claro',
+        floatingBadge: 'Hoy mismo',
+        tone: 'cream',
+      },
+      {
+        eyebrow: 'Atención farmacéutica',
+        title: 'Sube tu receta, nosotros la validamos',
+        text: 'Un farmacéutico revisa cada receta antes de preparar tu pedido.',
+        ctaLabel: 'Explorar catálogo',
+        ctaLink: '/catalogo',
+        image: 'images/former-pharmacy-shelves-with-medicines.jpg',
+        imageAlt: 'Estantes de madera con frascos de cerámica de una botica tradicional',
+        floatingBadge: 'Receta segura',
+        tone: 'cocoa',
+      },
+    ];
+  });
+
+  // -- Categorías --
+  readonly categoryShortcuts = computed<CategoryShortcut[]>(() =>
+    this.categories().map((category) => ({ category, iconClass: chooseCategoryIcon(category.name) })),
   );
 
-  readonly selectedStopIndex = computed(() =>
-    this.routeStops().findIndex(
-      (routeStop) => routeStop.branch.id === this.branchSelection.selectedBranchId(),
+  // -- Ofertas con cuenta regresiva --
+  readonly offerRows = computed<ProductCardRow[]>(() =>
+    this.toCardRows(
+      this.products()
+        .filter((product) => hasActivePromotion(product))
+        .sort(
+          (firstProduct, secondProduct) =>
+            (secondProduct.promotion?.discountPercent ?? 0) - (firstProduct.promotion?.discountPercent ?? 0),
+        )
+        .slice(0, MAXIMUM_OFFERS),
     ),
   );
 
-  readonly promotedProductRows = computed<PromotedProductRow[]>(() => {
-    const selectedBranchId = this.branchSelection.selectedBranchId();
-    const activeBranchIds = this.branchSelection.availableBranches().map((branch) => branch.id);
-    return this.products()
-      .filter((product) => hasActivePromotion(product))
+  /** La promoción vigente que vence primero marca la cuenta regresiva. */
+  readonly countdownParts = computed<CountdownPart[] | null>(() => {
+    const promotionEndTimes = this.offerRows().map((offerRow) => offerRow.product.promotion?.endsAt.getTime() ?? 0);
+    if (promotionEndTimes.length === 0) {
+      return null;
+    }
+    return splitRemainingTime(Math.min(...promotionEndTimes) - this.currentTime());
+  });
+
+  // -- Destacados por pestañas --
+  readonly selectedTabId = signal(ALL_PRODUCTS_TAB);
+
+  readonly featuredTabs = computed<FeaturedTab[]>(() => {
+    const categoryIdsWithProducts = new Set(this.products().map((product) => product.categoryId));
+    return [
+      { id: ALL_PRODUCTS_TAB, name: 'Todo' },
+      ...this.categories()
+        .filter((category) => categoryIdsWithProducts.has(category.id))
+        .slice(0, MAXIMUM_FEATURED_TABS)
+        .map((category) => ({ id: category.id, name: category.name })),
+    ];
+  });
+
+  readonly featuredRows = computed<ProductCardRow[]>(() => {
+    const selectedTabId = this.selectedTabId();
+    const rows = this.toCardRows(
+      this.products().filter(
+        (product) => selectedTabId === ALL_PRODUCTS_TAB || product.categoryId === selectedTabId,
+      ),
+    );
+    // Primero lo que se puede comprar ya.
+    return rows
       .sort(
-        (firstProduct, secondProduct) =>
-          (secondProduct.promotion?.discountPercent ?? 0) -
-          (firstProduct.promotion?.discountPercent ?? 0),
+        (firstRow, secondRow) =>
+          Number(firstRow.availability.stockStatus === 'out_of_stock') -
+          Number(secondRow.availability.stockStatus === 'out_of_stock'),
       )
-      .slice(0, MAXIMUM_FEATURED_PROMOTIONS)
-      .map((product) => ({
-        product,
-        availability: describeProductAvailability(product, selectedBranchId, activeBranchIds),
-      }));
+      .slice(0, MAXIMUM_FEATURED_PRODUCTS);
   });
 
-  /** Categorías activas con su número de productos, para el tablero de fichas. */
-  readonly categoryBoardRows = computed(() => {
-    const products = this.products();
-    return this.categories().map((category) => ({
-      category,
-      productCount: products.filter((product) => product.categoryId === category.id).length,
-    }));
-  });
+  readonly tickerItems = [
+    { icon: 'fa-truck-fast', text: `Delivery en Trujillo por S/ ${DELIVERY_FEE_IN_SOLES}` },
+    { icon: 'fa-store', text: 'Recojo gratis en tu botica' },
+    { icon: 'fa-user-doctor', text: 'Receta validada por farmacéutico' },
+    { icon: 'fa-shield-halved', text: 'Pago seguro con tarjeta' },
+    { icon: 'fa-boxes-stacked', text: 'Stock real antes de comprar' },
+  ];
 
-  /** Boticas con delivery, para las cifras escalonadas. */
-  readonly deliveryBranchCount = computed(
-    () => this.branchSelection.availableBranches().filter((branch) => branch.offersDelivery).length,
-  );
+  constructor() {
+    const clockInterval = setInterval(() => this.currentTime.set(Date.now()), MILLISECONDS_PER_SECOND);
+    inject(DestroyRef).onDestroy(() => clearInterval(clockInterval));
+  }
 
-  /** Productos activos publicados, para las cifras escalonadas. */
-  readonly productCount = computed(() => this.products().length);
-
-  /** Productos y boticas en paralelo. Si falla, la ruta y las ofertas no aparecen; el buscador sigue funcionando. */
+  /** Productos, categorías y boticas en paralelo (las boticas solo para calcular disponibilidad). */
   async ngOnInit(): Promise<void> {
     try {
-      const [activeProducts, activeBranches, activeCategories] = await Promise.all([
+      const [activeProducts, activeCategories, activeBranches] = await Promise.all([
         this.productRepository.findActiveProducts(),
-        this.branchRepository.findActiveBranches(),
         this.categoryRepository.findActiveCategories(),
+        this.branchRepository.findActiveBranches(),
       ]);
       this.products.set(activeProducts);
-      this.branchSelection.setAvailableBranches(activeBranches);
       this.categories.set(activeCategories);
-      // La botica guardada puede quedar fuera de vista en la línea: se centra sin mover la página.
-      afterNextRender(
-        () => {
-          const scroller = this.hostElement.nativeElement.querySelector<HTMLElement>('.route-line-scroller');
-          const selectedStop = scroller?.querySelector<HTMLElement>('.route-stop-button.is-selected');
-          if (scroller && selectedStop) {
-            const stopLeft = selectedStop.getBoundingClientRect().left - scroller.getBoundingClientRect().left;
-            scroller.scrollLeft += stopLeft - (scroller.clientWidth - selectedStop.offsetWidth) / 2;
-          }
-        },
-        { injector: this.injector },
-      );
+      this.branchSelection.setAvailableBranches(activeBranches);
     } catch (error) {
-      this.logger.logError('HomePage.loadRoute', error);
-      this.hasRouteLoadFailed.set(true);
+      // El carrusel y los accesos siguen funcionando aunque no lleguen los productos.
+      this.logger.logError('HomePage.loadProducts', error);
     } finally {
-      this.isLoadingRoute.set(false);
+      this.isLoading.set(false);
     }
   }
 
-  updateSearchTerm(inputEvent: Event): void {
-    this.searchTerm.set((inputEvent.target as HTMLInputElement).value);
+  showSlide(slideIndex: number): void {
+    const slideCount = this.heroSlides().length;
+    this.activeSlideIndex.set((slideIndex + slideCount) % slideCount);
   }
 
-  searchCatalog(submitEvent: Event): void {
-    submitEvent.preventDefault();
-    const trimmedSearchTerm = this.searchTerm().trim();
-    void this.router.navigate(['/catalogo'], {
-      queryParams: trimmedSearchTerm ? { buscar: trimmedSearchTerm } : {},
-    });
+  showNextSlide(): void {
+    this.showSlide(this.activeSlideIndex() + 1);
   }
 
-  selectStop(branchId: string, clickEvent: Event): void {
-    const isAlreadySelected = this.branchSelection.selectedBranchId() === branchId;
-    this.branchSelection.selectBranch(isAlreadySelected ? ALL_BRANCHES_OPTION : branchId);
-    (clickEvent.currentTarget as HTMLElement).scrollIntoView({
-      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      block: 'nearest',
-      inline: 'center',
-    });
+  showPreviousSlide(): void {
+    this.showSlide(this.activeSlideIndex() - 1);
   }
 
-  addToCart(product: Product): void {
-    this.cartService.addProduct(product.id);
-    this.cartNotice.announceAddedProduct(product.name);
+  startSwipe(pointerEvent: PointerEvent): void {
+    this.swipeStartX = pointerEvent.clientX;
+  }
+
+  finishSwipe(pointerEvent: PointerEvent): void {
+    if (this.swipeStartX === null) {
+      return;
+    }
+    const swipeDistance = pointerEvent.clientX - this.swipeStartX;
+    this.swipeStartX = null;
+    if (Math.abs(swipeDistance) > 50) {
+      if (swipeDistance < 0) {
+        this.showNextSlide();
+      } else {
+        this.showPreviousSlide();
+      }
+    }
+  }
+
+  scrollOffers(offersTrack: HTMLElement, direction: 1 | -1): void {
+    offersTrack.scrollBy({ left: direction * offersTrack.clientWidth * 0.8, behavior: 'smooth' });
+  }
+
+  selectTab(tabId: string): void {
+    this.selectedTabId.set(tabId);
+  }
+
+  private toCardRows(products: Product[]): ProductCardRow[] {
+    const selectedBranchId = this.branchSelection.selectedBranchId();
+    const activeBranchIds = this.branchSelection.availableBranches().map((branch) => branch.id);
+    return products.map((product) => ({
+      product,
+      availability: describeProductAvailability(product, selectedBranchId, activeBranchIds),
+    }));
   }
 }

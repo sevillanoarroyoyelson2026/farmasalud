@@ -1,327 +1,193 @@
-<!-- La ficha impresa y, a su lado, la ruta en vivo: el paradero es el motivo -->
-<section class="hero" aria-labelledby="hero-title">
-  <div class="hero-card">
-    <div class="hero-stripe" aria-hidden="true">
-      @for (bar of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]; track bar) {
-        <span [class.is-ink]="bar % 2 === 0"></span>
-      }
-    </div>
-
-    <div class="hero-card-body">
-      <h1 class="hero-title" id="hero-title">Tu botica,<br />ahora en línea</h1>
-      <p class="hero-text">
-        La botica de barrio de Trujillo, en tu celular: stock real antes de comprar, receta validada
-        por un farmacéutico y delivery el mismo día.
-      </p>
-
-      <form class="hero-search" role="search" (submit)="searchCatalog($event)">
-        <label class="visually-hidden" for="home-search">Buscar medicamento</label>
-        <input
-          id="home-search"
-          type="search"
-          class="hero-search-input"
-          placeholder="Paracetamol, ibuprofeno, vitamina C…"
-          autocomplete="off"
-          [value]="searchTerm()"
-          (input)="updateSearchTerm($event)"
-        />
-        <button type="submit" class="hero-search-button">
-          <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
-          Buscar
-        </button>
-      </form>
-    </div>
-
-    <ul class="hero-assurances">
-      <li>Farmacéutico valida tu receta</li>
-      <li>Pago en línea seguro</li>
-      <li>Delivery el mismo día</li>
-    </ul>
-  </div>
-
-  <!-- La botica, dentro del motivo en grande: un círculo recortado por el marco -->
-  <div class="hero-stage">
-    <img
-      class="hero-photo"
-      src="images/former-pharmacy-shelves-with-medicines.jpg"
-      alt="Estantes de madera con frascos de cerámica de una botica tradicional"
-    />
-    <p class="hero-photo-caption">La tradición de la botica de barrio, de siempre.</p>
-  </div>
-</section>
-
-<!-- Campo periwinkle: la ruta de boticas en vivo -->
-<section class="route-field" aria-labelledby="route-title">
-  <div class="container-xl route-field-inner">
-    <div class="route-field-head">
-      <h2 class="route-field-title" id="route-title">Elige tu botica</h2>
-      <p class="route-field-hint">
-        @if (branchSelection.selectedBranch(); as selectedBranch) {
-          Viendo stock de <strong>{{ selectedBranch.name }}</strong>.
-          <a routerLink="/catalogo">Ver su catálogo</a>
-        } @else {
-          Toca un paradero para ver el stock real de esa botica.
-        }
-      </p>
-    </div>
-
-    <div class="route-line-scroller">
-      @if (isLoadingRoute()) {
-        <ol
-          class="route-line route-line-track"
-          aria-busy="true"
-          [style.--stop-count]="skeletonStops.length"
-        >
-          @for (skeletonStop of skeletonStops; track skeletonStop) {
-            <li class="route-stop is-skeleton" aria-hidden="true">
-              <span class="route-stop-marker skeleton-block"></span>
-              <span class="skeleton-block route-stop-skeleton-line"></span>
-              <span class="skeleton-block route-stop-skeleton-line is-short"></span>
-            </li>
-          }
-        </ol>
-      } @else if (hasRouteLoadFailed()) {
-        <p class="hero-stage-error">No pudimos cargar las boticas. Revisa tu conexión e intenta de
-          nuevo.</p>
-      } @else {
-        <div
-          class="route-line-track"
-          [style.--stop-count]="routeStops().length"
-          [style.--selected-index]="selectedStopIndex()"
-          [class.has-selection]="selectedStopIndex() >= 0"
-        >
-          <span class="route-line-vehicle" aria-hidden="true"
-            ><i class="fas fa-van-shuttle"></i
-          ></span>
-          <ol class="route-line enter-along-route">
-            @for (routeStop of routeStops(); track routeStop.branch.id; let stopIndex = $index) {
-              <li class="route-stop" [style.--enter-index]="stopIndex">
-                <button
-                  type="button"
-                  class="route-stop-button"
-                  [class.is-selected]="branchSelection.selectedBranchId() === routeStop.branch.id"
-                  [attr.aria-pressed]="branchSelection.selectedBranchId() === routeStop.branch.id"
-                  (click)="selectStop(routeStop.branch.id, $event)"
-                >
-                  <span class="route-stop-marker is-tabular" aria-hidden="true">{{
-                    stopIndex + 1
-                  }}</span>
-                  <span class="route-stop-name">{{ routeStop.branch.name }}</span>
-                  <span class="route-stop-district">{{ routeStop.branch.district }}</span>
-                  <span class="route-stop-stock is-tabular">
-                    {{ routeStop.availableProductCount }}
-                    {{
-                      routeStop.availableProductCount === 1
-                        ? 'producto disponible'
-                        : 'productos disponibles'
-                    }}
-                  </span>
-                  @if (routeStop.branch.offersDelivery) {
-                    <span class="route-stop-delivery"
-                      ><i class="fas fa-motorcycle me-1" aria-hidden="true"></i>Delivery</span
-                    >
-                  }
-                </button>
-              </li>
-            }
-          </ol>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-@if (promotedProductRows().length > 0) {
-  <!-- Campo rosa: las ofertas de la semana -->
-  <section class="offers-field" aria-labelledby="offers-title">
-    <div class="container-xl">
-      <div class="offers-head">
-        <h2 class="offers-title" id="offers-title">Ofertas de la semana</h2>
-        <a class="offers-link" routerLink="/catalogo">Ver todo el catálogo</a>
-      </div>
-      <ul class="offers-board-list enter-along-route">
-        @for (
-          promotedRow of promotedProductRows();
-          track promotedRow.product.id;
-          let rowIndex = $index
-        ) {
-          <li class="offers-row" [style.--enter-index]="rowIndex">
-            <span class="offers-discount is-tabular"
-              >-{{ promotedRow.product.promotion?.discountPercent }}%</span
-            >
-            <span class="offers-thumb" aria-hidden="true">
-              @if (promotedRow.product.imageUrl) {
-                <img
-                  [src]="promotedRow.product.imageUrl"
-                  alt=""
-                  loading="lazy"
-                  (error)="$any($event.target).style.display = 'none'"
-                />
-              } @else {
-                <i class="fas fa-pills"></i>
-              }
-            </span>
-            <span class="offers-product">
-              <a class="offers-name" [routerLink]="['/producto', promotedRow.product.id]">{{
-                promotedRow.product.name
-              }}</a>
-              <span class="offers-presentation">{{ promotedRow.product.presentation }}</span>
-            </span>
-            <span
-              class="status-badge offers-availability"
-              [class.is-success]="promotedRow.availability.stockStatus === 'available'"
-              [class.is-warning]="promotedRow.availability.stockStatus === 'low_stock'"
-              [class.is-neutral]="promotedRow.availability.stockStatus === 'out_of_stock'"
-            >
-              {{ promotedRow.availability.availabilityLabel }}
-            </span>
-            <app-product-price
-              class="offers-price"
-              [product]="promotedRow.product"
-              [showDiscount]="false"
-            />
-            @if (!isStaffMember()) {
-              <button
-                type="button"
-                class="btn btn-primary offers-add"
-                [disabled]="promotedRow.availability.stockStatus === 'out_of_stock'"
-                [attr.aria-label]="'Agregar ' + promotedRow.product.name + ' al carrito'"
-                (click)="addToCart(promotedRow.product)"
-              >
-                <i class="fas fa-cart-plus" aria-hidden="true"></i>
-                @if (cartService.getQuantityOf(promotedRow.product.id) > 0) {
-                  <span class="is-tabular">{{
-                    cartService.getQuantityOf(promotedRow.product.id)
-                  }}</span>
-                } @else {
-                  <span>Agregar</span>
-                }
-              </button>
-            }
-          </li>
-        }
-      </ul>
-    </div>
-  </section>
-}
-
-<!-- Campo arena: el pedido como diagrama "muchos → uno" -->
-<section class="flow-field" aria-labelledby="flow-title" revealOnScroll>
-  <div class="container-xl">
-    <div class="flow-head">
-      <h2 class="flow-title" id="flow-title">Así se arma tu pedido</h2>
-      <img
-        class="flow-photo"
-        src="images/pills-and-medicines-02.jpg"
-        alt="Frascos de medicinas y pastillas sobre una superficie clara"
-        loading="lazy"
-      />
-    </div>
-    <svg class="flow-diagram" viewBox="0 0 1200 270" aria-hidden="true" focusable="false">
-      @for (dot of diagramDots; track $index) {
-        <circle
-          class="is-dot"
-          [class.is-ribbon]="dot.tone === 'ribbon'"
-          [class.is-order]="dot.tone === 'order'"
-          [attr.cx]="dot.x"
-          [attr.cy]="dot.y"
-          r="6"
-        />
-      }
-    </svg>
-    <ol class="flow-steps">
-      @for (flowStep of flowSteps; track flowStep.name; let stepIndex = $index) {
-        <li class="flow-step" [style.--enter-index]="stepIndex">
-          <h3 class="flow-step-name">{{ flowStep.name }}</h3>
-          <p class="flow-step-text">{{ flowStep.description }}</p>
-        </li>
-      }
-    </ol>
-  </div>
-</section>
-
-<!-- Tablero de fichas: cada categoría, un paradero -->
-<section class="category-board" aria-labelledby="category-board-title">
-  <div class="category-board-grid">
-    <div class="category-board-intro">
-      <div class="category-board-intro-text">
-        <h2 class="category-board-title" id="category-board-title">Compra por categoría</h2>
-        <p class="category-board-text">
-          De analgésicos a cuidado personal: entra directo a lo que buscas.
-        </p>
-      </div>
-      <img
-        class="category-board-photo"
-        src="images/pills-and-medicines-01.jpg"
-        alt="Frascos de medicinas de colores sobre fondo claro"
-        loading="lazy"
-      />
-    </div>
-    @for (
-      categoryRow of categoryBoardRows();
-      track categoryRow.category.id;
-      let categoryIndex = $index
-    ) {
-      <a
-        class="category-tile"
-        [class.is-warm]="categoryIndex % 2 === 1"
-        [routerLink]="['/catalogo']"
-        [queryParams]="{ categoria: categoryRow.category.id }"
-        revealOnScroll
-        [revealDelay]="categoryIndex * 40"
+<!-- Carrusel principal: avanza solo, se pausa al pasar el mouse y se desliza con el dedo -->
+<section
+  class="hero-carousel container-xl"
+  aria-roledescription="carrusel"
+  aria-label="Novedades de Farmasalud"
+  [class.is-paused]="isCarouselPaused()"
+  [attr.data-tone]="heroSlides()[activeSlideIndex()].tone"
+  (mouseenter)="isCarouselPaused.set(true)"
+  (mouseleave)="isCarouselPaused.set(false)"
+  (focusin)="isCarouselPaused.set(true)"
+  (focusout)="isCarouselPaused.set(false)"
+  (pointerdown)="startSwipe($event)"
+  (pointerup)="finishSwipe($event)"
+>
+  <div class="hero-viewport">
+    @for (slide of heroSlides(); track $index; let slideIndex = $index) {
+      <article
+        class="hero-slide"
+        [class]="'hero-slide is-' + slide.tone + (slideIndex === activeSlideIndex() ? ' is-active' : '')"
+        aria-roledescription="diapositiva"
+        [attr.aria-label]="slideIndex + 1 + ' de ' + heroSlides().length"
+        [attr.aria-hidden]="slideIndex !== activeSlideIndex()"
+        [attr.inert]="slideIndex !== activeSlideIndex() ? '' : null"
       >
-        <span class="category-tile-name">{{ categoryRow.category.name }}</span>
-        <span class="category-tile-count is-tabular"
-          >{{ categoryRow.productCount }}
-          {{ categoryRow.productCount === 1 ? 'producto' : 'productos' }}</span
-        >
-      </a>
+        <span class="hero-orb is-one" aria-hidden="true"></span>
+        <span class="hero-orb is-two" aria-hidden="true"></span>
+
+        <div class="hero-copy">
+          <p class="hero-eyebrow">{{ slide.eyebrow }}</p>
+          <h1 class="hero-title">{{ slide.title }}</h1>
+          <p class="hero-text">{{ slide.text }}</p>
+          <a class="hero-cta" [routerLink]="slide.ctaLink">
+            {{ slide.ctaLabel }} <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-photo-frame">
+            <img [src]="slide.image" [alt]="slide.imageAlt" draggable="false" />
+          </div>
+          <span class="hero-floating-badge">{{ slide.floatingBadge }}</span>
+          <span class="hero-capsule" aria-hidden="true"></span>
+        </div>
+      </article>
+    }
+  </div>
+
+  <button type="button" class="hero-arrow is-previous" aria-label="Diapositiva anterior" (click)="showPreviousSlide()">
+    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+  </button>
+  <button type="button" class="hero-arrow is-next" aria-label="Diapositiva siguiente" (click)="showNextSlide()">
+    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+  </button>
+
+  <div class="hero-dots">
+    @for (slide of heroSlides(); track $index; let slideIndex = $index) {
+      <button
+        type="button"
+        class="hero-dot"
+        [class.is-active]="slideIndex === activeSlideIndex()"
+        [attr.aria-label]="'Ir a la diapositiva ' + (slideIndex + 1)"
+        [attr.aria-current]="slideIndex === activeSlideIndex()"
+        (click)="showSlide(slideIndex)"
+      >
+        @if (slideIndex === activeSlideIndex()) {
+          <!-- Al terminar de llenarse, pasa a la siguiente diapositiva -->
+          <span class="hero-dot-progress" (animationend)="showNextSlide()"></span>
+        }
+      </button>
     }
   </div>
 </section>
 
-<!-- Cifras escalonadas: fichas que no se alinean, como boticas en la ciudad -->
-<section class="stats-board" aria-labelledby="stats-title">
-  <div class="stats-grid">
-    <div class="stats-tile stats-tile--tall">
-      <span class="stats-figure is-tabular" [countUp]="routeStops().length">{{
-        routeStops().length
-      }}</span>
-      <span class="stats-caption">boticas reales en Trujillo, cada una con su stock en vivo</span>
-      <img
-        class="stats-photo"
-        src="images/trujillo-town-hall-peru.jpg"
-        alt="Fachada celeste del municipio de Trujillo, en la Plaza de Armas"
-        loading="lazy"
-        width="1920"
-        height="1309"
-      />
-    </div>
-    <div class="stats-side">
-      <h2 class="stats-title" id="stats-title">Farmasalud en cifras</h2>
-      <div class="stats-tile stats-tile--ink">
-        <span class="stats-figure is-tabular">
-          <span [countUp]="productCount()">{{ productCount() }}</span>+
-        </span>
-        <span class="stats-caption">productos publicados en el catálogo</span>
-      </div>
-      <div class="stats-tile stats-tile--sand">
-        <span class="stats-figure is-tabular" [countUp]="deliveryBranchCount()">{{
-          deliveryBranchCount()
-        }}</span>
-        <span class="stats-caption">boticas con delivery a domicilio</span>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- Accesos por categoría -->
+@if (categoryShortcuts().length > 0) {
+  <section class="category-shortcuts container-xl" aria-labelledby="category-shortcuts-title">
+    <h2 class="visually-hidden" id="category-shortcuts-title">Categorías</h2>
+    <ul class="category-shortcut-list">
+      @for (shortcut of categoryShortcuts(); track shortcut.category.id; let shortcutIndex = $index) {
+        <li revealOnScroll [revealDelay]="shortcutIndex * 50">
+          <a
+            class="category-shortcut"
+            [class]="'category-shortcut is-tone-' + (shortcutIndex % 4)"
+            routerLink="/catalogo"
+            [queryParams]="{ categoria: shortcut.category.id }"
+          >
+            <span class="category-shortcut-icon"><i class="fas" [class]="'fas ' + shortcut.iconClass" aria-hidden="true"></i></span>
+            <span class="category-shortcut-name">{{ shortcut.category.name }}</span>
+          </a>
+        </li>
+      }
+    </ul>
+  </section>
+}
 
-<!-- El cierre: una sola palabra es el botón -->
-<a class="cta-band" routerLink="/catalogo">
-  <div class="container-xl cta-band-inner">
-    <p class="cta-note">
-      Elige tu botica y recibe tu pedido hoy mismo.
-      <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i>
-    </p>
-    <span class="cta-word">Ordena</span>
+<!-- Ofertas: carrusel de tarjetas con cuenta regresiva real -->
+@if (offerRows().length > 0) {
+  <section class="offers container-xl" aria-labelledby="offers-title" revealOnScroll>
+    <div class="section-head">
+      <div>
+        <h2 class="section-title" id="offers-title"><i class="fas fa-bolt" aria-hidden="true"></i> Ofertas que vuelan</h2>
+        @if (countdownParts(); as countdown) {
+          <div class="countdown" role="timer" aria-label="Tiempo restante de la oferta">
+            <span class="countdown-label">Terminan en</span>
+            @for (part of countdown; track part.unit) {
+              <span class="countdown-box"
+                ><strong class="is-tabular">{{ part.value }}</strong><small>{{ part.unit }}</small></span
+              >
+            }
+          </div>
+        }
+      </div>
+      @if (offerRows().length > 4) {
+        <div class="slider-controls">
+          <button type="button" class="slider-arrow" aria-label="Ofertas anteriores" (click)="scrollOffers(offersTrack, -1)">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="slider-arrow" aria-label="Más ofertas" (click)="scrollOffers(offersTrack, 1)">
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+        }
+    </div>
+    <ul #offersTrack class="offers-track">
+      @for (offerRow of offerRows(); track offerRow.product.id; let offerIndex = $index) {
+        <li class="offers-slide">
+          <app-product-card [product]="offerRow.product" [availability]="offerRow.availability" [toneIndex]="offerIndex" />
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+<!-- Cinta de beneficios en movimiento -->
+<div class="benefit-ticker" aria-label="Beneficios">
+  <div class="benefit-ticker-track">
+    @for (copyIndex of [0, 1]; track copyIndex) {
+      <ul class="benefit-ticker-group" [attr.aria-hidden]="copyIndex === 1">
+        @for (tickerItem of tickerItems; track tickerItem.text) {
+          <li><i class="fas" [class]="'fas ' + tickerItem.icon" aria-hidden="true"></i>{{ tickerItem.text }}</li>
+        }
+      </ul>
+    }
   </div>
-</a>
+</div>
+
+<!-- Destacados por pestañas -->
+<section class="featured container-xl" aria-labelledby="featured-title">
+  <div class="section-head">
+    <h2 class="section-title" id="featured-title">Lo más buscado</h2>
+    <a class="section-link" routerLink="/catalogo">Ver todo <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+  </div>
+
+  <div class="featured-tabs" role="tablist" aria-label="Filtrar destacados">
+    @for (tab of featuredTabs(); track tab.id) {
+      <button
+        type="button"
+        role="tab"
+        class="featured-tab"
+        [class.is-selected]="selectedTabId() === tab.id"
+        [attr.aria-selected]="selectedTabId() === tab.id"
+        (click)="selectTab(tab.id)"
+      >
+        {{ tab.name }}
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="featured-grid" aria-busy="true">
+      @for (placeholder of [1, 2, 3, 4]; track placeholder) {
+        <div class="featured-skeleton skeleton-block" aria-hidden="true"></div>
+      }
+    </div>
+  } @else if (featuredRows().length === 0) {
+    <p class="featured-empty">Pronto publicaremos productos en esta sección.</p>
+  } @else {
+    <!-- Se recrea al cambiar de pestaña para que las tarjetas vuelvan a entrar en cascada -->
+    @for (tabKey of [selectedTabId()]; track tabKey) {
+      <ul class="featured-grid" role="tabpanel">
+        @for (featuredRow of featuredRows(); track featuredRow.product.id; let featuredIndex = $index) {
+          <li class="featured-item" [style.--enter-index]="featuredIndex">
+            <app-product-card
+              [product]="featuredRow.product"
+              [availability]="featuredRow.availability"
+              [toneIndex]="featuredIndex"
+            />
+          </li>
+        }
+      </ul>
+    }
+  }
+</section>

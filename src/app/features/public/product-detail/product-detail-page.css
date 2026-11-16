@@ -27,7 +27,7 @@
 
 .product-detail-image {
   position: sticky;
-  top: 6rem;
+  top: 8.75rem;
   display: grid;
   place-items: center;
   aspect-ratio: 1;

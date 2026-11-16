@@ -117,7 +117,7 @@
 
 .cart-summary {
   position: sticky;
-  top: 96px;
+  top: 140px;
   padding: 1.25rem;
   border-top: 6px solid var(--route-cobalt);
   font-variant-numeric: tabular-nums;

@@ -1,0 +1,57 @@
+<a
+  class="product-card-media"
+  [class.is-tone-1]="placeholderTone() === 1"
+  [class.is-tone-2]="placeholderTone() === 2"
+  [class.is-tone-3]="placeholderTone() === 3"
+  [routerLink]="['/producto', product().id]"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  @if (product().imageUrl) {
+    <img [src]="product().imageUrl" alt="" loading="lazy" />
+  } @else {
+    <span class="product-card-initial">{{ product().name.charAt(0) }}</span>
+  }
+  @if (discountPercent(); as discount) {
+    <span class="product-card-discount">-{{ discount }}%</span>
+  }
+  @if (product().requiresPrescription) {
+    <span class="product-card-prescription"
+      ><i class="fas fa-file-prescription" aria-hidden="true"></i>Con receta</span
+    >
+  }
+</a>
+
+<div class="product-card-body">
+  <span class="product-card-presentation">{{ product().presentation }}</span>
+  <a class="product-card-name" [routerLink]="['/producto', product().id]">{{ product().name }}</a>
+  <span
+    class="status-badge product-card-availability"
+    [class.is-success]="availability().stockStatus === 'available'"
+    [class.is-warning]="availability().stockStatus === 'low_stock'"
+    [class.is-neutral]="availability().stockStatus === 'out_of_stock'"
+  >
+    {{ availability().availabilityLabel }}
+  </span>
+  <app-product-price class="product-card-price" [product]="product()" [showDiscount]="false" />
+
+  @if (!isStaffMember()) {
+    <button
+      type="button"
+      class="btn btn-primary product-card-add"
+      [class.is-in-cart]="quantityInCart() > 0"
+      [disabled]="isOutOfStock()"
+      [attr.aria-label]="'Agregar ' + product().name + ' al carrito'"
+      (click)="addToCart()"
+    >
+      @if (isOutOfStock()) {
+        Agotado
+      } @else if (quantityInCart() > 0) {
+        <i class="fas fa-check" aria-hidden="true"></i>
+        En tu carrito ({{ quantityInCart() }}) · Agregar otro
+      } @else {
+        <i class="fas fa-cart-plus" aria-hidden="true"></i> Agregar al carrito
+      }
+    </button>
+  }
+</div>

@@ -1,4 +1,3 @@
-import { ProductPrice } from '../../../shared/ui/product-price/product-price';
 import {
   afterNextRender,
   Component,
@@ -12,16 +11,14 @@ import {
   signal,
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/auth/auth.service';
 import { AppLoggerService } from '../../../core/logger/app-logger.service';
-import { CartService } from '../../../shared/data-access/cart.service';
 import { BranchRepository } from '../../../shared/data-access/branch.repository';
 import { BranchSelectionService } from '../../../shared/data-access/branch-selection.service';
 import { CategoryRepository } from '../../../shared/data-access/category.repository';
 import { ProductRepository } from '../../../shared/data-access/product.repository';
 import { Category } from '../../../shared/models/category';
-import { hasActivePromotion, Product } from '../../../shared/models/product';
-import { CartNoticeService } from '../../../shared/ui/cart-notice/cart-notice';
+import { Product } from '../../../shared/models/product';
+import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { normalizeTextForSearch } from '../../../shared/utils/text-normalization';
 import { describeProductAvailability, ProductAvailability } from './product-availability';
 
@@ -39,7 +36,7 @@ const ALL_CATEGORIES_FILTER = '';
  */
 @Component({
   selector: 'app-catalog-page',
-  imports: [RouterLink, ProductPrice],
+  imports: [ProductCard],
   templateUrl: './catalog-page.html',
   styleUrl: './catalog-page.css',
 })
@@ -51,9 +48,6 @@ export class CatalogPage implements OnInit {
   private readonly hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly injector = inject(Injector);
   readonly branchSelection = inject(BranchSelectionService);
-  readonly cartService = inject(CartService);
-  private readonly cartNotice = inject(CartNoticeService);
-  readonly isStaffMember = inject(AuthService).isStaffMember;
 
   /** `?categoria=analgesicos` desde enlaces externos o del inicio. */
   readonly categoria = input<string>();
@@ -113,17 +107,12 @@ export class CatalogPage implements OnInit {
   });
 
   constructor() {
+    // La URL manda: al llegar desde la cabecera (categoría o búsqueda) se reemplazan ambos filtros.
     effect(() => {
-      const categoryFromUrl = this.categoria();
-      if (categoryFromUrl) {
-        this.selectedCategoryId.set(categoryFromUrl);
-      }
+      this.selectedCategoryId.set(this.categoria() ?? ALL_CATEGORIES_FILTER);
     });
     effect(() => {
-      const searchFromUrl = this.buscar();
-      if (searchFromUrl) {
-        this.searchText.set(searchFromUrl);
-      }
+      this.searchText.set(this.buscar() ?? '');
     });
   }
 
@@ -177,16 +166,6 @@ export class CatalogPage implements OnInit {
 
   clearSearch(): void {
     this.searchText.set('');
-  }
-
-  /** % de descuento vigente para la placa sobre la foto (null si no hay promoción). */
-  discountPercentOf(product: Product): number | null {
-    return hasActivePromotion(product) ? (product.promotion?.discountPercent ?? null) : null;
-  }
-
-  addToCart(product: Product): void {
-    this.cartService.addProduct(product.id);
-    this.cartNotice.announceAddedProduct(product.name);
   }
 
   toggleOnlyAvailable(): void {

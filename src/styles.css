@@ -12,9 +12,9 @@
   --route-enamel-deep: #dde0ef;
   --route-ink: #141414;
   --route-ink-soft: #3d4456;
-  --route-cobalt: #0f5257;
-  --route-cobalt-deep: #0a3b3e;
-  --route-cobalt-wash: #d9e8e9;
+  --route-cobalt: #c9480d;
+  --route-cobalt-deep: #a3380a;
+  --route-cobalt-wash: #fdeadc;
   --route-marigold: #f9cdbd;
   --route-marigold-deep: #f2b39f;
   --route-marigold-wash: #fce8e0;
@@ -81,14 +81,14 @@
 
   /* Bootstrap hereda la paleta */
   --bs-primary: var(--color-primary);
-  --bs-primary-rgb: 15, 82, 87;
+  --bs-primary-rgb: 201, 72, 13;
   --bs-success: var(--color-accent);
   --bs-success-rgb: 46, 125, 70;
   --bs-body-font-family: var(--font-body);
   --bs-body-color: var(--color-text);
   --bs-body-bg: var(--color-background);
   --bs-link-color: var(--color-primary);
-  --bs-link-color-rgb: 15, 82, 87;
+  --bs-link-color-rgb: 201, 72, 13;
   --bs-link-hover-color: var(--color-primary-hover);
   --bs-border-radius: var(--radius-sm);
   --bs-border-color: var(--color-border);
