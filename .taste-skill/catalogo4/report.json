@@ -1,0 +1,1594 @@
+{
+ "url": "http://localhost:4200/catalogo",
+ "at": "2026-11-16T08:28:25.584Z",
+ "allow": [],
+ "viewports": [
+  {
+   "width": 1440,
+   "height": 900,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    0.6,
+    0.24,
+    0.66,
+    0.74
+   ],
+   "motion": {
+    "elements": 51,
+    "css": 50,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "page": {
+     "height": 2831,
+     "screens": 3.1,
+     "words": 483,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 1,
+     "sections": 1,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 2,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Catálogo",
+     "words": 1,
+     "chars": 8,
+     "lines": 1,
+     "size": 80,
+     "vw": 5.6,
+     "font": "Jost",
+     "weight": 700,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.33,
+     "top": 148,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Catálogo",
+     "words": 1,
+     "lines": 1,
+     "size": 80,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "Catálogo",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 80,
+      "vw": 5.6,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.33,
+      "top": 148,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      26,
+      80
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 13,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.8
+     },
+     "measureChars": 86,
+     "max": {
+      "size": 80,
+      "vw": 5.6,
+      "font": "Jost",
+      "text": "Catálogo"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.13,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e9ebf5",
+     "bodyBgHsl": {
+      "h": 230,
+      "s": 0.38,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#141414",
+       "top": 2225,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#b9bdc9",
+       "share": 0.28
+      },
+      {
+       "color": "#141414",
+       "share": 0.27
+      },
+      {
+       "color": "#3d4456",
+       "share": 0.21
+      },
+      {
+       "color": "#235f36",
+       "share": 0.16
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.06
+      }
+     ],
+     "button": {
+      "bg": "#dde0ef",
+      "hsl": {
+       "h": 230,
+       "s": 0.36,
+       "l": 0.9
+      },
+      "fg": "#141414"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 18,
+     "inHero": 18,
+     "radius": "pill",
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Catálogo",
+      "Carrito",
+      "Crear cuenta",
+      "Todas",
+      "1 Botica Centro Histórico"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 6,
+     "fixed": true,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "jost",
+     "font awesome 6 free"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 1440,
+     "h": 900
+    },
+    "pageH": 2831,
+    "margins": {
+     "left": 76,
+     "right": 76
+    },
+    "sections": [
+     {
+      "sel": "main#contenido-principal.store-content",
+      "tag": "main",
+      "top": 76,
+      "height": 2053,
+      "words": 327,
+      "media": 0,
+      "middle": 0,
+      "heading": {
+       "text": "Catálogo",
+       "size": 80,
+       "tag": "h1"
+      },
+      "left": 76,
+      "right": 0,
+      "textLeft": 76,
+      "textRight": 60,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.store-footer",
+      "tag": "footer",
+      "top": 2225,
+      "height": 606,
+      "words": 126,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Farmasalud",
+       "size": 26,
+       "tag": "p"
+      },
+      "left": 76,
+      "right": 148,
+      "textLeft": 76,
+      "textRight": 148,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Catálogo",
+      "size": 80,
+      "top": 148,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 76,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 3,
+    "bodySize": 13,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0.13,
+    "voidBox": {
+     "x": 420,
+     "y": 600,
+     "w": 540,
+     "h": 300
+    }
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 768,
+   "height": 1024,
+   "load": "load",
+   "screens": 4,
+   "filled": [
+    0.55,
+    0.38,
+    0.76,
+    1
+   ],
+   "motion": {
+    "elements": 51,
+    "css": 50,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "page": {
+     "height": 3374,
+     "screens": 3.3,
+     "words": 476,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 1,
+     "sections": 1,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 2,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Catálogo",
+     "words": 1,
+     "chars": 8,
+     "lines": 1,
+     "size": 49.9,
+     "vw": 6.5,
+     "font": "Jost",
+     "weight": 700,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "left",
+     "widthRatio": 0.61,
+     "top": 122,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Catálogo",
+     "words": 1,
+     "lines": 1,
+     "size": 49.9,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "Catálogo",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 49.9,
+      "vw": 6.5,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.61,
+      "top": 122,
+      "tag": "h1",
+      "kind": "heading"
+     }
+    ],
+    "headingSummary": {
+     "count": 1,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 0,
+     "centered": 0,
+     "medianWords": null,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      26,
+      50
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 13,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.8
+     },
+     "measureChars": 86,
+     "max": {
+      "size": 49.9,
+      "vw": 6.5,
+      "font": "Jost",
+      "text": "Catálogo"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.13,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e9ebf5",
+     "bodyBgHsl": {
+      "h": 230,
+      "s": 0.38,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#0f5257",
+       "top": 76,
+       "hsl": {
+        "h": 184,
+        "s": 0.71,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#141414",
+       "top": 2372,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#b9bdc9",
+       "share": 0.28
+      },
+      {
+       "color": "#141414",
+       "share": 0.28
+      },
+      {
+       "color": "#3d4456",
+       "share": 0.21
+      },
+      {
+       "color": "#235f36",
+       "share": 0.16
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.06
+      }
+     ],
+     "button": {
+      "bg": "#dde0ef",
+      "hsl": {
+       "h": 230,
+       "s": 0.36,
+       "l": 0.9
+      },
+      "fg": "#3d4456"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 15,
+     "inHero": 15,
+     "radius": "pill",
+     "height": 40,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Todas",
+      "1 Botica Centro Histórico",
+      "2 Botica el Bosque",
+      "3 Botica el Molino",
+      "4 Botica Florencia de Mora"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "jost",
+     "font awesome 6 free"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 768,
+     "h": 1024
+    },
+    "pageH": 3374,
+    "margins": {
+     "left": 16,
+     "right": 16
+    },
+    "sections": [
+     {
+      "sel": "main#contenido-principal.store-content",
+      "tag": "main",
+      "top": 76,
+      "height": 2200,
+      "words": 310,
+      "media": 0,
+      "middle": 478,
+      "heading": {
+       "text": "Catálogo",
+       "size": 50,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 0,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.store-footer",
+      "tag": "footer",
+      "top": 2372,
+      "height": 1002,
+      "words": 126,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Farmasalud",
+       "size": 26,
+       "tag": "p"
+      },
+      "left": 16,
+      "right": 16,
+      "textLeft": 16,
+      "textRight": 23,
+      "fullBleed": false,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Catálogo",
+      "size": 50,
+      "top": 122,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 3,
+    "bodySize": 13,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  },
+  {
+   "width": 390,
+   "height": 844,
+   "load": "load",
+   "screens": 7,
+   "filled": [
+    0.77,
+    0.38,
+    0.48,
+    0.42,
+    0.43,
+    0.69,
+    1
+   ],
+   "motion": {
+    "elements": 51,
+    "css": 50,
+    "transitions": 1,
+    "scripted": 0,
+    "videos": 0,
+    "playingVideos": 0
+   },
+   "metrics": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "page": {
+     "height": 5687,
+     "screens": 6.7,
+     "words": 476,
+     "img": 1,
+     "video": 0,
+     "canvas": 0,
+     "svg": 1,
+     "sections": 1,
+     "horizontalOverflow": 0,
+     "overflowCulprits": [],
+     "uiFragments": 0,
+     "uiAbuse": false,
+     "realPictures": 0,
+     "videoCount": 0,
+     "uiPictures": 0,
+     "pictureSamples": [],
+     "blendText": 0,
+     "sideScrollers": 2,
+     "brokenImages": [],
+     "emoji": [],
+     "videosNoPoster": 0
+    },
+    "hero": {
+     "text": "Catálogo",
+     "words": 1,
+     "chars": 8,
+     "lines": 1,
+     "size": 48,
+     "vw": 12.3,
+     "font": "Jost",
+     "weight": 700,
+     "tracking": -0.03,
+     "leading": 0.95,
+     "upper": false,
+     "italic": false,
+     "mono": false,
+     "align": "left",
+     "position": "center",
+     "widthRatio": 0.92,
+     "top": 116,
+     "tag": "h1",
+     "kind": "heading"
+    },
+    "h1": {
+     "text": "Catálogo",
+     "words": 1,
+     "lines": 1,
+     "size": 48,
+     "font": "Jost"
+    },
+    "headings": [
+     {
+      "text": "F Farmasalud",
+      "words": 2,
+      "chars": 12,
+      "lines": 1,
+      "size": 23.2,
+      "vw": 5.9,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.42,
+      "top": 18,
+      "tag": "a",
+      "kind": "heading"
+     },
+     {
+      "text": "Catálogo",
+      "words": 1,
+      "chars": 8,
+      "lines": 1,
+      "size": 48,
+      "vw": 12.3,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 0.95,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 116,
+      "tag": "h1",
+      "kind": "heading"
+     },
+     {
+      "text": "A",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 862,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "A",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1059,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "A",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1256,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "A",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1452,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "A",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1680,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "A",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 1877,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "C",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 2104,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "D",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 2332,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "G",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 2528,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "I",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 2725,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "L",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 2922,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "M",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 3119,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "N",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 3316,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "P",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 3513,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "P",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 3710,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "P",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 3907,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "S",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 4104,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "V",
+      "words": 1,
+      "chars": 1,
+      "lines": 1,
+      "size": 22.4,
+      "vw": 5.7,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": 0,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "left",
+      "widthRatio": 0.14,
+      "top": 4300,
+      "tag": "span",
+      "kind": "statement"
+     },
+     {
+      "text": "Farmasalud",
+      "words": 1,
+      "chars": 10,
+      "lines": 1,
+      "size": 25.6,
+      "vw": 6.6,
+      "font": "Jost",
+      "weight": 700,
+      "tracking": -0.03,
+      "leading": 1.55,
+      "upper": false,
+      "italic": false,
+      "mono": false,
+      "align": "left",
+      "position": "center",
+      "widthRatio": 0.92,
+      "top": 4778,
+      "tag": "p",
+      "kind": "statement"
+     }
+    ],
+    "headingSummary": {
+     "count": 21,
+     "maxLines": 1,
+     "over2Lines": 0,
+     "statements": 19,
+     "centered": 0,
+     "medianWords": 1,
+     "mixedFontHeadings": 0
+    },
+    "type": {
+     "families": [
+      {
+       "family": "Jost",
+       "share": 1,
+       "mono": false
+      }
+     ],
+     "familyCount": 1,
+     "sizes": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      19,
+      21,
+      22,
+      23,
+      26,
+      48
+     ],
+     "sizeCount": 11,
+     "notLoaded": [],
+     "body": {
+      "font": "Jost",
+      "size": 13,
+      "leading": 1.55,
+      "weight": 400,
+      "tracking": 0,
+      "contrast": 9.8
+     },
+     "measureChars": 56,
+     "max": {
+      "size": 48,
+      "vw": 12.3,
+      "font": "Jost",
+      "text": "Catálogo"
+     },
+     "monoShare": 0,
+     "monoProseShare": 0,
+     "monoFamilies": [],
+     "monoSamples": [],
+     "microLabels": 0,
+     "microLabelShare": 0,
+     "microSamples": [],
+     "upperShare": 0,
+     "centerShare": 0.13,
+     "smallText": 0
+    },
+    "eyebrows": [],
+    "numbered": [],
+    "color": {
+     "bodyBg": "#e9ebf5",
+     "bodyBgHsl": {
+      "h": 230,
+      "s": 0.38,
+      "l": 0.94
+     },
+     "dark": false,
+     "sectionBgs": [
+      {
+       "color": "#0f5257",
+       "top": 76,
+       "hsl": {
+        "h": 184,
+        "s": 0.71,
+        "l": 0.2
+       }
+      },
+      {
+       "color": "#141414",
+       "top": 4629,
+       "hsl": {
+        "h": 0,
+        "s": 0,
+        "l": 0.08
+       }
+      }
+     ],
+     "textColors": [
+      {
+       "color": "#b9bdc9",
+       "share": 0.28
+      },
+      {
+       "color": "#141414",
+       "share": 0.28
+      },
+      {
+       "color": "#3d4456",
+       "share": 0.21
+      },
+      {
+       "color": "#235f36",
+       "share": 0.16
+      },
+      {
+       "color": "#ffffff",
+       "share": 0.06
+      }
+     ],
+     "button": {
+      "bg": "#0f5257",
+      "hsl": {
+       "h": 184,
+       "s": 0.71,
+       "l": 0.2
+      },
+      "fg": "#d9e8e9"
+     },
+     "lowContrast": []
+    },
+    "buttons": {
+     "count": 33,
+     "inHero": 15,
+     "radius": "pill",
+     "height": 44,
+     "withShadow": 0,
+     "withGradient": 0,
+     "mono": 0,
+     "upper": 0,
+     "heroLabels": [
+      "Todas",
+      "1 Botica Centro Histórico",
+      "2 Botica el Bosque",
+      "3 Botica el Molino",
+      "4 Botica Florencia de Mora"
+     ]
+    },
+    "surfaces": {
+     "shadowStatic": 0,
+     "shadowOverlay": 0,
+     "shadowSamples": [],
+     "gradients": 0,
+     "scrims": 0,
+     "gradientSamples": [],
+     "gradientText": 0,
+     "hairlines": 0,
+     "hairlineSamples": [],
+     "outlinedBoxes": 0,
+     "dashed": 0,
+     "blurred": 0,
+     "roundedBoxes": 0,
+     "boxRadius": 0,
+     "squareMedia": 0,
+     "roundedMedia": 0,
+     "mediaRadius": 0,
+     "textShadow": 0,
+     "cardRows": []
+    },
+    "heroMedia": [],
+    "nav": {
+     "links": 1,
+     "fixed": true,
+     "height": 76,
+     "floatingPill": false,
+     "blur": false
+    },
+    "fontsLoaded": [
+     "jost",
+     "font awesome 6 free"
+    ]
+   },
+   "layout": {
+    "viewport": {
+     "w": 390,
+     "h": 844
+    },
+    "pageH": 5687,
+    "margins": {
+     "left": 16,
+     "right": 19
+    },
+    "sections": [
+     {
+      "sel": "main#contenido-principal.store-content",
+      "tag": "main",
+      "top": 76,
+      "height": 4457,
+      "words": 298,
+      "media": 0,
+      "middle": 856,
+      "heading": {
+       "text": "Catálogo",
+       "size": 48,
+       "tag": "h1"
+      },
+      "left": 16,
+      "right": 0,
+      "textLeft": 16,
+      "textRight": 16,
+      "fullBleed": false,
+      "footer": false,
+      "hero": true,
+      "continues": false,
+      "pinned": false
+     },
+     {
+      "sel": "footer.store-footer",
+      "tag": "footer",
+      "top": 4629,
+      "height": 1058,
+      "words": 126,
+      "media": 1,
+      "middle": 0,
+      "heading": {
+       "text": "Farmasalud",
+       "size": 26,
+       "tag": "p"
+      },
+      "left": 16,
+      "right": 19,
+      "textLeft": 16,
+      "textRight": 19,
+      "fullBleed": true,
+      "footer": true,
+      "hero": false,
+      "continues": false,
+      "pinned": false
+     }
+    ],
+    "gaps": [],
+    "h1s": [
+     {
+      "text": "Catálogo",
+      "size": 48,
+      "top": 116,
+      "firstScreen": true
+     }
+    ],
+    "edgeText": [],
+    "edges": [
+     {
+      "x": 16,
+      "n": 3
+     }
+    ],
+    "leftBlocks": 3,
+    "bodySize": 13,
+    "stage": false,
+    "explains": false,
+    "slivers": [],
+    "voidShare": 0,
+    "voidBox": null
+   },
+   "app": null,
+   "consoleErrors": []
+  }
+ ],
+ "findings": [
+  {
+   "level": "WARN",
+   "id": "size-count",
+   "width": 1440,
+   "message": "11 different font sizes (13, 14, 15, 16, 17, 19, 21, 22, 23, 26, 80).",
+   "fix": "A page needs about five: display, heading, lead, body, small.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "body-size",
+   "width": 1440,
+   "message": "Body text is 13px (the size most of the running text is set in).",
+   "fix": "Body copy 16–20px. Map small sizes from blueprints onto your body step.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "FAIL",
+   "id": "few-pictures",
+   "width": 1440,
+   "message": "Only 0 picture(s) on the page (0 photographs, footage or raster images, 0 interface fragments). Drawings in SVG do not count.",
+   "fix": "Find real pictures of the subject's world with scripts/assets.mjs (photographs, archival images, maps, engravings, footage), download them to assets/ and give them room: a hero picture, one per section that has a subject, a full-width band. At least four, usually six to twelve."
+  },
+  {
+   "level": "WARN",
+   "id": "no-footage",
+   "width": 1440,
+   "message": "No video anywhere on the page.",
+   "fix": "Look for one honest clip with scripts/assets.mjs --video (the place, the material, the process) and use it as a muted loop with a poster frame. Defend its absence only if no clip fits the subject."
+  },
+  {
+   "level": "WARN",
+   "id": "side-scroll",
+   "width": 1440,
+   "message": "2 row(s) scroll sideways with content past their edge.",
+   "fix": "Jurors and most visitors read a row cut at the edge as clipped, not as scrollable. Wrap it onto more lines, or end it inside the grid.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "dev-server",
+   "width": 1440,
+   "message": "This page is served by a development server (Vite, webpack or Next in dev mode).",
+   "fix": "Run the last gate on the production build too (vite build && vite preview, next build && next start, or the built index.html): minifiers and bundlers change the CSS a visitor receives.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  },
+  {
+   "level": "WARN",
+   "id": "name-only-title",
+   "width": 1440,
+   "message": "The h1 is a bare name (\"Catálogo\") and nothing else on the first screen says what this is.",
+   "fix": "Keep the name if it leads, and give the line under it (18px or more) the plain words: what it is, for whom, where or when. In the study of 97 Sites of the Day, first screens that named nothing lost usability and content points.",
+   "alsoAt": [
+    768,
+    390
+   ]
+  }
+ ],
+ "images": [
+  {
+   "viewport": "desktop",
+   "width": 1440,
+   "fold": "D:\\Yelson\\farmasalud\\.taste-skill\\catalogo4\\desktop-fold.jpg",
+   "pages": [
+    "D:\\Yelson\\farmasalud\\.taste-skill\\catalogo4\\desktop-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "tablet",
+   "width": 768,
+   "fold": "D:\\Yelson\\farmasalud\\.taste-skill\\catalogo4\\tablet-fold.jpg",
+   "pages": [
+    "D:\\Yelson\\farmasalud\\.taste-skill\\catalogo4\\tablet-page-01.jpg"
+   ],
+   "film": []
+  },
+  {
+   "viewport": "mobile",
+   "width": 390,
+   "fold": "D:\\Yelson\\farmasalud\\.taste-skill\\catalogo4\\mobile-fold.jpg",
+   "pages": [
+    "D:\\Yelson\\farmasalud\\.taste-skill\\catalogo4\\mobile-page-01.jpg"
+   ],
+   "film": []
+  }
+ ]
+}

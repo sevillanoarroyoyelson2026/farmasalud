@@ -462,7 +462,7 @@ table {
   padding: 0.2rem 0.65rem;
   border-radius: var(--radius-pill);
   font-family: var(--font-heading);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   white-space: nowrap;
 }

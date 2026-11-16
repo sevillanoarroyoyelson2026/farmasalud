@@ -27,29 +27,26 @@ import { getEffectivePrice, hasActivePromotion, Product } from '../../models/pro
     }
     .product-price-current {
       font-family: var(--font-heading);
-      font-stretch: var(--font-stretch-label);
       font-size: 1.3rem;
-      font-weight: 900;
+      font-weight: 700;
       color: var(--color-text);
     }
     .product-price-previous {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--color-text-muted);
       text-decoration: line-through;
     }
     .product-price-discount {
-      padding: 0.05rem 0.4rem;
-      border-radius: var(--radius-sm);
-      background: var(--route-marigold);
+      padding: 0.05rem 0.45rem;
+      border-radius: var(--radius-pill);
+      background: var(--field-peach);
       color: var(--route-ink);
       font-family: var(--font-heading);
-      font-stretch: var(--font-stretch-label);
-      font-size: 0.78rem;
-      font-weight: 800;
+      font-size: 0.8125rem;
+      font-weight: 600;
     }
     .is-large .product-price-current {
-      font-size: 2.6rem;
-      font-stretch: var(--font-stretch-sign);
+      font-size: 2.75rem;
     }
     .is-large .product-price-previous {
       font-size: 1.05rem;

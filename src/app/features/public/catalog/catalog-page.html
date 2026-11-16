@@ -1,7 +1,12 @@
 <section class="catalog-page">
   <header class="catalog-sign">
     <div class="container-xl catalog-sign-inner">
-      <h1 class="catalog-title">Catálogo</h1>
+      <div class="catalog-sign-head">
+        <h1 class="catalog-title">Catálogo</h1>
+        <p class="catalog-sub">
+          Medicamentos y cuidado personal con stock real de nuestras boticas de Trujillo.
+        </p>
+      </div>
       <div class="catalog-search">
         <i class="fas fa-magnifying-glass catalog-search-icon" aria-hidden="true"></i>
         <input
@@ -24,6 +29,12 @@
           </button>
         }
       </div>
+      <img
+        class="catalog-sign-photo"
+        src="images/pills-and-medicines-02.jpg"
+        alt="Frascos de medicinas y pastillas sobre una superficie clara"
+        loading="lazy"
+      />
     </div>
   </header>
 
@@ -105,18 +116,24 @@
         />
         <label class="form-check-label" for="only-available">Solo disponibles</label>
       </div>
+      @if (!isLoading() && !loadErrorMessage() && visibleProductCards().length > 0) {
+        <p class="catalog-result-count is-tabular" aria-live="polite">
+          {{ visibleProductCards().length }}
+          {{ visibleProductCards().length === 1 ? 'producto' : 'productos' }}
+        </p>
+      }
     </div>
 
     @if (isLoading()) {
-      <div class="catalog-grid" aria-busy="true">
+      <div class="catalog-list" aria-busy="true">
         @for (placeholderNumber of [1, 2, 3, 4, 5, 6, 7, 8]; track placeholderNumber) {
-          <div class="catalog-card is-placeholder" aria-hidden="true">
-            <span class="catalog-card-image skeleton-block"></span>
-            <span class="catalog-card-body">
+          <div class="catalog-row is-placeholder" aria-hidden="true">
+            <span class="catalog-row-thumb skeleton-block"></span>
+            <span class="catalog-row-product">
               <span class="skeleton-block catalog-skeleton-line is-short"></span>
-              <span class="skeleton-block catalog-skeleton-line"></span>
               <span class="skeleton-block catalog-skeleton-line is-medium"></span>
             </span>
+            <span class="skeleton-block catalog-skeleton-line is-short"></span>
           </div>
         }
       </div>
@@ -139,77 +156,98 @@
         }
       </div>
     } @else {
-      <p class="catalog-result-count is-tabular" aria-live="polite">
-        {{ visibleProductCards().length }}
-        {{ visibleProductCards().length === 1 ? 'producto' : 'productos' }}
-      </p>
-      <div class="catalog-grid enter-along-route">
+      <ul class="catalog-list enter-along-route">
         @for (
           productCard of visibleProductCards();
           track productCard.product.id;
           let cardIndex = $index
         ) {
-          <article
-            class="catalog-card"
+          <li
+            class="catalog-row"
             [class.is-out-of-stock]="productCard.availability.stockStatus === 'out_of_stock'"
+            [class.is-tone-1]="cardIndex % 4 === 1"
+            [class.is-tone-2]="cardIndex % 4 === 2"
+            [class.is-tone-3]="cardIndex % 4 === 3"
             [style.--enter-index]="cardIndex"
           >
-            <span class="catalog-card-image">
+            <span class="catalog-row-thumb">
               @if (productCard.product.imageUrl) {
                 <img
                   [src]="productCard.product.imageUrl"
-                  [alt]="productCard.product.name"
+                  [alt]="'Foto de ' + productCard.product.name"
                   loading="lazy"
                 />
               } @else {
-                <span class="catalog-card-initial" aria-hidden="true">{{
+                <span class="catalog-row-initial" aria-hidden="true">{{
                   productCard.product.name.charAt(0)
                 }}</span>
               }
-              @if (productCard.product.requiresPrescription) {
-                <span class="catalog-card-prescription">
-                  <i class="fas fa-file-prescription me-1" aria-hidden="true"></i>Con receta
-                </span>
-              }
             </span>
-            <span class="catalog-card-body">
-              <a class="catalog-card-name" [routerLink]="['/producto', productCard.product.id]">{{
+            <span class="catalog-row-product">
+              <a class="catalog-row-name" [routerLink]="['/producto', productCard.product.id]">{{
                 productCard.product.name
               }}</a>
-              <span class="catalog-card-presentation">{{ productCard.product.presentation }}</span>
-              <span class="catalog-card-category">{{ productCard.categoryName }}</span>
-              <span
-                class="status-badge catalog-card-availability"
-                [class.is-success]="productCard.availability.stockStatus === 'available'"
-                [class.is-warning]="productCard.availability.stockStatus === 'low_stock'"
-                [class.is-neutral]="productCard.availability.stockStatus === 'out_of_stock'"
-              >
-                {{ productCard.availability.availabilityLabel }}
-              </span>
-              <span class="catalog-card-footer">
-                <app-product-price [product]="productCard.product" />
-                @if (!isStaffMember()) {
-                  <button
-                    type="button"
-                    class="btn btn-primary catalog-card-add"
-                    [class.is-in-cart]="cartService.getQuantityOf(productCard.product.id) > 0"
-                    [disabled]="productCard.availability.stockStatus === 'out_of_stock'"
-                    [attr.aria-label]="'Agregar ' + productCard.product.name + ' al carrito'"
-                    (click)="addToCart(productCard.product)"
-                  >
-                    <i class="fas fa-cart-plus" aria-hidden="true"></i>
-                    @if (cartService.getQuantityOf(productCard.product.id) > 0) {
-                      <span class="is-tabular">{{
-                        cartService.getQuantityOf(productCard.product.id)
-                      }}</span>
-                    }
-                  </button>
-                }
-              </span>
+              <span class="catalog-row-presentation">{{ productCard.product.presentation }}</span>
+              @if (productCard.product.requiresPrescription) {
+                <span class="catalog-row-prescription"
+                  ><i class="fas fa-file-prescription" aria-hidden="true"></i>Requiere receta</span
+                >
+              }
             </span>
-          </article>
+            <span
+              class="status-badge catalog-row-availability"
+              [class.is-success]="productCard.availability.stockStatus === 'available'"
+              [class.is-warning]="productCard.availability.stockStatus === 'low_stock'"
+              [class.is-neutral]="productCard.availability.stockStatus === 'out_of_stock'"
+            >
+              {{ productCard.availability.availabilityLabel }}
+            </span>
+            <app-product-price class="catalog-row-price" [product]="productCard.product" />
+            @if (!isStaffMember()) {
+              <button
+                type="button"
+                class="btn btn-primary catalog-row-add"
+                [class.is-in-cart]="cartService.getQuantityOf(productCard.product.id) > 0"
+                [disabled]="productCard.availability.stockStatus === 'out_of_stock'"
+                [attr.aria-label]="'Agregar ' + productCard.product.name + ' al carrito'"
+                (click)="addToCart(productCard.product)"
+              >
+                <i class="fas fa-cart-plus" aria-hidden="true"></i>
+                @if (cartService.getQuantityOf(productCard.product.id) > 0) {
+                  <span class="is-tabular">{{
+                    cartService.getQuantityOf(productCard.product.id)
+                  }}</span>
+                }
+              </button>
+            }
+          </li>
         }
-      </div>
+      </ul>
+
+      <!-- Las boticas detrás del pedido: donde también puedes recoger -->
+      <section class="catalog-branches-band">
+        <div class="catalog-branches-photos">
+          <img
+            src="images/trujillo-town-hall-peru.jpg"
+            alt="Fachada celeste del municipio de Trujillo, en la Plaza de Armas"
+          />
+          <img
+            src="images/former-pharmacy-shelves-with-medicines.jpg"
+            alt="Estantes de madera con frascos de cerámica de una botica tradicional"
+          />
+          <img
+            src="images/pills-and-medicines-01.jpg"
+            alt="Frascos de medicinas de colores sobre fondo claro"
+          />
+        </div>
+        <div class="catalog-branches-text">
+          <h2>¿Prefieres recogerlo en tienda?</h2>
+          <p>
+            Nuestras boticas de Trujillo te esperan de lunes a sábado; elige tu paradero y revisa el
+            stock antes de salir de casa.
+          </p>
+        </div>
+      </section>
     }
   </div>
 </section>
