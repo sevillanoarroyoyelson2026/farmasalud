@@ -3,6 +3,7 @@ import type { DecodedIdToken } from 'firebase-admin/auth';
 import type { ZodType } from 'zod';
 import { adminAppCheck, adminAuth } from './firebase-admin';
 import { HttpError } from './http-response';
+import { assertSystemActivated } from './system-activation';
 
 export type UserRole = 'admin' | 'worker' | 'customer';
 
@@ -42,6 +43,9 @@ async function verifyAppCheckToken(requestEvent: HandlerEvent): Promise<void> {
  * invaliden la sesión al instante.
  */
 export async function authenticateCaller(requestEvent: HandlerEvent): Promise<AuthenticatedCaller> {
+  // Candado de licencia: si el sistema no está activado, ninguna operación procede.
+  assertSystemActivated();
+
   await verifyAppCheckToken(requestEvent);
 
   const authorizationHeader = requestEvent.headers['authorization'] ?? '';

@@ -3,9 +3,12 @@ import localeSpanishPeru from '@angular/common/locales/es-PE';
 import {
   ApplicationConfig,
   LOCALE_ID,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
+  inject,
 } from '@angular/core';
+import { SystemActivationService } from './core/system/system-activation.service';
 import {
   provideRouter,
   withComponentInputBinding,
@@ -20,6 +23,8 @@ registerLocaleData(localeSpanishPeru);
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    // Consulta el estado de activación antes de mostrar la app.
+    provideAppInitializer(() => inject(SystemActivationService).refreshActivationStatus()),
     { provide: LOCALE_ID, useValue: 'es-PE' },
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(
